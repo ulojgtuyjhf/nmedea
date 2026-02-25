@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nmedea</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,800&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family:'DM Sans',sans-serif;
+            background:#0b0b0b;
+            color:#f3f3ee;
+            min-height:100dvh;
+        }
+
+        /* ── HEADER BAR ── */
+        .header {
+            position:fixed;
+            top:0; left:0; right:0;
+            z-index:999;
+            background:rgba(11,11,11,0.97);
+            backdrop-filter:blur(20px);
+            border-bottom:1px solid rgba(255,255,255,0.07);
+            padding:12px 20px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+
+        .header-left {
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .logo {
+            font-family:'Bebas Neue',sans-serif;
+            font-size:22px;
+            letter-spacing:5px;
+            color:#f3f3ee;
+        }
+
+        .connected-pill {
+            display:flex;
+            align-items:center;
+            gap:5px;
+            background:rgba(34,197,94,0.1);
+            border:1px solid rgba(34,197,94,0.2);
+            border-radius:100px;
+            padding:4px 10px;
+            font-size:9px;
+            font-weight:800;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+            color:#22c55e;
+            transition:all 0.3s;
+        }
+
+        .connected-pill.expired {
+            background:rgba(239,68,68,0.1);
+            border-color:rgba(239,68,68,0.2);
+            color:#ef4444;
+        }
+
+        .c-dot {
+            width:5px; height:5px;
+            border-radius:50%;
+            background:currentColor;
+            animation:pulse 1.5s infinite;
+        }
+        .connected-pill.expired .c-dot { animation:none; }
+
+        @keyframes pulse {
+            0%,100%{opacity:1;transform:scale(1);}
+            50%{opacity:0.4;transform:scale(0.7);}
+        }
+
+        /* ── AVATAR ── */
+        .avatar {
+            width:36px; height:36px;
+            border-radius:50%;
+            background:#1a1a1a;
+            border:1.5px solid rgba(255,255,255,0.1);
+            display:flex; align-items:center; justify-content:center;
+            font-size:14px; font-weight:800;
+            color:#f3f3ee;
+            cursor:pointer;
+            transition:border-color 0.2s;
+            overflow:hidden;
+            flex-shrink:0;
+        }
+        .avatar:hover { border-color:rgba(255,255,255,0.3); }
+
+        /* ── EXPIRED BANNER ── */
+        .expired-banner {
+            position:fixed;
+            top:64px; left:0; right:0;
+            z-index:998;
+            background:#ef4444;
+            padding:12px 20px;
+            display:none;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            animation:slideDown 0.3s ease;
+        }
+        .expired-banner.show { display:flex; }
+
+        @keyframes slideDown {
+            from{transform:translateY(-100%);opacity:0;}
+            to{transform:translateY(0);opacity:1;}
+        }
+
+        .expired-text {
+            font-size:13px;
+            font-weight:700;
+            color:#fff;
+        }
+
+        .expired-btn {
+            background:#fff;
+            color:#ef4444;
+            border:none;
+            border-radius:8px;
+            padding:7px 14px;
+            font-family:'DM Sans',sans-serif;
+            font-size:12px;
+            font-weight:800;
+            letter-spacing:1px;
+            text-transform:uppercase;
+            cursor:pointer;
+            white-space:nowrap;
+            flex-shrink:0;
+        }
+
+        /* ── SHEET OVERLAY ── */
+        .overlay {
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.7);
+            backdrop-filter:blur(6px);
+            z-index:1000;
+            opacity:0;
+            pointer-events:none;
+            transition:opacity 0.3s;
+        }
+        .overlay.open { opacity:1; pointer-events:all; }
+
+        /* ── PROFILE SHEET ── */
+        .sheet {
+            position:fixed;
+            bottom:0; left:0; right:0;
+            background:#141414;
+            border-radius:24px 24px 0 0;
+            border-top:1px solid rgba(255,255,255,0.08);
+            padding:12px 24px max(32px, env(safe-area-inset-bottom));
+            z-index:1001;
+            transform:translateY(100%);
+            transition:transform 0.4s cubic-bezier(0.32,0.72,0,1);
+            max-height:88dvh;
+            overflow-y:auto;
+        }
+        .sheet.open { transform:translateY(0); }
+
+        .handle {
+            width:36px; height:4px;
+            background:rgba(255,255,255,0.12);
+            border-radius:2px;
+            margin:0 auto 24px;
+        }
+
+        /* Sheet top profile */
+        .sheet-top {
+            display:flex;
+            align-items:center;
+            gap:14px;
+            padding-bottom:20px;
+            border-bottom:1px solid rgba(255,255,255,0.07);
+            margin-bottom:8px;
+        }
+
+        .sheet-big-avatar {
+            width:56px; height:56px;
+            border-radius:50%;
+            background:#1a1a1a;
+            border:2px solid rgba(255,255,255,0.1);
+            display:flex; align-items:center; justify-content:center;
+            font-size:22px; font-weight:800;
+            color:#f3f3ee;
+            overflow:hidden;
+            flex-shrink:0;
+        }
+
+        .sheet-name {
+            font-family:'Bebas Neue',sans-serif;
+            font-size:24px;
+            letter-spacing:3px;
+            line-height:1;
+        }
+
+        .sheet-email {
+            font-size:12px;
+            color:rgba(243,243,238,0.4);
+            margin-top:3px;
+        }
+
+        /* Sheet rows */
+        .s-row {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 0;
+            border-bottom:1px solid rgba(255,255,255,0.04);
+        }
+        .s-row:last-of-type { border:none; }
+
+        .s-key {
+            font-size:11px;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+            color:rgba(243,243,238,0.35);
+        }
+
+        .s-val {
+            font-size:13px;
+            font-weight:700;
+            color:#f3f3ee;
+            text-align:right;
+        }
+        .s-val.green { color:#22c55e; }
+        .s-val.amber { color:#f59e0b; }
+        .s-val.red   { color:#ef4444; }
+        .s-val.mono  {
+            font-family:'DM Mono',monospace;
+            font-size:10px;
+            color:rgba(243,243,238,0.35);
+        }
+
+        /* Buttons */
+        .sheet-btns {
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            margin-top:20px;
+        }
+
+        .s-btn {
+            width:100%; padding:15px;
+            border-radius:12px;
+            font-family:'DM Sans',sans-serif;
+            font-size:13px; font-weight:800;
+            letter-spacing:2px; text-transform:uppercase;
+            cursor:pointer;
+            border:none;
+            transition:opacity 0.2s, transform 0.1s;
+        }
+        .s-btn:active { transform:scale(0.98); }
+        .s-btn.primary { background:#f3f3ee; color:#0b0b0b; }
+        .s-btn.outline {
+            background:transparent; color:#f3f3ee;
+            border:1.5px solid rgba(255,255,255,0.1);
+        }
+        .s-btn.danger {
+            background:transparent; color:#ef4444;
+            border:1.5px solid rgba(239,68,68,0.2);
+        }
+        .s-btn:hover { opacity:0.85; }
+
+        /* spinner */
+        .spinner {
+            display:inline-block; width:12px; height:12px;
+            border:2px solid rgba(11,11,11,0.2);
+            border-top-color:#0b0b0b;
+            border-radius:50%;
+            animation:spin 0.6s linear infinite;
+            vertical-align:middle; margin-right:6px;
+        }
+        @keyframes spin{to{transform:rotate(360deg);}}
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+    <div class="header-left">
+        <div class="logo">nmedea</div>
+        <div class="connected-pill" id="conn-pill">
+            <div class="c-dot"></div>
+            <span id="conn-txt">Connected</span>
+        </div>
+    </div>
+    <div class="avatar" id="avatar-btn" onclick="openSheet()">?</div>
+</div>
+
+<!-- ── EXPIRED BANNER ── -->
+<div class="expired-banner" id="exp-banner">
+    <div class="expired-text">⏰ Free trial ended — Top up to continue</div>
+    <button class="expired-btn" onclick="location.href='pay.html?amt=10'">R10</button>
+</div>
+
+<!-- ── OVERLAY ── -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+
+<!-- ── PROFILE SHEET ── -->
+<div class="sheet" id="sheet">
+    <div class="handle"></div>
+
+    <div class="sheet-top">
+        <div class="sheet-big-avatar" id="s-avatar">?</div>
+        <div>
+            <div class="sheet-name" id="s-name">—</div>
+            <div class="sheet-email" id="s-email">—</div>
+        </div>
+    </div>
+
+    <div class="s-row">
+        <span class="s-key">Plan</span>
+        <span class="s-val amber" id="s-plan">Free Trial ⚡</span>
+    </div>
+    <div class="s-row">
+        <span class="s-key">Status</span>
+        <span class="s-val green" id="s-status">Active ✓</span>
+    </div>
+    <div class="s-row">
+        <span class="s-key">Balance</span>
+        <span class="s-val green" id="s-balance">R0</span>
+    </div>
+    <div class="s-row">
+        <span class="s-key">Trial Expires</span>
+        <span class="s-val" id="s-expiry">—</span>
+    </div>
+    <div class="s-row">
+        <span class="s-key">Member Since</span>
+        <span class="s-val" id="s-since">—</span>
+    </div>
+    <div class="s-row">
+        <span class="s-key">Device ID</span>
+        <span class="s-val mono" id="s-device">—</span>
+    </div>
+
+    <div class="sheet-btns">
+        <button class="s-btn primary" onclick="closeSheet();location.href='pay.html?amt=10'">
+            Top Up R10 — 1 Week
+        </button>
+        <button class="s-btn outline" onclick="doSignOut()">Sign Out</button>
+        <button class="s-btn danger"  onclick="confirmDelete()">Delete Account</button>
+    </div>
+</div>
+
+<!-- ════════════════════
+     SCRIPTS
+════════════════════ -->
+<script>
+
+    /* ── SESSION ── */
+    let session = null;
+    try { session = JSON.parse(localStorage.getItem('nmedea_session')||'null'); } catch(e){}
+    if (!session || !session.uid) { location.replace('index.html'); }
+
+    /* ── POPULATE ── */
+    function populate() {
+        if (!session) return;
+        const name    = session.name  || 'User';
+        const initial = name.charAt(0).toUpperCase();
+
+        document.getElementById('avatar-btn').textContent  = initial;
+        document.getElementById('s-avatar').textContent   = initial;
+        document.getElementById('s-name').textContent     = name;
+        document.getElementById('s-email').textContent    = session.email || '—';
+        document.getElementById('s-balance').textContent  = 'R' + (session.balance || 0);
+        document.getElementById('s-device').textContent   = (session.deviceId || '—').substring(0,18) + '...';
+
+        if (session.createdAt) {
+            document.getElementById('s-since').textContent =
+                new Date(session.createdAt).toLocaleDateString('en-ZA');
+        }
+
+        if (session.freeExpiry) {
+            document.getElementById('s-expiry').textContent =
+                new Date(session.freeExpiry).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'});
+        }
+
+        if (!session.isFree && session.subscribed) {
+            document.getElementById('s-plan').textContent   = 'Active Plan ✓';
+            document.getElementById('s-plan').className     = 's-val green';
+            document.getElementById('s-expiry').textContent = 'N/A — Active Plan';
+        }
+    }
+
+    populate();
+
+    /* ── CHECK EXPIRY ── */
+    function checkExpiry() {
+        if (!session) return;
+        if (!session.isFree) return;
+        if (!session.freeExpiry) return;
+
+        const now      = Date.now();
+        const expiry   = new Date(session.freeExpiry).getTime();
+        const remaining = expiry - now;
+
+        if (remaining <= 0) {
+            // Expired
+            document.getElementById('conn-pill').className = 'connected-pill expired';
+            document.getElementById('conn-txt').textContent = 'Expired';
+            document.getElementById('exp-banner').classList.add('show');
+            document.getElementById('s-status').textContent = 'Expired';
+            document.getElementById('s-status').className   = 's-val red';
+
+            session.subscribed = false;
+            session.isFree     = false;
+            try { localStorage.setItem('nmedea_session', JSON.stringify(session)); } catch(e){}
+            clearInterval(expiryInterval);
+        }
+    }
+
+    checkExpiry();
+    const expiryInterval = setInterval(checkExpiry, 10000); // check every 10 seconds
+
+    /* ── SHEET ── */
+    window.openSheet = () => {
+        document.getElementById('overlay').classList.add('open');
+        document.getElementById('sheet').classList.add('open');
+    };
+
+    window.closeSheet = () => {
+        document.getElementById('overlay').classList.remove('open');
+        document.getElementById('sheet').classList.remove('open');
+    };
+
+    /* ── SIGN OUT ── */
+    window.doSignOut = () => {
+        if (!confirm('Sign out of nmedea?')) return;
+        try { localStorage.removeItem('nmedea_session'); } catch(e){}
+        location.replace('index.html');
+    };
+
+    /* ── DELETE ── */
+    window.confirmDelete = () => {
+        if (!confirm('Delete your account permanently? This cannot be undone.')) return;
+        try {
+            localStorage.removeItem('nmedea_session');
+            localStorage.removeItem('nmedea_device_id');
+        } catch(e){}
+        location.replace('index.html');
+    };
+
+</script>
+
+<!-- ════════════════════
+     FIREBASE SYNC
+════════════════════ -->
+<script type="module">
+import { initializeApp }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signOut, onAuthStateChanged, deleteUser }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, getDoc, enableIndexedDbPersistence }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const app = initializeApp({
+    apiKey:            "AIzaSyBreKi86gv26Eig7hym4WFhAB70VbVWW5g",
+    authDomain:        "checkers-225fb.firebaseapp.com",
+    projectId:         "checkers-225fb",
+    storageBucket:     "checkers-225fb.firebasestorage.app",
+    messagingSenderId: "75322611034",
+    appId:             "1:75322611034:web:d3725be1ae7b640b408f63"
+});
+
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+enableIndexedDbPersistence(db).catch(()=>{});
+
+onAuthStateChanged(auth, async user => {
+    if (!user) return;
+    try {
+        const snap = await getDoc(doc(db,'users',user.uid));
+        if (!snap.exists()) return;
+        const data = snap.data();
+
+        let s = null;
+        try { s = JSON.parse(localStorage.getItem('nmedea_session')||'null'); } catch(e){}
+        if (!s) return;
+
+        s.balance    = data.balance    ?? s.balance;
+        s.subscribed = data.subscribed ?? s.subscribed;
+        s.isFree     = data.isFree     ?? s.isFree;
+        s.freeExpiry = data.freeExpiry ?? s.freeExpiry;
+        s.createdAt  = data.createdAt  ?? s.createdAt;
+
+        try { localStorage.setItem('nmedea_session', JSON.stringify(s)); } catch(e){}
+
+        // Refresh balance in sheet
+        document.getElementById('s-balance').textContent = 'R' + (data.balance || 0);
+
+        if (data.createdAt) {
+            document.getElementById('s-since').textContent =
+                new Date(data.createdAt).toLocaleDateString('en-ZA');
+        }
+
+    } catch(e) { /* offline — local data used */ }
+});
+
+window.doSignOut = async () => {
+    if (!confirm('Sign out of nmedea?')) return;
+    try { await signOut(auth); } catch(e){}
+    try { localStorage.removeItem('nmedea_session'); } catch(e){}
+    location.replace('index.html');
+};
+
+window.confirmDelete = async () => {
+    if (!confirm('Delete your account permanently? This cannot be undone.')) return;
+    try {
+        const user = auth.currentUser;
+        if (user) await deleteUser(user);
+    } catch(e){}
+    try {
+        localStorage.removeItem('nmedea_session');
+        localStorage.removeItem('nmedea_device_id');
+    } catch(e){}
+    location.replace('index.html');
+};
+</script>
+
+</body>
+</html>
