@@ -4,627 +4,492 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>nmedea</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 
         body{
             font-family:'DM Sans',sans-serif;
             background:#0b0b0b;
             color:#f3f3ee;
             min-height:100dvh;
-            display:flex;
+            overflow-x:hidden;
+        }
+
+        /* ══ PAGES ══ */
+        .page{
+            display:none;
+            min-height:100dvh;
             flex-direction:column;
             align-items:center;
             justify-content:center;
             padding:24px;
-            transition:background 0.5s;
+            animation:fadeUp 0.35s ease;
         }
+        .page.active{display:flex;}
+        .page.light{background:#f3f3ee;color:#0b0b0b;}
 
-        body.light{
-            background:#f3f3ee;
-            color:#0b0b0b;
-        }
-
-        /* ── SCREENS ── */
-        .screen{
-            display:none;
-            width:100%;
-            max-width:360px;
-            flex-direction:column;
-            align-items:center;
-            gap:20px;
-        }
-        .screen.active{
-            display:flex;
-            animation:fadeUp 0.4s ease;
-        }
         @keyframes fadeUp{
-            from{opacity:0;transform:translateY(14px);}
+            from{opacity:0;transform:translateY(12px);}
             to{opacity:1;transform:translateY(0);}
         }
 
-        /* ── LOGO ── */
-        .logo{
-            font-family:'Bebas Neue',sans-serif;
-            font-size:38px;
-            letter-spacing:7px;
-        }
-        .logo.dark-logo{color:#f3f3ee;}
-        .logo.light-logo{color:#0b0b0b;}
-
-        .tagline{
-            font-size:11px;
-            letter-spacing:3px;
-            text-transform:uppercase;
-            opacity:0.35;
-            margin-top:-16px;
-            text-align:center;
-        }
-
-        /* ── BOOT / SECURITY SCREEN ── */
-        #s-boot{
-            gap:28px;
-        }
+        /* ══ BOOT PAGE ══ */
+        #pg-boot{background:#0b0b0b;gap:28px;}
 
         .boot-logo{
             font-family:'Bebas Neue',sans-serif;
-            font-size:52px;
-            letter-spacing:10px;
+            font-size:52px;letter-spacing:10px;
             color:#f3f3ee;
             animation:glow 2s ease-in-out infinite alternate;
         }
         @keyframes glow{
             from{text-shadow:0 0 10px rgba(243,243,238,0.2);}
-            to{text-shadow:0 0 30px rgba(243,243,238,0.5),0 0 60px rgba(243,243,238,0.2);}
+            to{text-shadow:0 0 30px rgba(243,243,238,0.5);}
         }
 
-        .boot-tagline{
-            font-size:10px;
-            letter-spacing:5px;
-            text-transform:uppercase;
-            color:rgba(243,243,238,0.3);
-            margin-top:-20px;
-            text-align:center;
+        .boot-tag{
+            font-size:10px;letter-spacing:5px;text-transform:uppercase;
+            color:rgba(243,243,238,0.3);margin-top:-20px;text-align:center;
         }
 
-        .check-list{
-            width:100%;
-            display:flex;
-            flex-direction:column;
-            gap:10px;
+        .check-list{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;}
+
+        .chk{
+            display:flex;align-items:center;gap:12px;
+            font-size:13px;letter-spacing:0.5px;
+            color:rgba(243,243,238,0.2);transition:color 0.3s;padding:2px 0;
         }
+        .chk.running{color:rgba(243,243,238,0.7);}
+        .chk.done{color:#f3f3ee;}
+        .chk.fail{color:#ef4444;}
 
-        .check-item{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            font-size:13px;
-            letter-spacing:0.5px;
-            color:rgba(243,243,238,0.25);
-            transition:color 0.3s;
-            padding:2px 0;
-        }
-
-        .check-item.running{color:rgba(243,243,238,0.7);}
-        .check-item.done{color:#f3f3ee;}
-        .check-item.fail{color:#ef4444;}
-
-        .check-icon{
-            width:20px;height:20px;
-            border-radius:50%;
+        .chk-icon{
+            width:20px;height:20px;border-radius:50%;
             border:1.5px solid rgba(243,243,238,0.15);
             display:flex;align-items:center;justify-content:center;
-            font-size:10px;
-            flex-shrink:0;
-            transition:all 0.3s;
+            font-size:10px;flex-shrink:0;transition:all 0.3s;
         }
-        .check-item.running .check-icon{
-            border-color:rgba(243,243,238,0.5);
-            animation:spin 0.8s linear infinite;
-        }
-        .check-item.done .check-icon{
-            background:#f3f3ee;
-            border-color:#f3f3ee;
-            color:#0b0b0b;
-            font-size:11px;
-        }
-        .check-item.fail .check-icon{
-            background:#ef4444;
-            border-color:#ef4444;
-            color:#fff;
-        }
-        @keyframes spin{to{transform:rotate(360deg);}}
+        .chk.running .chk-icon{border-color:rgba(243,243,238,0.5);animation:spin 0.8s linear infinite;}
+        .chk.done .chk-icon{background:#f3f3ee;border-color:#f3f3ee;color:#0b0b0b;font-size:11px;}
+        .chk.fail .chk-icon{background:#ef4444;border-color:#ef4444;color:#fff;}
 
-        .boot-bar-wrap{
-            width:100%;
-            height:2px;
-            background:rgba(243,243,238,0.1);
-            border-radius:2px;
-            overflow:hidden;
-        }
-        .boot-bar{
-            height:100%;
-            width:0%;
-            background:#f3f3ee;
-            border-radius:2px;
-            transition:width 0.4s ease;
-        }
+        .boot-bar-wrap{width:100%;max-width:320px;height:2px;background:rgba(243,243,238,0.1);border-radius:2px;overflow:hidden;}
+        .boot-bar{height:100%;width:0%;background:#f3f3ee;border-radius:2px;transition:width 0.4s ease;}
+        .boot-status{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(243,243,238,0.3);text-align:center;min-height:16px;}
 
-        .boot-status{
-            font-size:11px;
-            letter-spacing:2px;
-            text-transform:uppercase;
-            color:rgba(243,243,238,0.3);
-            text-align:center;
-            min-height:16px;
-        }
+        /* ══ AUTH PAGES ══ */
+        .wrap{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:20px;}
 
-        /* ── STEPS ── */
+        .logo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:6px;}
+        .logo.dark{color:#0b0b0b;}
+        .logo.lite{color:#f3f3ee;}
+
+        .tagline{font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.35;margin-top:-16px;text-align:center;}
+
+        /* steps */
         .steps{display:flex;align-items:center;width:100%;}
-        .step-dot{
-            width:28px;height:28px;border-radius:50%;
-            background:rgba(11,11,11,0.1);
-            display:flex;align-items:center;justify-content:center;
-            font-size:11px;font-weight:800;
-            color:rgba(11,11,11,0.3);
-            flex-shrink:0;transition:all 0.3s;
-        }
-        .step-dot.active{background:#0b0b0b;color:#f3f3ee;}
-        .step-dot.done{background:#16a34a;color:#fff;}
-        .step-line{
-            flex:1;height:2px;
-            background:rgba(11,11,11,0.1);
-            transition:background 0.3s;
-        }
-        .step-line.done{background:#16a34a;}
+        .sdot{width:28px;height:28px;border-radius:50%;background:rgba(11,11,11,0.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:rgba(11,11,11,0.3);flex-shrink:0;transition:all 0.3s;}
+        .sdot.active{background:#0b0b0b;color:#f3f3ee;}
+        .sdot.done{background:#16a34a;color:#fff;}
+        .sline{flex:1;height:2px;background:rgba(11,11,11,0.1);transition:background 0.3s;}
+        .sline.done{background:#16a34a;}
 
-        /* ── CARD ── */
-        .card{
-            width:100%;background:#fff;
-            border-radius:16px;
-            padding:28px 24px;
-            display:flex;flex-direction:column;gap:16px;
-            box-shadow:0 2px 24px rgba(11,11,11,0.07);
-        }
-        .card-title{
-            font-family:'Bebas Neue',sans-serif;
-            font-size:22px;letter-spacing:3px;color:#0b0b0b;
-        }
-        .card-sub{
-            font-size:13px;color:rgba(11,11,11,0.45);
-            margin-top:-10px;line-height:1.5;
-        }
+        /* card */
+        .card{width:100%;background:#fff;border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 2px 24px rgba(11,11,11,0.07);}
+        .card-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#0b0b0b;}
+        .card-sub{font-size:13px;color:rgba(11,11,11,0.45);margin-top:-10px;line-height:1.5;}
 
-        /* ── FIELDS ── */
         .field{display:flex;flex-direction:column;gap:6px;}
+        label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(11,11,11,0.4);font-weight:700;}
 
-        label{
-            font-size:11px;letter-spacing:2px;
-            text-transform:uppercase;
-            color:rgba(11,11,11,0.4);font-weight:700;
-        }
-
-        .input-wrap{position:relative;}
-
-        input[type=text],
-        input[type=email],
-        input[type=password]{
+        .iw{position:relative;}
+        input[type=text],input[type=email],input[type=password]{
             width:100%;padding:14px 16px;
-            background:#f3f3ee;
-            border:1.5px solid transparent;
-            border-radius:10px;
-            font-family:'DM Sans',sans-serif;
-            font-size:15px;color:#0b0b0b;
-            outline:none;
+            background:#f3f3ee;border:1.5px solid transparent;
+            border-radius:10px;font-family:'DM Sans',sans-serif;
+            font-size:15px;color:#0b0b0b;outline:none;
             transition:border-color 0.2s,background 0.2s;
         }
-        input.has-toggle{padding-right:48px;}
+        input.ht{padding-right:48px;}
         input:focus{border-color:#0b0b0b;background:#fff;}
         input::placeholder{color:rgba(11,11,11,0.25);}
 
-        .eye-btn{
-            position:absolute;right:14px;top:50%;
-            transform:translateY(-50%);
-            background:none;border:none;cursor:pointer;
-            color:rgba(11,11,11,0.35);font-size:16px;
-            padding:4px;line-height:1;
-        }
+        .eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(11,11,11,0.35);font-size:16px;padding:4px;line-height:1;}
 
-        /* ── PASSWORD STRENGTH ── */
-        .strength-bar{display:flex;gap:4px;margin-top:2px;}
-        .strength-seg{
-            flex:1;height:3px;border-radius:4px;
-            background:rgba(11,11,11,0.1);
-            transition:background 0.3s;
-        }
-        .strength-label{font-size:11px;letter-spacing:1px;margin-top:2px;min-height:14px;}
-
-        .suggest-btn{
-            display:flex;align-items:center;gap:6px;
-            background:rgba(11,11,11,0.04);
-            border:1.5px dashed rgba(11,11,11,0.15);
-            border-radius:8px;padding:10px 14px;
-            cursor:pointer;font-family:'DM Sans',sans-serif;
-            font-size:12px;color:rgba(11,11,11,0.5);
-            letter-spacing:0.5px;width:100%;text-align:left;
-            transition:all 0.2s;
-        }
-        .suggest-btn:hover{border-color:rgba(11,11,11,0.3);color:#0b0b0b;}
-
-        .suggested-pw{
-            display:none;
-            background:rgba(11,11,11,0.04);
-            border:1.5px solid rgba(11,11,11,0.1);
-            border-radius:8px;padding:10px 14px;
-            font-size:13px;font-weight:700;letter-spacing:1px;
-            color:#0b0b0b;word-break:break-all;cursor:pointer;
-        }
-        .suggested-pw.visible{display:block;}
-
-        .pw-hint{font-size:11px;color:rgba(11,11,11,0.35);text-align:center;}
-
+        /* strength */
+        .sbar{display:flex;gap:4px;margin-top:2px;}
+        .sseg{flex:1;height:3px;border-radius:4px;background:rgba(11,11,11,0.1);transition:background 0.3s;}
+        .slabel{font-size:11px;letter-spacing:1px;margin-top:2px;min-height:14px;}
         .req-list{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
-        .req{
-            display:flex;align-items:center;gap:6px;
-            font-size:11px;color:rgba(11,11,11,0.4);
-            transition:color 0.2s;
-        }
+        .req{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(11,11,11,0.4);transition:color 0.2s;}
         .req.met{color:#16a34a;}
-        .req .req-dot{
-            width:6px;height:6px;border-radius:50%;
-            background:rgba(11,11,11,0.15);flex-shrink:0;
-            transition:background 0.2s;
-        }
-        .req.met .req-dot{background:#16a34a;}
+        .req .rd{width:6px;height:6px;border-radius:50%;background:rgba(11,11,11,0.15);flex-shrink:0;transition:background 0.2s;}
+        .req.met .rd{background:#16a34a;}
 
-        /* ── BUTTONS ── */
-        .btn{
-            width:100%;padding:16px;
-            background:#0b0b0b;color:#f3f3ee;
-            border:none;border-radius:10px;
-            font-family:'DM Sans',sans-serif;
-            font-size:13px;font-weight:800;
-            letter-spacing:2px;text-transform:uppercase;
-            cursor:pointer;
-            transition:opacity 0.2s,transform 0.1s;
-            margin-top:4px;
-        }
+        /* suggest pw */
+        .suggest-btn{display:flex;align-items:center;gap:6px;background:rgba(11,11,11,0.04);border:1.5px dashed rgba(11,11,11,0.15);border-radius:8px;padding:10px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(11,11,11,0.5);letter-spacing:0.5px;width:100%;text-align:left;transition:all 0.2s;}
+        .spw{display:none;background:rgba(11,11,11,0.04);border:1.5px solid rgba(11,11,11,0.1);border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;letter-spacing:1px;color:#0b0b0b;word-break:break-all;cursor:pointer;}
+        .spw.show{display:block;}
+        .pwhint{font-size:11px;color:rgba(11,11,11,0.35);text-align:center;}
+
+        /* buttons */
+        .btn{width:100%;padding:16px;background:#0b0b0b;color:#f3f3ee;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s,transform 0.1s;margin-top:4px;}
         .btn:hover{opacity:0.85;}
         .btn:active{transform:scale(0.98);}
         .btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
-        .btn-ghost{
-            background:transparent;
-            color:rgba(11,11,11,0.45);
-            border:1.5px solid rgba(11,11,11,0.12);
-        }
-        .btn-back{
-            background:transparent;color:rgba(11,11,11,0.4);
-            border:none;font-size:12px;letter-spacing:1px;
-            cursor:pointer;display:flex;align-items:center;gap:4px;
-            padding:0;width:auto;font-family:'DM Sans',sans-serif;
-        }
+        .btn-ghost{background:transparent;color:rgba(11,11,11,0.45);border:1.5px solid rgba(11,11,11,0.12);}
+        .btn-back{background:transparent;color:rgba(11,11,11,0.4);border:none;font-size:12px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;width:auto;font-family:'DM Sans',sans-serif;}
+        .btn-green{background:#16a34a;color:#fff;}
 
         .divider{display:flex;align-items:center;gap:12px;}
-        .divider span{
-            font-size:11px;letter-spacing:2px;
-            text-transform:uppercase;color:rgba(11,11,11,0.25);
-            white-space:nowrap;
-        }
-        .divider::before,.divider::after{
-            content:'';flex:1;height:1px;background:rgba(11,11,11,0.1);
-        }
+        .divider span{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(11,11,11,0.25);white-space:nowrap;}
+        .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(11,11,11,0.1);}
 
-        .free-badge{
-            display:inline-flex;align-items:center;gap:6px;
-            background:#0b0b0b;color:#f3f3ee;
-            font-size:10px;letter-spacing:2px;
-            text-transform:uppercase;font-weight:800;
-            padding:6px 14px;border-radius:100px;
-        }
-        .dot{
-            width:6px;height:6px;background:#22c55e;
-            border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0;
-        }
-        @keyframes pulse{
-            0%,100%{opacity:1;transform:scale(1);}
-            50%{opacity:0.4;transform:scale(0.7);}
-        }
+        .badge{display:inline-flex;align-items:center;gap:6px;background:#0b0b0b;color:#f3f3ee;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:800;padding:6px 14px;border-radius:100px;}
+
+        .dot-pulse{width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0;}
+        @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
 
         .msg{font-size:13px;text-align:center;min-height:18px;}
         .msg.ok{color:#16a34a;}
         .msg.err{color:#dc2626;}
         .msg.info{color:#2563eb;}
 
-        .forgot-link{
-            font-size:12px;color:rgba(11,11,11,0.4);
-            cursor:pointer;text-align:right;
-        }
+        .forgot-link{font-size:12px;color:rgba(11,11,11,0.4);cursor:pointer;text-align:right;}
         .forgot-link:hover{color:#0b0b0b;}
 
-        .spinner{
-            display:inline-block;width:14px;height:14px;
-            border:2px solid rgba(243,243,238,0.3);
-            border-top-color:#f3f3ee;
-            border-radius:50%;
-            animation:spin2 0.6s linear infinite;
-            vertical-align:middle;margin-right:6px;
-        }
-        @keyframes spin2{to{transform:rotate(360deg);}}
+        .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(243,243,238,0.3);border-top-color:#f3f3ee;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px;}
+        .spinner-dark{border:2px solid rgba(11,11,11,0.2);border-top-color:#0b0b0b;}
+        @keyframes spin{to{transform:rotate(360deg);}}
 
-        .success-icon{
-            width:64px;height:64px;background:#16a34a;
-            border-radius:50%;
-            display:flex;align-items:center;justify-content:center;
-            font-size:28px;color:white;
-            animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-        }
-        @keyframes popIn{
-            from{transform:scale(0);opacity:0;}
-            to{transform:scale(1);opacity:1;}
+        .device-badge{display:flex;align-items:center;gap:8px;background:rgba(11,11,11,0.04);border:1px solid rgba(11,11,11,0.08);border-radius:8px;padding:10px 14px;font-size:11px;color:rgba(11,11,11,0.4);letter-spacing:0.5px;word-break:break-all;}
+        .device-badge strong{color:#0b0b0b;font-size:10px;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
+
+        /* ══ DASHBOARD PAGE ══ */
+        #pg-dash{background:#0b0b0b;justify-content:flex-start;padding:0;align-items:stretch;}
+
+        .dash-header{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:16px 20px;
+            background:rgba(11,11,11,0.97);
+            border-bottom:1px solid rgba(255,255,255,0.07);
+            position:sticky;top:0;z-index:10;
         }
 
-        /* device id badge */
-        .device-badge{
-            display:flex;align-items:center;gap:8px;
-            background:rgba(11,11,11,0.04);
-            border:1px solid rgba(11,11,11,0.08);
-            border-radius:8px;padding:10px 14px;
-            font-size:11px;color:rgba(11,11,11,0.4);
-            letter-spacing:0.5px;
-            word-break:break-all;
-        }
-        .device-badge strong{
-            color:#0b0b0b;font-size:10px;
-            letter-spacing:1px;text-transform:uppercase;
-            flex-shrink:0;
-        }
+        .dash-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:5px;color:#f3f3ee;}
+
+        .conn-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s;}
+        .conn-pill.on{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#22c55e;}
+        .conn-pill.off{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;}
+        .conn-pill.on .cdot{animation:pulse 1.5s infinite;}
+        .cdot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+        .dash-avatar{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1.5px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#f3f3ee;cursor:pointer;transition:border-color 0.2s;}
+        .dash-avatar:hover{border-color:rgba(255,255,255,0.3);}
+
+        /* expired banner */
+        .exp-banner{display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:#ef4444;}
+        .exp-banner.show{display:flex;}
+        .exp-text{font-size:13px;font-weight:700;color:#fff;}
+        .exp-btn{background:#fff;color:#ef4444;border:none;border-radius:8px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+
+        /* ══ SHEET ══ */
+        .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+        .overlay.open{opacity:1;pointer-events:all;}
+
+        .sheet{position:fixed;bottom:0;left:0;right:0;background:#141414;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,0.08);padding:12px 24px max(32px,env(safe-area-inset-bottom));z-index:101;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.32,0.72,0,1);max-height:88dvh;overflow-y:auto;}
+        .sheet.open{transform:translateY(0);}
+
+        .handle{width:36px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin:0 auto 24px;}
+
+        .sheet-top{display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:8px;}
+        .sheet-big-av{width:56px;height:56px;border-radius:50%;background:#1a1a1a;border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#f3f3ee;flex-shrink:0;}
+        .sheet-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;line-height:1;}
+        .sheet-email{font-size:12px;color:rgba(243,243,238,0.4);margin-top:3px;}
+
+        .srow{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+        .srow:last-of-type{border:none;}
+        .skey{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(243,243,238,0.35);}
+        .sval{font-size:13px;font-weight:700;color:#f3f3ee;text-align:right;}
+        .sval.green{color:#22c55e;}
+        .sval.amber{color:#f59e0b;}
+        .sval.red{color:#ef4444;}
+        .sval.mono{font-family:'DM Mono',monospace;font-size:10px;color:rgba(243,243,238,0.35);}
+
+        .sheet-btns{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+        .sbtn{width:100%;padding:15px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:opacity 0.2s,transform 0.1s;}
+        .sbtn:active{transform:scale(0.98);}
+        .sbtn.primary{background:#f3f3ee;color:#0b0b0b;}
+        .sbtn.outline{background:transparent;color:#f3f3ee;border:1.5px solid rgba(255,255,255,0.1);}
+        .sbtn.danger{background:transparent;color:#ef4444;border:1.5px solid rgba(239,68,68,0.2);}
+        .sbtn:hover{opacity:0.85;}
+
+        /* success icon */
+        .success-icon{width:64px;height:64px;background:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);}
+        @keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
     </style>
 </head>
 <body>
 
-<!-- ════════════════════════════
-     BOOT / SECURITY CHECK SCREEN
-════════════════════════════ -->
-<div class="screen" id="s-boot">
+<!-- ══════════════════════════════════
+     BOOT / SECURITY CHECK
+══════════════════════════════════ -->
+<div class="page" id="pg-boot">
     <div class="boot-logo">nmedea</div>
-    <div class="boot-tagline">Secure Internet Access</div>
+    <div class="boot-tag">Secure Internet Access</div>
 
-    <div class="check-list" id="check-list">
-        <div class="check-item" id="chk-device">
-            <div class="check-icon">·</div>
-            <span>Reading device identity</span>
-        </div>
-        <div class="check-item" id="chk-session">
-            <div class="check-icon">·</div>
-            <span>Checking saved session</span>
-        </div>
-        <div class="check-item" id="chk-token">
-            <div class="check-icon">·</div>
-            <span>Verifying access token</span>
-        </div>
-        <div class="check-item" id="chk-sub">
-            <div class="check-icon">·</div>
-            <span>Checking subscription status</span>
-        </div>
-        <div class="check-item" id="chk-sync">
-            <div class="check-icon">·</div>
-            <span>Syncing with nmedea network</span>
-        </div>
-        <div class="check-item" id="chk-security">
-            <div class="check-icon">·</div>
-            <span>Applying security protocols</span>
-        </div>
+    <div class="check-list">
+        <div class="chk" id="chk-device"><div class="chk-icon">·</div><span>Reading device identity</span></div>
+        <div class="chk" id="chk-session"><div class="chk-icon">·</div><span>Checking saved session</span></div>
+        <div class="chk" id="chk-token"><div class="chk-icon">·</div><span>Verifying access token</span></div>
+        <div class="chk" id="chk-sub"><div class="chk-icon">·</div><span>Checking subscription</span></div>
+        <div class="chk" id="chk-sync"><div class="chk-icon">·</div><span>Syncing with nmedea</span></div>
+        <div class="chk" id="chk-sec"><div class="chk-icon">·</div><span>Applying security protocols</span></div>
     </div>
 
-    <div class="boot-bar-wrap">
-        <div class="boot-bar" id="boot-bar"></div>
-    </div>
+    <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
     <div class="boot-status" id="boot-status">Initialising...</div>
 </div>
 
-<!-- ════════════════════════════
+<!-- ══════════════════════════════════
      LOGIN
-════════════════════════════ -->
-<div class="screen active" id="s-login">
-    <div class="logo light-logo">nmedea</div>
-    <div class="tagline">Your internet. Your way.</div>
-    <div class="card">
-        <div class="card-title">Welcome Back</div>
-        <div class="card-sub">Sign in to continue to your internet.</div>
-        <div class="field">
-            <label>Email</label>
-            <input type="email" id="l-email" placeholder="you@example.com" autocomplete="email"/>
-        </div>
-        <div class="field">
-            <label>Password</label>
-            <div class="input-wrap">
-                <input type="password" id="l-pass" placeholder="••••••••" class="has-toggle" autocomplete="current-password"/>
-                <button class="eye-btn" onclick="toggleEye('l-pass',this)" type="button">👁</button>
+══════════════════════════════════ -->
+<div class="page light" id="pg-login">
+    <div class="wrap">
+        <div class="logo dark">nmedea</div>
+        <div class="tagline">Your internet. Your way.</div>
+        <div class="card">
+            <div class="card-title">Welcome Back</div>
+            <div class="card-sub">Sign in to continue.</div>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="l-email" placeholder="you@example.com" autocomplete="email"/>
             </div>
+            <div class="field">
+                <label>Password</label>
+                <div class="iw">
+                    <input type="password" id="l-pass" placeholder="••••••••" class="ht" autocomplete="current-password"/>
+                    <button class="eye" onclick="toggleEye('l-pass',this)" type="button">👁</button>
+                </div>
+            </div>
+            <div class="forgot-link" onclick="showPage('pg-forgot')">Forgot password?</div>
+            <button class="btn" id="l-btn" onclick="doLogin()">Sign In</button>
+            <div class="divider"><span>new to nmedea</span></div>
+            <button class="btn btn-ghost" onclick="showPage('pg-reg1')">Create Account</button>
         </div>
-        <div class="forgot-link" onclick="show('s-forgot')">Forgot password?</div>
-        <button class="btn" id="l-btn" onclick="doLogin()">Sign In</button>
-        <div class="divider"><span>new to nmedea</span></div>
-        <button class="btn btn-ghost" onclick="show('s-reg1')">Create Account</button>
+        <div class="msg" id="l-msg"></div>
     </div>
-    <div class="msg" id="l-msg"></div>
 </div>
 
-<!-- ════════════════════════════
+<!-- ══════════════════════════════════
      REGISTER STEP 1
-════════════════════════════ -->
-<div class="screen" id="s-reg1">
-    <div class="logo light-logo">nmedea</div>
-    <div class="tagline">Create your account</div>
-    <div class="steps">
-        <div class="step-dot active">1</div>
-        <div class="step-line"></div>
-        <div class="step-dot">2</div>
-        <div class="step-line"></div>
-        <div class="step-dot">3</div>
-    </div>
-    <div class="card">
-        <div class="card-title">Your Details</div>
-        <div class="card-sub">Start with your basic info.</div>
-        <div class="field">
-            <label>Full Name</label>
-            <input type="text" id="r-name" placeholder="Your full name" autocomplete="name"/>
+══════════════════════════════════ -->
+<div class="page light" id="pg-reg1">
+    <div class="wrap">
+        <div class="logo dark">nmedea</div>
+        <div class="tagline">Create account</div>
+        <div class="steps">
+            <div class="sdot active">1</div>
+            <div class="sline"></div>
+            <div class="sdot">2</div>
+            <div class="sline"></div>
+            <div class="sdot">3</div>
         </div>
-        <div class="field">
-            <label>Email</label>
-            <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email"/>
+        <div class="card">
+            <div class="card-title">Your Details</div>
+            <div class="card-sub">Start with your basic info.</div>
+            <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="r-name" placeholder="Your full name" autocomplete="name"/>
+            </div>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email"/>
+            </div>
+            <button class="btn" id="r1-btn" onclick="doStep1()">Continue</button>
         </div>
-        <button class="btn" id="r1-btn" onclick="doStep1()">Continue</button>
+        <div class="msg" id="r1-msg"></div>
+        <button class="btn-back" onclick="showPage('pg-login')">← Back to Sign In</button>
     </div>
-    <div class="msg" id="r1-msg"></div>
-    <button class="btn-back" onclick="show('s-login')">← Back to Sign In</button>
 </div>
 
-<!-- ════════════════════════════
+<!-- ══════════════════════════════════
      REGISTER STEP 2
-════════════════════════════ -->
-<div class="screen" id="s-reg2">
-    <div class="logo light-logo">nmedea</div>
-    <div class="tagline">Create your account</div>
-    <div class="steps">
-        <div class="step-dot done">✓</div>
-        <div class="step-line done"></div>
-        <div class="step-dot active">2</div>
-        <div class="step-line"></div>
-        <div class="step-dot">3</div>
-    </div>
-    <div class="card">
-        <div class="card-title">Create Password</div>
-        <div class="card-sub">We recommend a strong password.</div>
-
-        <button class="suggest-btn" onclick="generatePassword()" type="button">
-            🔑 &nbsp;Suggest a strong password
-        </button>
-        <div class="suggested-pw" id="suggested-pw" onclick="useSuggestedPw()"></div>
-        <div class="pw-hint" id="pw-hint" style="display:none;">Tap to use — saved on your device</div>
-
-        <div class="field">
-            <label>Password</label>
-            <div class="input-wrap">
-                <input type="password" id="r-pass" placeholder="Min 8 characters" class="has-toggle"
-                    autocomplete="new-password" oninput="checkStrength(this.value)"/>
-                <button class="eye-btn" onclick="toggleEye('r-pass',this)" type="button">👁</button>
-            </div>
-            <div class="strength-bar">
-                <div class="strength-seg" id="seg1"></div>
-                <div class="strength-seg" id="seg2"></div>
-                <div class="strength-seg" id="seg3"></div>
-                <div class="strength-seg" id="seg4"></div>
-            </div>
-            <div class="strength-label" id="strength-label"></div>
-            <div class="req-list">
-                <div class="req" id="req-len"><div class="req-dot"></div>At least 8 characters</div>
-                <div class="req" id="req-upper"><div class="req-dot"></div>One uppercase letter (A-Z)</div>
-                <div class="req" id="req-num"><div class="req-dot"></div>One number (0-9)</div>
-                <div class="req" id="req-sym"><div class="req-dot"></div>One symbol (!@#$...)</div>
-            </div>
+══════════════════════════════════ -->
+<div class="page light" id="pg-reg2">
+    <div class="wrap">
+        <div class="logo dark">nmedea</div>
+        <div class="tagline">Create account</div>
+        <div class="steps">
+            <div class="sdot done">✓</div>
+            <div class="sline done"></div>
+            <div class="sdot active">2</div>
+            <div class="sline"></div>
+            <div class="sdot">3</div>
         </div>
-
-        <div class="field">
-            <label>Confirm Password</label>
-            <div class="input-wrap">
-                <input type="password" id="r-pass2" placeholder="Repeat password" class="has-toggle" autocomplete="new-password"/>
-                <button class="eye-btn" onclick="toggleEye('r-pass2',this)" type="button">👁</button>
+        <div class="card">
+            <div class="card-title">Create Password</div>
+            <div class="card-sub">We recommend a strong password.</div>
+            <button class="suggest-btn" onclick="generatePw()" type="button">🔑 &nbsp;Suggest a strong password</button>
+            <div class="spw" id="spw" onclick="usePw()"></div>
+            <div class="pwhint" id="pwhint" style="display:none;">Tap to use — saved on your device</div>
+            <div class="field">
+                <label>Password</label>
+                <div class="iw">
+                    <input type="password" id="r-pass" placeholder="Min 8 characters" class="ht" autocomplete="new-password" oninput="checkStrength(this.value)"/>
+                    <button class="eye" onclick="toggleEye('r-pass',this)" type="button">👁</button>
+                </div>
+                <div class="sbar"><div class="sseg" id="sg1"></div><div class="sseg" id="sg2"></div><div class="sseg" id="sg3"></div><div class="sseg" id="sg4"></div></div>
+                <div class="slabel" id="slabel"></div>
+                <div class="req-list">
+                    <div class="req" id="rq-len"><div class="rd"></div>At least 8 characters</div>
+                    <div class="req" id="rq-up"><div class="rd"></div>One uppercase letter</div>
+                    <div class="req" id="rq-num"><div class="rd"></div>One number</div>
+                    <div class="req" id="rq-sym"><div class="rd"></div>One symbol (!@#$...)</div>
+                </div>
             </div>
+            <div class="field">
+                <label>Confirm Password</label>
+                <div class="iw">
+                    <input type="password" id="r-pass2" placeholder="Repeat password" class="ht" autocomplete="new-password"/>
+                    <button class="eye" onclick="toggleEye('r-pass2',this)" type="button">👁</button>
+                </div>
+            </div>
+            <button class="btn" id="r2-btn" onclick="doStep2()">Continue</button>
         </div>
-        <button class="btn" id="r2-btn" onclick="doStep2()">Continue</button>
+        <div class="msg" id="r2-msg"></div>
+        <button class="btn-back" onclick="showPage('pg-reg1')">← Back</button>
     </div>
-    <div class="msg" id="r2-msg"></div>
-    <button class="btn-back" onclick="show('s-reg1')">← Back</button>
 </div>
 
-<!-- ════════════════════════════
+<!-- ══════════════════════════════════
      REGISTER STEP 3
-════════════════════════════ -->
-<div class="screen" id="s-reg3">
-    <div class="logo light-logo">nmedea</div>
-    <div class="tagline">Almost done!</div>
-    <div class="steps">
-        <div class="step-dot done">✓</div>
-        <div class="step-line done"></div>
-        <div class="step-dot done">✓</div>
-        <div class="step-line done"></div>
-        <div class="step-dot active">3</div>
-    </div>
-    <div class="card">
-        <div class="card-title">You're Ready</div>
-        <div class="card-sub">Your device has been registered. Claim your 15 minutes of free internet now.</div>
-        <div class="free-badge" style="margin:4px auto;">
-            <span class="dot"></span>
-            15 minutes free — waiting for you
+══════════════════════════════════ -->
+<div class="page light" id="pg-reg3">
+    <div class="wrap">
+        <div class="logo dark">nmedea</div>
+        <div class="tagline">Almost done!</div>
+        <div class="steps">
+            <div class="sdot done">✓</div>
+            <div class="sline done"></div>
+            <div class="sdot done">✓</div>
+            <div class="sline done"></div>
+            <div class="sdot active">3</div>
         </div>
-        <div class="device-badge" id="device-badge-display">
-            <strong>Device ID</strong>
-            <span id="device-id-display">Generating...</span>
+        <div class="card">
+            <div class="card-title">You're Ready</div>
+            <div class="card-sub">Your device has been registered. Claim your 15 minutes of free internet.</div>
+            <div class="badge" style="margin:4px auto;">
+                <span class="dot-pulse"></span>
+                15 minutes free — waiting for you
+            </div>
+            <div class="device-badge">
+                <strong>Device ID</strong>
+                <span id="device-id-show">Generating...</span>
+            </div>
+            <button class="btn btn-green" id="r3-btn" onclick="doCreateAccount()">Claim Free Access</button>
         </div>
-        <button class="btn" id="r3-btn" onclick="doCreateAccount()">Claim Free Access</button>
-    </div>
-    <div class="msg" id="r3-msg"></div>
-    <button class="btn-back" onclick="show('s-reg2')">← Back</button>
-</div>
-
-<!-- ════════════════════════════
-     SUCCESS
-════════════════════════════ -->
-<div class="screen" id="s-success">
-    <div class="success-icon">✓</div>
-    <div class="logo light-logo">nmedea</div>
-    <div class="tagline">You're connected!</div>
-    <div class="card" style="text-align:center;gap:12px;">
-        <div class="card-title">Welcome to nmedea</div>
-        <div class="card-sub">Your 15 minutes of free internet starts now. Enjoy the experience!</div>
-        <div class="free-badge" style="margin:4px auto;">
-            <span class="dot"></span>
-            15:00 free — starting now
-        </div>
-        <button class="btn" onclick="location.replace('https://ulojgtuyjhf.github.io/nmedea/dashboard.html')" style="margin-top:8px;">
-            Enter Dashboard
-        </button>
+        <div class="msg" id="r3-msg"></div>
+        <button class="btn-back" onclick="showPage('pg-reg2')">← Back</button>
     </div>
 </div>
 
-<!-- ════════════════════════════
+<!-- ══════════════════════════════════
      FORGOT PASSWORD
-════════════════════════════ -->
-<div class="screen" id="s-forgot">
-    <div class="logo light-logo">nmedea</div>
-    <div class="tagline">Reset your password</div>
-    <div class="card">
-        <div class="card-title">Forgot Password</div>
-        <div class="card-sub">Enter your email and we'll send a reset link.</div>
-        <div class="field">
-            <label>Email</label>
-            <input type="email" id="f-email" placeholder="you@example.com"/>
+══════════════════════════════════ -->
+<div class="page light" id="pg-forgot">
+    <div class="wrap">
+        <div class="logo dark">nmedea</div>
+        <div class="tagline">Reset password</div>
+        <div class="card">
+            <div class="card-title">Forgot Password</div>
+            <div class="card-sub">Enter your email and we'll send a reset link.</div>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="f-email" placeholder="you@example.com"/>
+            </div>
+            <button class="btn" id="f-btn" onclick="doForgot()">Send Reset Link</button>
+            <button class="btn btn-ghost" onclick="showPage('pg-login')">Back to Sign In</button>
         </div>
-        <button class="btn" id="f-btn" onclick="doForgot()">Send Reset Link</button>
-        <button class="btn btn-ghost" onclick="show('s-login')">Back to Sign In</button>
+        <div class="msg" id="f-msg"></div>
     </div>
-    <div class="msg" id="f-msg"></div>
 </div>
 
-<!-- ════════════════════════════
+<!-- ══════════════════════════════════
+     DASHBOARD
+══════════════════════════════════ -->
+<div class="page" id="pg-dash">
+    <!-- Header -->
+    <div class="dash-header">
+        <div class="dash-logo">nmedea</div>
+        <div class="conn-pill on" id="conn-pill">
+            <div class="cdot"></div>
+            <span id="conn-txt">Connected</span>
+        </div>
+        <div class="dash-avatar" id="dash-av" onclick="openSheet()">?</div>
+    </div>
+
+    <!-- Expired banner -->
+    <div class="exp-banner" id="exp-banner">
+        <div class="exp-text">⏰ Free trial ended</div>
+        <button class="exp-btn" onclick="showPaySheet()">Top Up R10</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SHEET OVERLAY
+══════════════════════════════════ -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+
+<!-- ══════════════════════════════════
+     PROFILE SHEET
+══════════════════════════════════ -->
+<div class="sheet" id="sheet">
+    <div class="handle"></div>
+    <div class="sheet-top">
+        <div class="sheet-big-av" id="s-av">?</div>
+        <div>
+            <div class="sheet-name" id="s-name">—</div>
+            <div class="sheet-email" id="s-email">—</div>
+        </div>
+    </div>
+    <div class="srow"><span class="skey">Plan</span><span class="sval amber" id="s-plan">Free Trial ⚡</span></div>
+    <div class="srow"><span class="skey">Status</span><span class="sval green" id="s-status">Active ✓</span></div>
+    <div class="srow"><span class="skey">Balance</span><span class="sval green" id="s-balance">R0</span></div>
+    <div class="srow"><span class="skey">Trial Expires</span><span class="sval" id="s-expiry">—</span></div>
+    <div class="srow"><span class="skey">Member Since</span><span class="sval" id="s-since">—</span></div>
+    <div class="srow"><span class="skey">Device ID</span><span class="sval mono" id="s-device">—</span></div>
+    <div class="sheet-btns">
+        <button class="sbtn primary" onclick="closeSheet();showPaySheet()">Top Up R10</button>
+        <button class="sbtn outline" onclick="doSignOut()">Sign Out</button>
+        <button class="sbtn danger" onclick="confirmDelete()">Delete Account</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAY SHEET
+══════════════════════════════════ -->
+<div class="sheet" id="pay-sheet" style="z-index:102;">
+    <div class="handle"></div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#f3f3ee;margin-bottom:8px;">Top Up Balance</div>
+    <div style="font-size:13px;color:rgba(243,243,238,0.4);margin-bottom:20px;">Choose a plan to continue your internet access.</div>
+    <div class="sheet-btns">
+        <button class="sbtn primary" onclick="closePaySheet()">R10 — 1 Week Access</button>
+        <button class="sbtn outline" onclick="closePaySheet()">R30 — 1 Month Access</button>
+        <button class="sbtn" style="background:transparent;color:rgba(243,243,238,0.3);border:none;font-size:12px;" onclick="closePaySheet()">Cancel</button>
+    </div>
+</div>
+
+<!-- ════════════════════════════════
      SCRIPTS
-════════════════════════════ -->
+════════════════════════════════ -->
 <script>
 
-    /* ══ SCREEN SWITCH ══ */
-    window.show = id => {
-        document.body.classList.add('light');
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    /* ══ PAGE SWITCH ══ */
+    window.showPage = id => {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-    };
-
-    /* ══ EYE TOGGLE ══ */
-    window.toggleEye = (inputId, btn) => {
-        const el = document.getElementById(inputId);
-        el.type = el.type === 'password' ? 'text' : 'password';
-        btn.textContent = el.type === 'password' ? '👁' : '🙈';
     };
 
     /* ══ DEVICE FINGERPRINT ══ */
@@ -632,573 +497,379 @@
         try {
             const saved = localStorage.getItem('nmedea_device_id');
             if (saved) return saved;
-        } catch(e) {}
-
-        const raw = [
-            navigator.userAgent,
-            navigator.language,
-            screen.width + 'x' + screen.height,
-            screen.colorDepth,
-            new Date().getTimezoneOffset(),
-            navigator.hardwareConcurrency || 'unk',
-            navigator.deviceMemory || 'unk',
-            navigator.platform || 'unk',
-            navigator.maxTouchPoints || '0'
-        ].join('||');
-
-        // Hash it
+        } catch(e){}
+        const raw = [navigator.userAgent,navigator.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||'unk',navigator.deviceMemory||'unk',navigator.platform||'unk',navigator.maxTouchPoints||'0'].join('||');
         let h = 5381;
-        for (let i = 0; i < raw.length; i++) {
-            h = ((h << 5) + h) ^ raw.charCodeAt(i);
-            h = h >>> 0;
-        }
-        const deviceId = 'NM-' + h.toString(36).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
-
-        try { localStorage.setItem('nmedea_device_id', deviceId); } catch(e) {}
-        return deviceId;
+        for(let i=0;i<raw.length;i++){h=((h<<5)+h)^raw.charCodeAt(i);h=h>>>0;}
+        const id='NM-'+h.toString(36).toUpperCase()+'-'+Date.now().toString(36).toUpperCase();
+        try{localStorage.setItem('nmedea_device_id',id);}catch(e){}
+        return id;
     };
 
-    /* ══ BOOT SEQUENCE — REAL CHECKS ══ */
-    async function runBoot() {
-        const bar     = document.getElementById('boot-bar');
-        const status  = document.getElementById('boot-status');
-
-        const setCheck = (id, state, icon) => {
-            const el  = document.getElementById(id);
-            const ico = el.querySelector('.check-icon');
-            el.className = 'check-item ' + state;
-            ico.textContent = icon || (state === 'done' ? '✓' : state === 'fail' ? '✗' : '·');
-        };
-
-        const progress = pct => { bar.style.width = pct + '%'; };
-        const wait     = ms  => new Promise(r => setTimeout(r, ms));
-
-        // Step 1 — Read device identity (REAL)
-        await wait(300);
-        setCheck('chk-device','running','');
-        status.textContent = 'Reading device identity...';
-        const deviceId = window.getDeviceID();
-        await wait(700);
-        setCheck('chk-device','done');
-        progress(17);
-
-        // Step 2 — Check saved session (REAL)
-        await wait(200);
-        setCheck('chk-session','running','');
-        status.textContent = 'Checking saved session...';
-        let session = null;
-        try { session = JSON.parse(localStorage.getItem('nmedea_session') || 'null'); } catch(e) {}
-        await wait(600);
-
-        if (session && session.uid && session.token) {
-            setCheck('chk-session','done');
-            progress(34);
-
-            // Step 3 — Verify token (REAL — check it exists and matches)
-            await wait(200);
-            setCheck('chk-token','running','');
-            status.textContent = 'Verifying access token...';
-            const tokenValid = session.token && session.token.length > 10;
-            await wait(600);
-
-            if (tokenValid) {
-                setCheck('chk-token','done');
-                progress(51);
-
-                // Step 4 — Check subscription (REAL — check expiry)
-                await wait(200);
-                setCheck('chk-sub','running','');
-                status.textContent = 'Checking subscription status...';
-                let isSubscribed = session.subscribed;
-                const now = Date.now();
-
-                // If on free trial check expiry
-                if (session.isFree && session.freeExpiry) {
-                    const expiry = new Date(session.freeExpiry).getTime();
-                    if (now > expiry) {
-                        isSubscribed = false;
-                        // Update local session
-                        session.subscribed = false;
-                        session.isFree = false;
-                        try { localStorage.setItem('nmedea_session', JSON.stringify(session)); } catch(e) {}
-                    }
-                }
-                await wait(700);
-                setCheck('chk-sub', isSubscribed ? 'done' : 'fail');
-                progress(68);
-
-                // Step 5 — Network sync (REAL — attempt Firebase sync)
-                await wait(200);
-                setCheck('chk-sync','running','');
-                status.textContent = 'Syncing with nmedea network...';
-                await wait(800);
-                setCheck('chk-sync','done');
-                progress(85);
-
-                // Step 6 — Security protocols (REAL — re-save fingerprint)
-                await wait(200);
-                setCheck('chk-security','running','');
-                status.textContent = 'Applying security protocols...';
-                // Re-verify device matches session
-                const sessionDevice  = session.deviceId || '';
-                const currentDevice  = deviceId;
-                const deviceMatch    = !sessionDevice || sessionDevice === currentDevice;
-                await wait(700);
-
-                if (deviceMatch) {
-                    setCheck('chk-security','done');
-                } else {
-                    setCheck('chk-security','fail');
-                }
-                progress(100);
-                await wait(500);
-
-                // All done — go to dashboard or payment
-                status.textContent = isSubscribed ? 'Access granted ✓' : 'Subscription expired';
-                await wait(600);
-
-                if (isSubscribed && deviceMatch) {
-                    location.replace('https://ulojgtuyjhf.github.io/nmedea/dashboard.html');
-                } else if (!isSubscribed) {
-                    location.replace('https://ulojgtuyjhf.github.io/nmedea/pay.html?amt=10');
-                } else {
-                    // Device mismatch — clear session, show login
-                    try { localStorage.removeItem('nmedea_session'); } catch(e) {}
-                    show('s-login');
-                }
-
-            } else {
-                // Bad token
-                setCheck('chk-token','fail');
-                progress(51);
-                await wait(500);
-                try { localStorage.removeItem('nmedea_session'); } catch(e) {}
-                show('s-login');
-            }
-
-        } else {
-            // No session
-            setCheck('chk-session','done');
-            progress(34);
-            // Run remaining checks quickly
-            await wait(200);
-            setCheck('chk-token','running','');
-            await wait(400);
-            setCheck('chk-token','done');
-            progress(51);
-            await wait(150);
-            setCheck('chk-sub','running','');
-            await wait(350);
-            setCheck('chk-sub','done');
-            progress(68);
-            await wait(150);
-            setCheck('chk-sync','running','');
-            await wait(400);
-            setCheck('chk-sync','done');
-            progress(85);
-            await wait(150);
-            setCheck('chk-security','running','');
-            await wait(350);
-            setCheck('chk-security','done');
-            progress(100);
-            await wait(400);
-            status.textContent = 'No session found';
-            await wait(400);
-            show('s-login');
-        }
-    }
-
-    // Show boot screen then run checks
-    window.showBoot = async () => {
-        // Switch to dark mode for boot screen
-        document.body.classList.remove('light');
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById('s-boot').classList.add('active');
-
-        // Reset all checks
-        ['chk-device','chk-session','chk-token','chk-sub','chk-sync','chk-security'].forEach(id => {
-            const el  = document.getElementById(id);
-            const ico = el.querySelector('.check-icon');
-            el.className = 'check-item';
-            ico.textContent = '·';
-        });
-        document.getElementById('boot-bar').style.width = '0%';
-        document.getElementById('boot-status').textContent = 'Initialising...';
-
-        await runBoot();
+    /* ══ EYE TOGGLE ══ */
+    window.toggleEye = (inputId,btn) => {
+        const el=document.getElementById(inputId);
+        el.type=el.type==='password'?'text':'password';
+        btn.textContent=el.type==='password'?'👁':'🙈';
     };
-
-    // Start boot when page loads — but only if session exists (returning user)
-    window.addEventListener('load', () => {
-        try {
-            const session = JSON.parse(localStorage.getItem('nmedea_session') || 'null');
-            if (session && session.uid && session.token) {
-                // Returning user — show boot screen immediately
-                showBoot();
-            } else {
-                // New user — show login, keep light mode
-                document.body.classList.add('light');
-            }
-        } catch(e) {
-            document.body.classList.add('light');
-        }
-    });
 
     /* ══ PASSWORD GENERATOR ══ */
-    const chars = {
-        upper: 'ABCDEFGHJKLMNPQRSTUVWXYZ',
-        lower: 'abcdefghjkmnpqrstuvwxyz',
-        nums:  '23456789',
-        syms:  '!@#$%&*?'
+    const ch={upper:'ABCDEFGHJKLMNPQRSTUVWXYZ',lower:'abcdefghjkmnpqrstuvwxyz',nums:'23456789',syms:'!@#$%&*?'};
+    window.generatePw=()=>{
+        const all=ch.upper+ch.lower+ch.nums+ch.syms;
+        let pw=ch.upper[Math.floor(Math.random()*ch.upper.length)]+ch.lower[Math.floor(Math.random()*ch.lower.length)]+ch.nums[Math.floor(Math.random()*ch.nums.length)]+ch.syms[Math.floor(Math.random()*ch.syms.length)];
+        for(let i=4;i<14;i++)pw+=all[Math.floor(Math.random()*all.length)];
+        pw=pw.split('').sort(()=>Math.random()-0.5).join('');
+        window._spw=pw;
+        const el=document.getElementById('spw');
+        el.textContent=pw;el.classList.add('show');
+        document.getElementById('pwhint').style.display='block';
+    };
+    window.usePw=()=>{
+        if(!window._spw)return;
+        document.getElementById('r-pass').value=window._spw;
+        document.getElementById('r-pass2').value=window._spw;
+        document.getElementById('r-pass').type='text';
+        document.getElementById('r-pass2').type='text';
+        checkStrength(window._spw);
+        try{const s=JSON.parse(localStorage.getItem('nmedea_saved_pws')||'[]');s.unshift({pw:window._spw,date:new Date().toISOString()});localStorage.setItem('nmedea_saved_pws',JSON.stringify(s.slice(0,5)));}catch(e){}
+        document.getElementById('pwhint').textContent='✓ Password saved on your device';
+        document.getElementById('pwhint').style.color='#16a34a';
     };
 
-    window.generatePassword = () => {
-        const all = chars.upper + chars.lower + chars.nums + chars.syms;
-        let pw = '';
-        pw += chars.upper[Math.floor(Math.random()*chars.upper.length)];
-        pw += chars.lower[Math.floor(Math.random()*chars.lower.length)];
-        pw += chars.nums[Math.floor(Math.random()*chars.nums.length)];
-        pw += chars.syms[Math.floor(Math.random()*chars.syms.length)];
-        for (let i = 4; i < 14; i++) pw += all[Math.floor(Math.random()*all.length)];
-        pw = pw.split('').sort(()=>Math.random()-0.5).join('');
-        window._suggestedPw = pw;
-
-        const el = document.getElementById('suggested-pw');
-        el.textContent = pw;
-        el.classList.add('visible');
-        document.getElementById('pw-hint').style.display = 'block';
-        document.getElementById('pw-hint').textContent = 'Tap to use — saved on your device';
-        document.getElementById('pw-hint').style.color = 'rgba(11,11,11,0.35)';
-    };
-
-    window.useSuggestedPw = () => {
-        if (!window._suggestedPw) return;
-        document.getElementById('r-pass').value  = window._suggestedPw;
-        document.getElementById('r-pass2').value = window._suggestedPw;
-        document.getElementById('r-pass').type   = 'text';
-        document.getElementById('r-pass2').type  = 'text';
-        checkStrength(window._suggestedPw);
-        try {
-            const saved = JSON.parse(localStorage.getItem('nmedea_saved_pws')||'[]');
-            saved.unshift({pw: window._suggestedPw, date: new Date().toISOString()});
-            localStorage.setItem('nmedea_saved_pws', JSON.stringify(saved.slice(0,5)));
-        } catch(e) {}
-        document.getElementById('pw-hint').textContent = '✓ Password saved on your device';
-        document.getElementById('pw-hint').style.color = '#16a34a';
-    };
-
-    /* ══ STRENGTH CHECKER ══ */
-    window.checkStrength = pw => {
-        const segs  = [1,2,3,4].map(i => document.getElementById('seg'+i));
-        const label = document.getElementById('strength-label');
-
-        const hasLen  = pw.length >= 8;
-        const hasUp   = /[A-Z]/.test(pw);
-        const hasNum  = /[0-9]/.test(pw);
-        const hasSym  = /[!@#$%^&*?_\-+=]/.test(pw);
-
-        document.getElementById('req-len').classList.toggle('met', hasLen);
-        document.getElementById('req-upper').classList.toggle('met', hasUp);
-        document.getElementById('req-num').classList.toggle('met', hasNum);
-        document.getElementById('req-sym').classList.toggle('met', hasSym);
-
-        const score = [hasLen,hasUp,hasNum,hasSym].filter(Boolean).length;
-        const colors = ['#ef4444','#f97316','#eab308','#16a34a'];
-        const labels = [
-            {text:'Too weak',color:'#ef4444'},
-            {text:'Weak',color:'#f97316'},
-            {text:'Fair',color:'#eab308'},
-            {text:'Strong ✓',color:'#16a34a'}
-        ];
-
-        segs.forEach((seg,i) => {
-            seg.style.background = i < score ? colors[score-1] : 'rgba(11,11,11,0.1)';
-        });
-
-        if (pw.length === 0) { label.textContent = ''; }
-        else { label.textContent = labels[score-1]?.text||''; label.style.color = labels[score-1]?.color||''; }
+    /* ══ STRENGTH ══ */
+    window.checkStrength=pw=>{
+        const segs=[1,2,3,4].map(i=>document.getElementById('sg'+i));
+        const label=document.getElementById('slabel');
+        const hL=pw.length>=8,hU=/[A-Z]/.test(pw),hN=/[0-9]/.test(pw),hS=/[!@#$%^&*?_\-+=]/.test(pw);
+        document.getElementById('rq-len').classList.toggle('met',hL);
+        document.getElementById('rq-up').classList.toggle('met',hU);
+        document.getElementById('rq-num').classList.toggle('met',hN);
+        document.getElementById('rq-sym').classList.toggle('met',hS);
+        const score=[hL,hU,hN,hS].filter(Boolean).length;
+        const colors=['#ef4444','#f97316','#eab308','#16a34a'];
+        const labels=[{t:'Too weak',c:'#ef4444'},{t:'Weak',c:'#f97316'},{t:'Fair',c:'#eab308'},{t:'Strong ✓',c:'#16a34a'}];
+        segs.forEach((s,i)=>{s.style.background=i<score?colors[score-1]:'rgba(11,11,11,0.1)';});
+        if(pw.length===0){label.textContent='';}else{label.textContent=labels[score-1]?.t||'';label.style.color=labels[score-1]?.c||'';}
     };
 
     /* ══ HELPERS ══ */
-    const setBtn = (id, loading, text) => {
-        const b = document.getElementById(id);
-        b.disabled = loading;
-        b.innerHTML = loading ? '<span class="spinner"></span>Please wait...' : text;
+    const setBtn=(id,loading,text)=>{const b=document.getElementById(id);b.disabled=loading;b.innerHTML=loading?'<span class="spinner"></span>Please wait...':text;};
+    const msg=(id,text,type)=>{const el=document.getElementById(id);el.textContent=text;el.className='msg '+(type||'');};
+
+    /* ══ BOOT SEQUENCE ══ */
+    window.showBoot=async()=>{
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        document.getElementById('pg-boot').classList.add('active');
+        ['chk-device','chk-session','chk-token','chk-sub','chk-sync','chk-sec'].forEach(id=>{
+            const el=document.getElementById(id);
+            el.className='chk';
+            el.querySelector('.chk-icon').textContent='·';
+        });
+        document.getElementById('boot-bar').style.width='0%';
+        document.getElementById('boot-status').textContent='Initialising...';
+        await runBoot();
     };
 
-    const msg = (id, text, type) => {
-        const el = document.getElementById(id);
-        el.textContent = text;
-        el.className = 'msg '+(type||'');
+    async function runBoot(){
+        const bar=document.getElementById('boot-bar');
+        const status=document.getElementById('boot-status');
+        const setChk=(id,state,icon)=>{const el=document.getElementById(id);const ico=el.querySelector('.chk-icon');el.className='chk '+state;ico.textContent=icon||(state==='done'?'✓':state==='fail'?'✗':'·');};
+        const prog=pct=>{bar.style.width=pct+'%';};
+        const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+        // Step 1 — Device ID
+        await wait(300);setChk('chk-device','running','');status.textContent='Reading device identity...';
+        const deviceId=window.getDeviceID();
+        await wait(700);setChk('chk-device','done');prog(17);
+
+        // Step 2 — Session
+        await wait(200);setChk('chk-session','running','');status.textContent='Checking saved session...';
+        let session=null;
+        try{session=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
+        await wait(600);
+
+        if(session&&session.uid&&session.token){
+            setChk('chk-session','done');prog(34);
+
+            // Step 3 — Token
+            await wait(200);setChk('chk-token','running','');status.textContent='Verifying access token...';
+            const tokenOk=session.token&&session.token.length>10;
+            await wait(600);
+            if(!tokenOk){setChk('chk-token','fail');prog(51);await wait(500);try{localStorage.removeItem('nmedea_session');}catch(e){}showPage('pg-login');return;}
+            setChk('chk-token','done');prog(51);
+
+            // Step 4 — Subscription
+            await wait(200);setChk('chk-sub','running','');status.textContent='Checking subscription...';
+            let isSubscribed=session.subscribed;
+            if(session.isFree&&session.freeExpiry){
+                if(Date.now()>new Date(session.freeExpiry).getTime()){
+                    isSubscribed=false;session.subscribed=false;session.isFree=false;
+                    try{localStorage.setItem('nmedea_session',JSON.stringify(session));}catch(e){}
+                }
+            }
+            await wait(700);setChk('chk-sub',isSubscribed?'done':'fail');prog(68);
+
+            // Step 5 — Sync
+            await wait(200);setChk('chk-sync','running','');status.textContent='Syncing with nmedea...';
+            await wait(800);setChk('chk-sync','done');prog(85);
+
+            // Step 6 — Security
+            await wait(200);setChk('chk-sec','running','');status.textContent='Applying security protocols...';
+            const deviceMatch=!session.deviceId||session.deviceId===deviceId;
+            await wait(700);setChk('chk-sec',deviceMatch?'done':'fail');prog(100);
+            await wait(500);
+
+            if(isSubscribed&&deviceMatch){
+                status.textContent='Access granted ✓';
+                await wait(400);
+                loadDashboard(session);
+                showPage('pg-dash');
+            } else if(!isSubscribed){
+                status.textContent='Subscription expired';
+                await wait(400);
+                loadDashboard(session);
+                showPage('pg-dash');
+                document.getElementById('exp-banner').classList.add('show');
+                document.getElementById('conn-pill').className='conn-pill off';
+                document.getElementById('conn-txt').textContent='Expired';
+            } else {
+                try{localStorage.removeItem('nmedea_session');}catch(e){}
+                showPage('pg-login');
+            }
+
+        } else {
+            // No session — quick checks then login
+            setChk('chk-session','done');prog(34);
+            for(const[id,p] of [['chk-token',51],['chk-sub',68],['chk-sync',85],['chk-sec',100]]){
+                await wait(150);setChk(id,'running','');await wait(350);setChk(id,'done');prog(p);
+            }
+            await wait(300);status.textContent='No session found';
+            await wait(300);showPage('pg-login');
+        }
+    }
+
+    /* ══ DASHBOARD ══ */
+    function loadDashboard(session){
+        if(!session)return;
+        const name=session.name||'User';
+        const initial=name.charAt(0).toUpperCase();
+        document.getElementById('dash-av').textContent=initial;
+        document.getElementById('s-av').textContent=initial;
+        document.getElementById('s-name').textContent=name;
+        document.getElementById('s-email').textContent=session.email||'—';
+        document.getElementById('s-balance').textContent='R'+(session.balance||0);
+        document.getElementById('s-device').textContent=(session.deviceId||'—').substring(0,18)+'...';
+        if(session.createdAt)document.getElementById('s-since').textContent=new Date(session.createdAt).toLocaleDateString('en-ZA');
+        if(session.freeExpiry)document.getElementById('s-expiry').textContent=new Date(session.freeExpiry).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'});
+        if(!session.isFree&&session.subscribed){
+            document.getElementById('s-plan').textContent='Active Plan ✓';
+            document.getElementById('s-plan').className='sval green';
+        }
+
+        // Check expiry every 30 seconds
+        setInterval(()=>{
+            if(!session.isFree||!session.freeExpiry)return;
+            if(Date.now()>new Date(session.freeExpiry).getTime()){
+                document.getElementById('exp-banner').classList.add('show');
+                document.getElementById('conn-pill').className='conn-pill off';
+                document.getElementById('conn-txt').textContent='Expired';
+                document.getElementById('s-status').textContent='Expired';
+                document.getElementById('s-status').className='sval red';
+            }
+        },30000);
+    }
+
+    /* ══ SHEET ══ */
+    window.openSheet=()=>{document.getElementById('overlay').classList.add('open');document.getElementById('sheet').classList.add('open');};
+    window.closeSheet=()=>{document.getElementById('overlay').classList.remove('open');document.getElementById('sheet').classList.remove('open');};
+    window.showPaySheet=()=>{document.getElementById('overlay').classList.add('open');document.getElementById('pay-sheet').classList.add('open');};
+    window.closePaySheet=()=>{document.getElementById('overlay').classList.remove('open');document.getElementById('pay-sheet').classList.remove('open');};
+
+    /* ══ SIGN OUT ══ */
+    window.doSignOut=()=>{
+        if(!confirm('Sign out of nmedea?'))return;
+        try{localStorage.removeItem('nmedea_session');}catch(e){}
+        showPage('pg-login');
+        closeSheet();
     };
 
-    // Enter key support
-    document.addEventListener('keydown', e => {
-        if (e.key !== 'Enter') return;
-        const id = document.querySelector('.screen.active')?.id;
-        if (id==='s-login')  window.doLogin && window.doLogin();
-        if (id==='s-reg1')   window.doStep1 && window.doStep1();
-        if (id==='s-reg2')   window.doStep2 && window.doStep2();
-        if (id==='s-forgot') window.doForgot && window.doForgot();
+    /* ══ DELETE ══ */
+    window.confirmDelete=async()=>{
+        if(!confirm('Delete your account permanently? This cannot be undone.'))return;
+        try{localStorage.removeItem('nmedea_session');localStorage.removeItem('nmedea_device_id');}catch(e){}
+        showPage('pg-login');
+        closeSheet();
+    };
+
+    /* ══ STARTUP ══ */
+    window.addEventListener('load',()=>{
+        try{
+            const session=JSON.parse(localStorage.getItem('nmedea_session')||'null');
+            if(session&&session.uid&&session.token){
+                showBoot();
+            } else {
+                showPage('pg-login');
+            }
+        } catch(e){showPage('pg-login');}
+    });
+
+    /* ══ ENTER KEY ══ */
+    document.addEventListener('keydown',e=>{
+        if(e.key!=='Enter')return;
+        const active=document.querySelector('.page.active')?.id;
+        if(active==='pg-login')window.doLogin&&window.doLogin();
+        if(active==='pg-reg1')window.doStep1&&window.doStep1();
+        if(active==='pg-reg2')window.doStep2&&window.doStep2();
+        if(active==='pg-forgot')window.doForgot&&window.doForgot();
     });
 
 </script>
 
-<!-- ════════════════════════════
+<!-- ════════════════════════════════
      FIREBASE
-════════════════════════════ -->
+════════════════════════════════ -->
 <script type="module">
-import { initializeApp }
-    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    updateProfile,
-    sendPasswordResetEmail,
-    onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import {
-    getFirestore,
-    doc, setDoc, getDoc,
-    collection, where, query, getDocs,
-    enableIndexedDbPersistence
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile,sendPasswordResetEmail,onAuthStateChanged,signOut,deleteUser}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import{getFirestore,doc,setDoc,getDoc,collection,where,query,getDocs,enableIndexedDbPersistence}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-const app = initializeApp({
-    apiKey:            "AIzaSyBreKi86gv26Eig7hym4WFhAB70VbVWW5g",
-    authDomain:        "checkers-225fb.firebaseapp.com",
-    projectId:         "checkers-225fb",
-    storageBucket:     "checkers-225fb.firebasestorage.app",
-    messagingSenderId: "75322611034",
-    appId:             "1:75322611034:web:d3725be1ae7b640b408f63"
-});
-
-const auth = getAuth(app);
-const db   = getFirestore(app);
-
-// Enable offline persistence — this is what makes Firebase work without internet
+const app=initializeApp({apiKey:"AIzaSyBreKi86gv26Eig7hym4WFhAB70VbVWW5g",authDomain:"checkers-225fb.firebaseapp.com",projectId:"checkers-225fb",storageBucket:"checkers-225fb.firebasestorage.app",messagingSenderId:"75322611034",appId:"1:75322611034:web:d3725be1ae7b640b408f63"});
+const auth=getAuth(app);
+const db=getFirestore(app);
 enableIndexedDbPersistence(db).catch(()=>{});
 
-// NOTE: We do NOT auto-redirect here — the boot sequence handles that
-// onAuthStateChanged only used to keep Firebase session alive
-onAuthStateChanged(auth, u => {
-    if (u) {
-        try {
-            // Keep local session fresh
-            const session = JSON.parse(localStorage.getItem('nmedea_session')||'null');
-            if (session) {
-                session.uid = u.uid;
-                session.email = u.email;
-                localStorage.setItem('nmedea_session', JSON.stringify(session));
-            }
-        } catch(e) {}
-    }
+const setBtn=(id,loading,text)=>{const b=document.getElementById(id);b.disabled=loading;b.innerHTML=loading?'<span class="spinner"></span>Please wait...':text;};
+const msg=(id,text,type)=>{const el=document.getElementById(id);el.textContent=text;el.className='msg '+(type||'');};
+
+let regData={};
+
+/* ── SYNC SESSION WHEN ONLINE ── */
+onAuthStateChanged(auth,async user=>{
+    if(!user)return;
+    try{
+        const snap=await getDoc(doc(db,'users',user.uid));
+        if(!snap.exists())return;
+        const data=snap.data();
+        let s=null;
+        try{s=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
+        if(!s)return;
+        s.balance=data.balance??s.balance;
+        s.subscribed=data.subscribed??s.subscribed;
+        s.isFree=data.isFree??s.isFree;
+        s.freeExpiry=data.freeExpiry??s.freeExpiry;
+        s.createdAt=data.createdAt??s.createdAt;
+        try{localStorage.setItem('nmedea_session',JSON.stringify(s));}catch(e){}
+        document.getElementById('s-balance').textContent='R'+(data.balance||0);
+        if(data.createdAt)document.getElementById('s-since').textContent=new Date(data.createdAt).toLocaleDateString('en-ZA');
+    }catch(e){}
 });
 
-let regData = {};
-
-const setBtn = (id, loading, text) => {
-    const b = document.getElementById(id);
-    b.disabled = loading;
-    b.innerHTML = loading ? '<span class="spinner"></span>Please wait...' : text;
-};
-
-const msg = (id, text, type) => {
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className = 'msg '+(type||'');
-};
-
-/* ══ LOGIN ══ */
-window.doLogin = async () => {
-    const email = document.getElementById('l-email').value.trim();
-    const pass  = document.getElementById('l-pass').value;
-    if (!email||!pass) { msg('l-msg','Please fill in all fields.','err'); return; }
-    setBtn('l-btn', true, 'Sign In');
-    try {
-        const cred = await signInWithEmailAndPassword(auth, email, pass);
-
-        // Pull user data and save locally for offline
-        let userData = null;
-        try {
-            const snap = await getDoc(doc(db,'users', cred.user.uid));
-            if (snap.exists()) userData = snap.data();
-        } catch(e) {}
-
-        const deviceId = window.getDeviceID();
-        try {
-            localStorage.setItem('nmedea_session', JSON.stringify({
-                uid:        cred.user.uid,
-                token:      userData?.token || ('tok_' + crypto.randomUUID()),
-                freeExpiry: userData?.freeExpiry || null,
-                subscribed: userData?.subscribed ?? true,
-                isFree:     userData?.isFree ?? false,
-                balance:    userData?.balance || 0,
-                name:       userData?.name || cred.user.displayName || '',
-                email:      cred.user.email,
-                deviceId:   deviceId
+/* ── LOGIN ── */
+window.doLogin=async()=>{
+    const email=document.getElementById('l-email').value.trim();
+    const pass=document.getElementById('l-pass').value;
+    if(!email||!pass){msg('l-msg','Please fill in all fields.','err');return;}
+    setBtn('l-btn',true,'Sign In');
+    try{
+        const cred=await signInWithEmailAndPassword(auth,email,pass);
+        let userData=null;
+        try{const snap=await getDoc(doc(db,'users',cred.user.uid));if(snap.exists())userData=snap.data();}catch(e){}
+        const deviceId=window.getDeviceID();
+        try{
+            localStorage.setItem('nmedea_session',JSON.stringify({
+                uid:cred.user.uid,
+                token:userData?.token||('tok_'+crypto.randomUUID()),
+                freeExpiry:userData?.freeExpiry||null,
+                subscribed:userData?.subscribed??true,
+                isFree:userData?.isFree??false,
+                balance:userData?.balance||0,
+                name:userData?.name||cred.user.displayName||'',
+                email:cred.user.email,
+                createdAt:userData?.createdAt||null,
+                deviceId:deviceId
             }));
-        } catch(e) {}
-
-        // Show security boot screen AFTER login
+        }catch(e){}
         window.showBoot();
-
-    } catch(e) {
-        const m = {
-            'auth/invalid-credential':  'Invalid email or password.',
-            'auth/user-not-found':      'No account found.',
-            'auth/wrong-password':      'Incorrect password.',
-            'auth/too-many-requests':   'Too many attempts. Please wait.'
-        };
-        msg('l-msg', m[e.code]||'Login failed. Try again.', 'err');
-        setBtn('l-btn', false, 'Sign In');
+    }catch(e){
+        const m={'auth/invalid-credential':'Invalid email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/too-many-requests':'Too many attempts. Please wait.'};
+        msg('l-msg',m[e.code]||'Login failed. Try again.','err');
+        setBtn('l-btn',false,'Sign In');
     }
 };
 
-/* ══ STEP 1 ══ */
-window.doStep1 = async () => {
-    const name  = document.getElementById('r-name').value.trim();
-    const email = document.getElementById('r-email').value.trim();
-    if (!name)               { msg('r1-msg','Please enter your name.','err'); return; }
-    if (!email.includes('@')){ msg('r1-msg','Please enter a valid email.','err'); return; }
-
-    const deviceId = window.getDeviceID();
-
-    // REAL check — has this device used free trial?
-    try {
-        const usedLocally = localStorage.getItem('nmedea_trial_used_' + deviceId);
-        if (usedLocally) {
-            msg('r1-msg','Free trial already used on this device. Please pay R10 to continue.','err');
-            return;
-        }
-    } catch(e) {}
-
-    // Also check Firebase (when online)
-    try {
-        const q    = query(collection(db,'users'), where('deviceId','==',deviceId), where('usedFreeTrial','==',true));
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-            msg('r1-msg','Free trial already used on this device. Please pay R10 to continue.','err');
-            // Save locally so works offline next time
-            try { localStorage.setItem('nmedea_trial_used_' + deviceId, '1'); } catch(e2) {}
-            return;
-        }
-    } catch(e) {
-        // Offline — local check already done above
-    }
-
-    regData.name     = name;
-    regData.email    = email;
-    regData.deviceId = deviceId;
-    show('s-reg2');
+/* ── STEP 1 ── */
+window.doStep1=async()=>{
+    const name=document.getElementById('r-name').value.trim();
+    const email=document.getElementById('r-email').value.trim();
+    if(!name){msg('r1-msg','Please enter your name.','err');return;}
+    if(!email.includes('@')){msg('r1-msg','Please enter a valid email.','err');return;}
+    const deviceId=window.getDeviceID();
+    try{const used=localStorage.getItem('nmedea_trial_used_'+deviceId);if(used){msg('r1-msg','Free trial already used on this device. Please pay R10.','err');return;}}catch(e){}
+    try{const q=query(collection(db,'users'),where('deviceId','==',deviceId),where('usedFreeTrial','==',true));const snap=await getDocs(q);if(!snap.empty){msg('r1-msg','Free trial already used on this device.','err');try{localStorage.setItem('nmedea_trial_used_'+deviceId,'1');}catch(e2){}return;}}catch(e){}
+    regData.name=name;regData.email=email;regData.deviceId=deviceId;
+    window.showPage('pg-reg2');
 };
 
-/* ══ STEP 2 ══ */
-window.doStep2 = () => {
-    const pass  = document.getElementById('r-pass').value;
-    const pass2 = document.getElementById('r-pass2').value;
-    const hasLen  = pass.length >= 8;
-    const hasUp   = /[A-Z]/.test(pass);
-    const hasNum  = /[0-9]/.test(pass);
-    const hasSym  = /[!@#$%^&*?_\-+=]/.test(pass);
-    if (!hasLen||!hasUp||!hasNum||!hasSym) {
-        msg('r2-msg','Please meet all password requirements above.','err'); return;
-    }
-    if (pass !== pass2) { msg('r2-msg',"Passwords don't match.",'err'); return; }
-    regData.pass = pass;
-
-    // Show device ID on step 3
-    const deviceId = window.getDeviceID();
-    const el = document.getElementById('device-id-display');
-    if (el) el.textContent = deviceId;
-
-    show('s-reg3');
+/* ── STEP 2 ── */
+window.doStep2=()=>{
+    const pass=document.getElementById('r-pass').value;
+    const pass2=document.getElementById('r-pass2').value;
+    const hL=pass.length>=8,hU=/[A-Z]/.test(pass),hN=/[0-9]/.test(pass),hS=/[!@#$%^&*?_\-+=]/.test(pass);
+    if(!hL||!hU||!hN||!hS){msg('r2-msg','Please meet all password requirements.','err');return;}
+    if(pass!==pass2){msg('r2-msg',"Passwords don't match.",'err');return;}
+    regData.pass=pass;
+    document.getElementById('device-id-show').textContent=window.getDeviceID();
+    window.showPage('pg-reg3');
 };
 
-/* ══ CREATE ACCOUNT ══ */
-window.doCreateAccount = async () => {
-    setBtn('r3-btn', true, 'Claim Free Access');
-    msg('r3-msg','','');
-    try {
-        const cred = await createUserWithEmailAndPassword(auth, regData.email, regData.pass);
-        await updateProfile(cred.user, { displayName: regData.name });
-
-        const token      = crypto.randomUUID();
-        // 15 minutes free trial
-        const freeExpiry = new Date(Date.now() + 15 * 60 * 1000).toISOString();
-
-        const userData = {
-            name:          regData.name,
-            email:         regData.email,
-            deviceId:      regData.deviceId,
-            token:         token,
-            balance:       0,
-            subscribed:    true,
-            usedFreeTrial: true,
-            freeExpiry:    freeExpiry,
-            isFree:        true,
-            createdAt:     new Date().toISOString(),
-            history:       []
-        };
-
-        await setDoc(doc(db,'users', cred.user.uid), userData);
-
-        // Save session locally — this is what makes offline work
-        const session = {
-            uid:        cred.user.uid,
-            token:      token,
-            freeExpiry: freeExpiry,
-            subscribed: true,
-            isFree:     true,
-            balance:    0,
-            name:       regData.name,
-            email:      regData.email,
-            deviceId:   regData.deviceId
-        };
-        try {
-            localStorage.setItem('nmedea_session', JSON.stringify(session));
-            localStorage.setItem('nmedea_trial_used_' + regData.deviceId, '1');
-        } catch(e) {}
-
-        // Show security boot screen AFTER registration
+/* ── CREATE ACCOUNT ── */
+window.doCreateAccount=async()=>{
+    setBtn('r3-btn',true,'Claim Free Access');msg('r3-msg','','');
+    try{
+        const cred=await createUserWithEmailAndPassword(auth,regData.email,regData.pass);
+        await updateProfile(cred.user,{displayName:regData.name});
+        const token=crypto.randomUUID();
+        const freeExpiry=new Date(Date.now()+15*60*1000).toISOString();
+        await setDoc(doc(db,'users',cred.user.uid),{name:regData.name,email:regData.email,deviceId:regData.deviceId,token:token,balance:0,subscribed:true,usedFreeTrial:true,freeExpiry:freeExpiry,isFree:true,createdAt:new Date().toISOString(),history:[]});
+        const session={uid:cred.user.uid,token:token,freeExpiry:freeExpiry,subscribed:true,isFree:true,balance:0,name:regData.name,email:regData.email,deviceId:regData.deviceId,createdAt:new Date().toISOString()};
+        try{localStorage.setItem('nmedea_session',JSON.stringify(session));localStorage.setItem('nmedea_trial_used_'+regData.deviceId,'1');}catch(e){}
         window.showBoot();
-
-    } catch(e) {
-        const m = {
-            'auth/email-already-in-use': 'This email is already registered. Please sign in.',
-            'auth/weak-password':        'Password too weak.',
-            'auth/invalid-email':        'Invalid email address.'
-        };
-        msg('r3-msg', m[e.code]||'Registration failed. Try again.', 'err');
-        setBtn('r3-btn', false, 'Claim Free Access');
+    }catch(e){
+        const m={'auth/email-already-in-use':'This email is already registered. Please sign in.','auth/weak-password':'Password too weak.','auth/invalid-email':'Invalid email address.'};
+        msg('r3-msg',m[e.code]||'Registration failed. Try again.','err');
+        setBtn('r3-btn',false,'Claim Free Access');
     }
 };
 
-/* ══ FORGOT PASSWORD ══ */
-window.doForgot = async () => {
-    const email = document.getElementById('f-email').value.trim();
-    if (!email) { msg('f-msg','Please enter your email.','err'); return; }
-    setBtn('f-btn', true, 'Send Reset Link');
-    try {
-        await sendPasswordResetEmail(auth, email);
-        msg('f-msg','✓ Reset link sent! Check your inbox.','ok');
-    } catch(e) {
-        msg('f-msg','Could not send reset link. Check your email.','err');
-    }
-    setBtn('f-btn', false, 'Send Reset Link');
+/* ── FORGOT ── */
+window.doForgot=async()=>{
+    const email=document.getElementById('f-email').value.trim();
+    if(!email){msg('f-msg','Please enter your email.','err');return;}
+    setBtn('f-btn',true,'Send Reset Link');
+    try{await sendPasswordResetEmail(auth,email);msg('f-msg','✓ Reset link sent! Check your inbox.','ok');}
+    catch(e){msg('f-msg','Could not send reset link.','err');}
+    setBtn('f-btn',false,'Send Reset Link');
+};
+
+/* ── SIGN OUT ── */
+window.doSignOut=async()=>{
+    if(!confirm('Sign out of nmedea?'))return;
+    try{await signOut(auth);}catch(e){}
+    try{localStorage.removeItem('nmedea_session');}catch(e){}
+    window.closeSheet();
+    window.showPage('pg-login');
+};
+
+/* ── DELETE ── */
+window.confirmDelete=async()=>{
+    if(!confirm('Delete your account permanently?'))return;
+    try{const user=auth.currentUser;if(user)await deleteUser(user);}catch(e){}
+    try{localStorage.removeItem('nmedea_session');localStorage.removeItem('nmedea_device_id');}catch(e){}
+    window.closeSheet();
+    window.showPage('pg-login');
 };
 
 </script>
 </body>
 </html>
-<!-- SERVICE WORKER — makes app work offline -->
-<script>
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(() => console.log('nmedea offline ready'))
-            .catch(e => console.log('SW error:', e));
-    });
-}
-</script>
