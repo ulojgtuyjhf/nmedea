@@ -583,7 +583,7 @@
             <span class="dot"></span>
             15:00 free — starting now
         </div>
-        <button class="btn" onclick="location.replace('dashboard.html')" style="margin-top:8px;">
+        <button class="btn" onclick="location.replace('https://ulojgtuyjhf.github.io/nmedea/dashboard.html')" style="margin-top:8px;">
             Enter Dashboard
         </button>
     </div>
@@ -758,9 +758,9 @@
                 await wait(600);
 
                 if (isSubscribed && deviceMatch) {
-                    location.replace('dashboard.html');
+                    location.replace('https://ulojgtuyjhf.github.io/nmedea/dashboard.html');
                 } else if (!isSubscribed) {
-                    location.replace('pay.html?amt=10');
+                    location.replace('https://ulojgtuyjhf.github.io/nmedea/pay.html?amt=10');
                 } else {
                     // Device mismatch — clear session, show login
                     try { localStorage.removeItem('nmedea_session'); } catch(e) {}
@@ -1192,3 +1192,13 @@ window.doForgot = async () => {
 </script>
 </body>
 </html>
+<!-- SERVICE WORKER — makes app work offline -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('nmedea offline ready'))
+            .catch(e => console.log('SW error:', e));
+    });
+}
+</script>

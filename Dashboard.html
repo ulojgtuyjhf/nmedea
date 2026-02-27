@@ -297,7 +297,7 @@
 <!-- ── EXPIRED BANNER ── -->
 <div class="expired-banner" id="exp-banner">
     <div class="expired-text">⏰ Free trial ended — Top up to continue</div>
-    <button class="expired-btn" onclick="location.href='pay.html?amt=10'">R10</button>
+    <button class="expired-btn" onclick="location.href='https://ulojgtuyjhf.github.io/nmedea/pay.html?amt=10'">R10</button>
 </div>
 
 <!-- ── OVERLAY ── -->
@@ -341,7 +341,7 @@
     </div>
 
     <div class="sheet-btns">
-        <button class="s-btn primary" onclick="closeSheet();location.href='pay.html?amt=10'">
+        <button class="s-btn primary" onclick="closeSheet();location.href='https://ulojgtuyjhf.github.io/nmedea/pay.html?amt=10'">
             Top Up R10 — 1 Week
         </button>
         <button class="s-btn outline" onclick="doSignOut()">Sign Out</button>
@@ -357,7 +357,7 @@
     /* ── SESSION ── */
     let session = null;
     try { session = JSON.parse(localStorage.getItem('nmedea_session')||'null'); } catch(e){}
-    if (!session || !session.uid) { location.replace('index.html'); }
+    if (!session || !session.uid) { location.replace('https://ulojgtuyjhf.github.io/nmedea/index.html'); }
 
     /* ── POPULATE ── */
     function populate() {
@@ -434,7 +434,7 @@
     window.doSignOut = () => {
         if (!confirm('Sign out of nmedea?')) return;
         try { localStorage.removeItem('nmedea_session'); } catch(e){}
-        location.replace('index.html');
+        location.replace('https://ulojgtuyjhf.github.io/nmedea/index.html');
     };
 
     /* ── DELETE ── */
@@ -444,7 +444,7 @@
             localStorage.removeItem('nmedea_session');
             localStorage.removeItem('nmedea_device_id');
         } catch(e){}
-        location.replace('index.html');
+        location.replace('https://ulojgtuyjhf.github.io/nmedea/index.html');
     };
 
 </script>
@@ -508,7 +508,7 @@ window.doSignOut = async () => {
     if (!confirm('Sign out of nmedea?')) return;
     try { await signOut(auth); } catch(e){}
     try { localStorage.removeItem('nmedea_session'); } catch(e){}
-    location.replace('index.html');
+    location.replace('https://ulojgtuyjhf.github.io/nmedea/index.html');
 };
 
 window.confirmDelete = async () => {
@@ -521,9 +521,16 @@ window.confirmDelete = async () => {
         localStorage.removeItem('nmedea_session');
         localStorage.removeItem('nmedea_device_id');
     } catch(e){}
-    location.replace('index.html');
+    location.replace('https://ulojgtuyjhf.github.io/nmedea/index.html');
 };
 </script>
 
 </body>
 </html>
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+    });
+}
+</script>
