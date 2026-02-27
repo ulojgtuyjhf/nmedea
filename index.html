@@ -8,86 +8,38 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 
-        body{
-            font-family:'DM Sans',sans-serif;
-            background:#0b0b0b;
-            color:#f3f3ee;
-            min-height:100dvh;
-            overflow-x:hidden;
-        }
+        body{font-family:'DM Sans',sans-serif;min-height:100dvh;overflow-x:hidden;}
 
         /* ══ PAGES ══ */
-        .page{
-            display:none;
-            min-height:100dvh;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            padding:24px;
-            animation:fadeUp 0.35s ease;
-        }
+        .page{display:none;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;animation:fadeUp 0.35s ease;}
         .page.active{display:flex;}
+        .page.dark{background:#0b0b0b;color:#f3f3ee;}
         .page.light{background:#f3f3ee;color:#0b0b0b;}
 
-        @keyframes fadeUp{
-            from{opacity:0;transform:translateY(12px);}
-            to{opacity:1;transform:translateY(0);}
-        }
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-        /* ══ BOOT PAGE ══ */
-        #pg-boot{background:#0b0b0b;gap:28px;}
-
-        .boot-logo{
-            font-family:'Bebas Neue',sans-serif;
-            font-size:52px;letter-spacing:10px;
-            color:#f3f3ee;
-            animation:glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes glow{
-            from{text-shadow:0 0 10px rgba(243,243,238,0.2);}
-            to{text-shadow:0 0 30px rgba(243,243,238,0.5);}
-        }
-
-        .boot-tag{
-            font-size:10px;letter-spacing:5px;text-transform:uppercase;
-            color:rgba(243,243,238,0.3);margin-top:-20px;text-align:center;
-        }
-
+        /* ══ BOOT ══ */
+        .boot-logo{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:10px;color:#f3f3ee;animation:glow 2s ease-in-out infinite alternate;}
+        @keyframes glow{from{text-shadow:0 0 10px rgba(243,243,238,0.2);}to{text-shadow:0 0 30px rgba(243,243,238,0.5);}}
+        .boot-tag{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(243,243,238,0.3);margin-top:-16px;text-align:center;}
         .check-list{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;}
-
-        .chk{
-            display:flex;align-items:center;gap:12px;
-            font-size:13px;letter-spacing:0.5px;
-            color:rgba(243,243,238,0.2);transition:color 0.3s;padding:2px 0;
-        }
+        .chk{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(243,243,238,0.2);transition:color 0.3s;padding:2px 0;}
         .chk.running{color:rgba(243,243,238,0.7);}
         .chk.done{color:#f3f3ee;}
         .chk.fail{color:#ef4444;}
-
-        .chk-icon{
-            width:20px;height:20px;border-radius:50%;
-            border:1.5px solid rgba(243,243,238,0.15);
-            display:flex;align-items:center;justify-content:center;
-            font-size:10px;flex-shrink:0;transition:all 0.3s;
-        }
+        .chk-icon{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(243,243,238,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all 0.3s;}
         .chk.running .chk-icon{border-color:rgba(243,243,238,0.5);animation:spin 0.8s linear infinite;}
         .chk.done .chk-icon{background:#f3f3ee;border-color:#f3f3ee;color:#0b0b0b;font-size:11px;}
         .chk.fail .chk-icon{background:#ef4444;border-color:#ef4444;color:#fff;}
-
         .boot-bar-wrap{width:100%;max-width:320px;height:2px;background:rgba(243,243,238,0.1);border-radius:2px;overflow:hidden;}
         .boot-bar{height:100%;width:0%;background:#f3f3ee;border-radius:2px;transition:width 0.4s ease;}
         .boot-status{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(243,243,238,0.3);text-align:center;min-height:16px;}
 
-        /* ══ AUTH PAGES ══ */
+        /* ══ SHARED AUTH ══ */
         .wrap{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:20px;}
-
         .logo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:6px;}
-        .logo.dark{color:#0b0b0b;}
-        .logo.lite{color:#f3f3ee;}
-
         .tagline{font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.35;margin-top:-16px;text-align:center;}
 
-        /* steps */
         .steps{display:flex;align-items:center;width:100%;}
         .sdot{width:28px;height:28px;border-radius:50%;background:rgba(11,11,11,0.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:rgba(11,11,11,0.3);flex-shrink:0;transition:all 0.3s;}
         .sdot.active{background:#0b0b0b;color:#f3f3ee;}
@@ -95,29 +47,19 @@
         .sline{flex:1;height:2px;background:rgba(11,11,11,0.1);transition:background 0.3s;}
         .sline.done{background:#16a34a;}
 
-        /* card */
         .card{width:100%;background:#fff;border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 2px 24px rgba(11,11,11,0.07);}
         .card-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#0b0b0b;}
         .card-sub{font-size:13px;color:rgba(11,11,11,0.45);margin-top:-10px;line-height:1.5;}
 
         .field{display:flex;flex-direction:column;gap:6px;}
         label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(11,11,11,0.4);font-weight:700;}
-
         .iw{position:relative;}
-        input[type=text],input[type=email],input[type=password]{
-            width:100%;padding:14px 16px;
-            background:#f3f3ee;border:1.5px solid transparent;
-            border-radius:10px;font-family:'DM Sans',sans-serif;
-            font-size:15px;color:#0b0b0b;outline:none;
-            transition:border-color 0.2s,background 0.2s;
-        }
+        input[type=text],input[type=email],input[type=password]{width:100%;padding:14px 16px;background:#f3f3ee;border:1.5px solid transparent;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:#0b0b0b;outline:none;transition:border-color 0.2s,background 0.2s;}
         input.ht{padding-right:48px;}
         input:focus{border-color:#0b0b0b;background:#fff;}
         input::placeholder{color:rgba(11,11,11,0.25);}
-
         .eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(11,11,11,0.35);font-size:16px;padding:4px;line-height:1;}
 
-        /* strength */
         .sbar{display:flex;gap:4px;margin-top:2px;}
         .sseg{flex:1;height:3px;border-radius:4px;background:rgba(11,11,11,0.1);transition:background 0.3s;}
         .slabel{font-size:11px;letter-spacing:1px;margin-top:2px;min-height:14px;}
@@ -127,66 +69,68 @@
         .req .rd{width:6px;height:6px;border-radius:50%;background:rgba(11,11,11,0.15);flex-shrink:0;transition:background 0.2s;}
         .req.met .rd{background:#16a34a;}
 
-        /* suggest pw */
-        .suggest-btn{display:flex;align-items:center;gap:6px;background:rgba(11,11,11,0.04);border:1.5px dashed rgba(11,11,11,0.15);border-radius:8px;padding:10px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(11,11,11,0.5);letter-spacing:0.5px;width:100%;text-align:left;transition:all 0.2s;}
+        .suggest-btn{display:flex;align-items:center;gap:6px;background:rgba(11,11,11,0.04);border:1.5px dashed rgba(11,11,11,0.15);border-radius:8px;padding:10px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(11,11,11,0.5);letter-spacing:0.5px;width:100%;text-align:left;}
         .spw{display:none;background:rgba(11,11,11,0.04);border:1.5px solid rgba(11,11,11,0.1);border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;letter-spacing:1px;color:#0b0b0b;word-break:break-all;cursor:pointer;}
         .spw.show{display:block;}
         .pwhint{font-size:11px;color:rgba(11,11,11,0.35);text-align:center;}
 
-        /* buttons */
         .btn{width:100%;padding:16px;background:#0b0b0b;color:#f3f3ee;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s,transform 0.1s;margin-top:4px;}
-        .btn:hover{opacity:0.85;}
         .btn:active{transform:scale(0.98);}
         .btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
         .btn-ghost{background:transparent;color:rgba(11,11,11,0.45);border:1.5px solid rgba(11,11,11,0.12);}
-        .btn-back{background:transparent;color:rgba(11,11,11,0.4);border:none;font-size:12px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;width:auto;font-family:'DM Sans',sans-serif;}
         .btn-green{background:#16a34a;color:#fff;}
+        .btn-back{background:transparent;color:rgba(11,11,11,0.4);border:none;font-size:12px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;width:auto;font-family:'DM Sans',sans-serif;}
 
         .divider{display:flex;align-items:center;gap:12px;}
         .divider span{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(11,11,11,0.25);white-space:nowrap;}
         .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(11,11,11,0.1);}
 
         .badge{display:inline-flex;align-items:center;gap:6px;background:#0b0b0b;color:#f3f3ee;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:800;padding:6px 14px;border-radius:100px;}
-
         .dot-pulse{width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0;}
         @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
 
         .msg{font-size:13px;text-align:center;min-height:18px;}
         .msg.ok{color:#16a34a;}
         .msg.err{color:#dc2626;}
-        .msg.info{color:#2563eb;}
 
         .forgot-link{font-size:12px;color:rgba(11,11,11,0.4);cursor:pointer;text-align:right;}
-        .forgot-link:hover{color:#0b0b0b;}
 
         .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(243,243,238,0.3);border-top-color:#f3f3ee;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:6px;}
-        .spinner-dark{border:2px solid rgba(11,11,11,0.2);border-top-color:#0b0b0b;}
         @keyframes spin{to{transform:rotate(360deg);}}
 
-        .device-badge{display:flex;align-items:center;gap:8px;background:rgba(11,11,11,0.04);border:1px solid rgba(11,11,11,0.08);border-radius:8px;padding:10px 14px;font-size:11px;color:rgba(11,11,11,0.4);letter-spacing:0.5px;word-break:break-all;}
-        .device-badge strong{color:#0b0b0b;font-size:10px;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
+        .dev-badge{display:flex;align-items:center;gap:8px;background:rgba(11,11,11,0.04);border:1px solid rgba(11,11,11,0.08);border-radius:8px;padding:10px 14px;font-size:11px;color:rgba(11,11,11,0.4);word-break:break-all;}
+        .dev-badge strong{color:#0b0b0b;font-size:10px;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
 
-        /* ══ DASHBOARD PAGE ══ */
-        #pg-dash{background:#0b0b0b;justify-content:flex-start;padding:0;align-items:stretch;}
+        /* ══ DASHBOARD ══ */
+        #pg-dash{padding:0;justify-content:flex-start;align-items:stretch;background:#0b0b0b;}
 
-        .dash-header{
-            display:flex;align-items:center;justify-content:space-between;
-            padding:16px 20px;
-            background:rgba(11,11,11,0.97);
-            border-bottom:1px solid rgba(255,255,255,0.07);
-            position:sticky;top:0;z-index:10;
-        }
-
+        .dash-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(11,11,11,0.97);border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:10;}
         .dash-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:5px;color:#f3f3ee;}
-
-        .conn-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s;}
+        .conn-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
         .conn-pill.on{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#22c55e;}
         .conn-pill.off{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;}
         .conn-pill.on .cdot{animation:pulse 1.5s infinite;}
         .cdot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+        .dash-av{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1.5px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#f3f3ee;cursor:pointer;}
 
-        .dash-avatar{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1.5px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#f3f3ee;cursor:pointer;transition:border-color 0.2s;}
-        .dash-avatar:hover{border-color:rgba(255,255,255,0.3);}
+        /* Dashboard body */
+        .dash-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:28px;}
+
+        /* Big profile circle */
+        .big-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border:2px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#f3f3ee;}
+
+        .big-name{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:5px;color:#f3f3ee;text-align:center;}
+        .big-email{font-size:12px;color:rgba(243,243,238,0.35);text-align:center;margin-top:-16px;}
+
+        /* Plan pill */
+        .plan-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+        .plan-pill.free{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#f59e0b;}
+        .plan-pill.paid{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#22c55e;}
+        .plan-pill.exp{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;}
+
+        /* Top up button */
+        .topup-btn{display:none;width:100%;max-width:320px;padding:16px;background:#f3f3ee;color:#0b0b0b;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+        .topup-btn.show{display:block;}
 
         /* expired banner */
         .exp-banner{display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:#ef4444;}
@@ -197,18 +141,14 @@
         /* ══ SHEET ══ */
         .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.3s;}
         .overlay.open{opacity:1;pointer-events:all;}
-
         .sheet{position:fixed;bottom:0;left:0;right:0;background:#141414;border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,0.08);padding:12px 24px max(32px,env(safe-area-inset-bottom));z-index:101;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.32,0.72,0,1);max-height:88dvh;overflow-y:auto;}
         .sheet.open{transform:translateY(0);}
-
         .handle{width:36px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;margin:0 auto 24px;}
-
         .sheet-top{display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:8px;}
         .sheet-big-av{width:56px;height:56px;border-radius:50%;background:#1a1a1a;border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#f3f3ee;flex-shrink:0;}
-        .sheet-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;line-height:1;}
-        .sheet-email{font-size:12px;color:rgba(243,243,238,0.4);margin-top:3px;}
-
-        .srow{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+        .sname{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;line-height:1;color:#f3f3ee;}
+        .semail{font-size:12px;color:rgba(243,243,238,0.4);margin-top:3px;}
+        .srow{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
         .srow:last-of-type{border:none;}
         .skey{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(243,243,238,0.35);}
         .sval{font-size:13px;font-weight:700;color:#f3f3ee;text-align:right;}
@@ -216,29 +156,20 @@
         .sval.amber{color:#f59e0b;}
         .sval.red{color:#ef4444;}
         .sval.mono{font-family:'DM Mono',monospace;font-size:10px;color:rgba(243,243,238,0.35);}
-
         .sheet-btns{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
         .sbtn{width:100%;padding:15px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:opacity 0.2s,transform 0.1s;}
         .sbtn:active{transform:scale(0.98);}
         .sbtn.primary{background:#f3f3ee;color:#0b0b0b;}
         .sbtn.outline{background:transparent;color:#f3f3ee;border:1.5px solid rgba(255,255,255,0.1);}
         .sbtn.danger{background:transparent;color:#ef4444;border:1.5px solid rgba(239,68,68,0.2);}
-        .sbtn:hover{opacity:0.85;}
-
-        /* success icon */
-        .success-icon{width:64px;height:64px;background:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);}
-        @keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
     </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════
-     BOOT / SECURITY CHECK
-══════════════════════════════════ -->
-<div class="page" id="pg-boot">
+<!-- ══ BOOT ══ -->
+<div class="page dark" id="pg-boot">
     <div class="boot-logo">nmedea</div>
     <div class="boot-tag">Secure Internet Access</div>
-
     <div class="check-list">
         <div class="chk" id="chk-device"><div class="chk-icon">·</div><span>Reading device identity</span></div>
         <div class="chk" id="chk-session"><div class="chk-icon">·</div><span>Checking saved session</span></div>
@@ -247,32 +178,20 @@
         <div class="chk" id="chk-sync"><div class="chk-icon">·</div><span>Syncing with nmedea</span></div>
         <div class="chk" id="chk-sec"><div class="chk-icon">·</div><span>Applying security protocols</span></div>
     </div>
-
     <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
     <div class="boot-status" id="boot-status">Initialising...</div>
 </div>
 
-<!-- ══════════════════════════════════
-     LOGIN
-══════════════════════════════════ -->
+<!-- ══ LOGIN ══ -->
 <div class="page light" id="pg-login">
     <div class="wrap">
-        <div class="logo dark">nmedea</div>
+        <div class="logo">nmedea</div>
         <div class="tagline">Your internet. Your way.</div>
         <div class="card">
             <div class="card-title">Welcome Back</div>
             <div class="card-sub">Sign in to continue.</div>
-            <div class="field">
-                <label>Email</label>
-                <input type="email" id="l-email" placeholder="you@example.com" autocomplete="email"/>
-            </div>
-            <div class="field">
-                <label>Password</label>
-                <div class="iw">
-                    <input type="password" id="l-pass" placeholder="••••••••" class="ht" autocomplete="current-password"/>
-                    <button class="eye" onclick="toggleEye('l-pass',this)" type="button">👁</button>
-                </div>
-            </div>
+            <div class="field"><label>Email</label><input type="email" id="l-email" placeholder="you@example.com" autocomplete="email"/></div>
+            <div class="field"><label>Password</label><div class="iw"><input type="password" id="l-pass" placeholder="••••••••" class="ht" autocomplete="current-password"/><button class="eye" onclick="toggleEye('l-pass',this)" type="button">👁</button></div></div>
             <div class="forgot-link" onclick="showPage('pg-forgot')">Forgot password?</div>
             <button class="btn" id="l-btn" onclick="doLogin()">Sign In</button>
             <div class="divider"><span>new to nmedea</span></div>
@@ -282,31 +201,17 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     REGISTER STEP 1
-══════════════════════════════════ -->
+<!-- ══ REGISTER 1 ══ -->
 <div class="page light" id="pg-reg1">
     <div class="wrap">
-        <div class="logo dark">nmedea</div>
+        <div class="logo">nmedea</div>
         <div class="tagline">Create account</div>
-        <div class="steps">
-            <div class="sdot active">1</div>
-            <div class="sline"></div>
-            <div class="sdot">2</div>
-            <div class="sline"></div>
-            <div class="sdot">3</div>
-        </div>
+        <div class="steps"><div class="sdot active">1</div><div class="sline"></div><div class="sdot">2</div><div class="sline"></div><div class="sdot">3</div></div>
         <div class="card">
             <div class="card-title">Your Details</div>
             <div class="card-sub">Start with your basic info.</div>
-            <div class="field">
-                <label>Full Name</label>
-                <input type="text" id="r-name" placeholder="Your full name" autocomplete="name"/>
-            </div>
-            <div class="field">
-                <label>Email</label>
-                <input type="email" id="r-email" placeholder="you@example.com" autocomplete="email"/>
-            </div>
+            <div class="field"><label>Full Name</label><input type="text" id="r-name" placeholder="Your full name" autocomplete="name"/></div>
+            <div class="field"><label>Email</label><input type="email" id="r-email" placeholder="you@example.com" autocomplete="email"/></div>
             <button class="btn" id="r1-btn" onclick="doStep1()">Continue</button>
         </div>
         <div class="msg" id="r1-msg"></div>
@@ -314,20 +219,12 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     REGISTER STEP 2
-══════════════════════════════════ -->
+<!-- ══ REGISTER 2 ══ -->
 <div class="page light" id="pg-reg2">
     <div class="wrap">
-        <div class="logo dark">nmedea</div>
+        <div class="logo">nmedea</div>
         <div class="tagline">Create account</div>
-        <div class="steps">
-            <div class="sdot done">✓</div>
-            <div class="sline done"></div>
-            <div class="sdot active">2</div>
-            <div class="sline"></div>
-            <div class="sdot">3</div>
-        </div>
+        <div class="steps"><div class="sdot done">✓</div><div class="sline done"></div><div class="sdot active">2</div><div class="sline"></div><div class="sdot">3</div></div>
         <div class="card">
             <div class="card-title">Create Password</div>
             <div class="card-sub">We recommend a strong password.</div>
@@ -336,10 +233,7 @@
             <div class="pwhint" id="pwhint" style="display:none;">Tap to use — saved on your device</div>
             <div class="field">
                 <label>Password</label>
-                <div class="iw">
-                    <input type="password" id="r-pass" placeholder="Min 8 characters" class="ht" autocomplete="new-password" oninput="checkStrength(this.value)"/>
-                    <button class="eye" onclick="toggleEye('r-pass',this)" type="button">👁</button>
-                </div>
+                <div class="iw"><input type="password" id="r-pass" placeholder="Min 8 characters" class="ht" autocomplete="new-password" oninput="checkStrength(this.value)"/><button class="eye" onclick="toggleEye('r-pass',this)" type="button">👁</button></div>
                 <div class="sbar"><div class="sseg" id="sg1"></div><div class="sseg" id="sg2"></div><div class="sseg" id="sg3"></div><div class="sseg" id="sg4"></div></div>
                 <div class="slabel" id="slabel"></div>
                 <div class="req-list">
@@ -349,13 +243,7 @@
                     <div class="req" id="rq-sym"><div class="rd"></div>One symbol (!@#$...)</div>
                 </div>
             </div>
-            <div class="field">
-                <label>Confirm Password</label>
-                <div class="iw">
-                    <input type="password" id="r-pass2" placeholder="Repeat password" class="ht" autocomplete="new-password"/>
-                    <button class="eye" onclick="toggleEye('r-pass2',this)" type="button">👁</button>
-                </div>
-            </div>
+            <div class="field"><label>Confirm Password</label><div class="iw"><input type="password" id="r-pass2" placeholder="Repeat password" class="ht" autocomplete="new-password"/><button class="eye" onclick="toggleEye('r-pass2',this)" type="button">👁</button></div></div>
             <button class="btn" id="r2-btn" onclick="doStep2()">Continue</button>
         </div>
         <div class="msg" id="r2-msg"></div>
@@ -363,31 +251,17 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     REGISTER STEP 3
-══════════════════════════════════ -->
+<!-- ══ REGISTER 3 ══ -->
 <div class="page light" id="pg-reg3">
     <div class="wrap">
-        <div class="logo dark">nmedea</div>
+        <div class="logo">nmedea</div>
         <div class="tagline">Almost done!</div>
-        <div class="steps">
-            <div class="sdot done">✓</div>
-            <div class="sline done"></div>
-            <div class="sdot done">✓</div>
-            <div class="sline done"></div>
-            <div class="sdot active">3</div>
-        </div>
+        <div class="steps"><div class="sdot done">✓</div><div class="sline done"></div><div class="sdot done">✓</div><div class="sline done"></div><div class="sdot active">3</div></div>
         <div class="card">
             <div class="card-title">You're Ready</div>
-            <div class="card-sub">Your device has been registered. Claim your 15 minutes of free internet.</div>
-            <div class="badge" style="margin:4px auto;">
-                <span class="dot-pulse"></span>
-                15 minutes free — waiting for you
-            </div>
-            <div class="device-badge">
-                <strong>Device ID</strong>
-                <span id="device-id-show">Generating...</span>
-            </div>
+            <div class="card-sub">Claim your 15 minutes of free internet now.</div>
+            <div class="badge" style="margin:4px auto;"><span class="dot-pulse"></span>15 minutes free</div>
+            <div class="dev-badge"><strong>Device ID</strong><span id="dev-id-show">Generating...</span></div>
             <button class="btn btn-green" id="r3-btn" onclick="doCreateAccount()">Claim Free Access</button>
         </div>
         <div class="msg" id="r3-msg"></div>
@@ -395,20 +269,15 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     FORGOT PASSWORD
-══════════════════════════════════ -->
+<!-- ══ FORGOT ══ -->
 <div class="page light" id="pg-forgot">
     <div class="wrap">
-        <div class="logo dark">nmedea</div>
+        <div class="logo">nmedea</div>
         <div class="tagline">Reset password</div>
         <div class="card">
             <div class="card-title">Forgot Password</div>
-            <div class="card-sub">Enter your email and we'll send a reset link.</div>
-            <div class="field">
-                <label>Email</label>
-                <input type="email" id="f-email" placeholder="you@example.com"/>
-            </div>
+            <div class="card-sub">We'll send a reset link to your email.</div>
+            <div class="field"><label>Email</label><input type="email" id="f-email" placeholder="you@example.com"/></div>
             <button class="btn" id="f-btn" onclick="doForgot()">Send Reset Link</button>
             <button class="btn btn-ghost" onclick="showPage('pg-login')">Back to Sign In</button>
         </div>
@@ -416,43 +285,43 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     DASHBOARD
-══════════════════════════════════ -->
-<div class="page" id="pg-dash">
+<!-- ══ DASHBOARD ══ -->
+<div class="page dark" id="pg-dash" style="padding:0;justify-content:flex-start;align-items:stretch;">
+
     <!-- Header -->
     <div class="dash-header">
         <div class="dash-logo">nmedea</div>
-        <div class="conn-pill on" id="conn-pill">
-            <div class="cdot"></div>
-            <span id="conn-txt">Connected</span>
-        </div>
-        <div class="dash-avatar" id="dash-av" onclick="openSheet()">?</div>
+        <div class="conn-pill on" id="conn-pill"><div class="cdot"></div><span id="conn-txt">Connected</span></div>
+        <div class="dash-av" id="dash-av" onclick="openSheet()">?</div>
     </div>
 
     <!-- Expired banner -->
     <div class="exp-banner" id="exp-banner">
         <div class="exp-text">⏰ Free trial ended</div>
-        <button class="exp-btn" onclick="showPaySheet()">Top Up R10</button>
+        <button class="exp-btn" onclick="openSheet()">Top Up R10</button>
+    </div>
+
+    <!-- Body -->
+    <div class="dash-body">
+        <div class="big-avatar" id="big-av">?</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div class="big-name" id="big-name">Loading...</div>
+            <div class="big-email" id="big-email">—</div>
+            <div class="plan-pill free" id="plan-pill"><span class="dot-pulse"></span>Free Trial</div>
+        </div>
+        <button class="topup-btn" id="topup-btn" onclick="openSheet()">Top Up to Continue →</button>
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     SHEET OVERLAY
-══════════════════════════════════ -->
+<!-- ══ OVERLAY ══ -->
 <div class="overlay" id="overlay" onclick="closeSheet()"></div>
 
-<!-- ══════════════════════════════════
-     PROFILE SHEET
-══════════════════════════════════ -->
+<!-- ══ PROFILE SHEET ══ -->
 <div class="sheet" id="sheet">
     <div class="handle"></div>
     <div class="sheet-top">
         <div class="sheet-big-av" id="s-av">?</div>
-        <div>
-            <div class="sheet-name" id="s-name">—</div>
-            <div class="sheet-email" id="s-email">—</div>
-        </div>
+        <div><div class="sname" id="s-name">—</div><div class="semail" id="s-email">—</div></div>
     </div>
     <div class="srow"><span class="skey">Plan</span><span class="sval amber" id="s-plan">Free Trial ⚡</span></div>
     <div class="srow"><span class="skey">Status</span><span class="sval green" id="s-status">Active ✓</span></div>
@@ -461,91 +330,54 @@
     <div class="srow"><span class="skey">Member Since</span><span class="sval" id="s-since">—</span></div>
     <div class="srow"><span class="skey">Device ID</span><span class="sval mono" id="s-device">—</span></div>
     <div class="sheet-btns">
-        <button class="sbtn primary" onclick="closeSheet();showPaySheet()">Top Up R10</button>
+        <button class="sbtn primary" onclick="closeSheet()">Top Up R10 — 1 Week</button>
         <button class="sbtn outline" onclick="doSignOut()">Sign Out</button>
         <button class="sbtn danger" onclick="confirmDelete()">Delete Account</button>
     </div>
 </div>
 
-<!-- ══════════════════════════════════
-     PAY SHEET
-══════════════════════════════════ -->
-<div class="sheet" id="pay-sheet" style="z-index:102;">
-    <div class="handle"></div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#f3f3ee;margin-bottom:8px;">Top Up Balance</div>
-    <div style="font-size:13px;color:rgba(243,243,238,0.4);margin-bottom:20px;">Choose a plan to continue your internet access.</div>
-    <div class="sheet-btns">
-        <button class="sbtn primary" onclick="closePaySheet()">R10 — 1 Week Access</button>
-        <button class="sbtn outline" onclick="closePaySheet()">R30 — 1 Month Access</button>
-        <button class="sbtn" style="background:transparent;color:rgba(243,243,238,0.3);border:none;font-size:12px;" onclick="closePaySheet()">Cancel</button>
-    </div>
-</div>
-
-<!-- ════════════════════════════════
-     SCRIPTS
-════════════════════════════════ -->
 <script>
+    /* PAGE SWITCH */
+    window.showPage=id=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');};
 
-    /* ══ PAGE SWITCH ══ */
-    window.showPage = id => {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    };
-
-    /* ══ DEVICE FINGERPRINT ══ */
-    window.getDeviceID = () => {
-        try {
-            const saved = localStorage.getItem('nmedea_device_id');
-            if (saved) return saved;
-        } catch(e){}
-        const raw = [navigator.userAgent,navigator.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||'unk',navigator.deviceMemory||'unk',navigator.platform||'unk',navigator.maxTouchPoints||'0'].join('||');
-        let h = 5381;
-        for(let i=0;i<raw.length;i++){h=((h<<5)+h)^raw.charCodeAt(i);h=h>>>0;}
+    /* DEVICE ID */
+    window.getDeviceID=()=>{
+        try{const s=localStorage.getItem('nmedea_device_id');if(s)return s;}catch(e){}
+        const raw=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||'u',navigator.deviceMemory||'u',navigator.platform||'u'].join('||');
+        let h=5381;for(let i=0;i<raw.length;i++){h=((h<<5)+h)^raw.charCodeAt(i);h=h>>>0;}
         const id='NM-'+h.toString(36).toUpperCase()+'-'+Date.now().toString(36).toUpperCase();
         try{localStorage.setItem('nmedea_device_id',id);}catch(e){}
         return id;
     };
 
-    /* ══ EYE TOGGLE ══ */
-    window.toggleEye = (inputId,btn) => {
-        const el=document.getElementById(inputId);
-        el.type=el.type==='password'?'text':'password';
-        btn.textContent=el.type==='password'?'👁':'🙈';
-    };
+    /* EYE */
+    window.toggleEye=(id,btn)=>{const el=document.getElementById(id);el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';};
 
-    /* ══ PASSWORD GENERATOR ══ */
-    const ch={upper:'ABCDEFGHJKLMNPQRSTUVWXYZ',lower:'abcdefghjkmnpqrstuvwxyz',nums:'23456789',syms:'!@#$%&*?'};
+    /* PASSWORD GENERATOR */
+    const CH={U:'ABCDEFGHJKLMNPQRSTUVWXYZ',L:'abcdefghjkmnpqrstuvwxyz',N:'23456789',S:'!@#$%&*?'};
     window.generatePw=()=>{
-        const all=ch.upper+ch.lower+ch.nums+ch.syms;
-        let pw=ch.upper[Math.floor(Math.random()*ch.upper.length)]+ch.lower[Math.floor(Math.random()*ch.lower.length)]+ch.nums[Math.floor(Math.random()*ch.nums.length)]+ch.syms[Math.floor(Math.random()*ch.syms.length)];
-        for(let i=4;i<14;i++)pw+=all[Math.floor(Math.random()*all.length)];
+        const all=CH.U+CH.L+CH.N+CH.S;
+        let pw=CH.U[~~(Math.random()*CH.U.length)]+CH.L[~~(Math.random()*CH.L.length)]+CH.N[~~(Math.random()*CH.N.length)]+CH.S[~~(Math.random()*CH.S.length)];
+        for(let i=4;i<14;i++)pw+=all[~~(Math.random()*all.length)];
         pw=pw.split('').sort(()=>Math.random()-0.5).join('');
         window._spw=pw;
-        const el=document.getElementById('spw');
-        el.textContent=pw;el.classList.add('show');
+        const el=document.getElementById('spw');el.textContent=pw;el.classList.add('show');
         document.getElementById('pwhint').style.display='block';
     };
     window.usePw=()=>{
         if(!window._spw)return;
-        document.getElementById('r-pass').value=window._spw;
-        document.getElementById('r-pass2').value=window._spw;
-        document.getElementById('r-pass').type='text';
-        document.getElementById('r-pass2').type='text';
+        ['r-pass','r-pass2'].forEach(id=>{const el=document.getElementById(id);el.value=window._spw;el.type='text';});
         checkStrength(window._spw);
-        try{const s=JSON.parse(localStorage.getItem('nmedea_saved_pws')||'[]');s.unshift({pw:window._spw,date:new Date().toISOString()});localStorage.setItem('nmedea_saved_pws',JSON.stringify(s.slice(0,5)));}catch(e){}
-        document.getElementById('pwhint').textContent='✓ Password saved on your device';
+        document.getElementById('pwhint').textContent='✓ Saved on your device';
         document.getElementById('pwhint').style.color='#16a34a';
     };
 
-    /* ══ STRENGTH ══ */
+    /* STRENGTH */
     window.checkStrength=pw=>{
         const segs=[1,2,3,4].map(i=>document.getElementById('sg'+i));
         const label=document.getElementById('slabel');
         const hL=pw.length>=8,hU=/[A-Z]/.test(pw),hN=/[0-9]/.test(pw),hS=/[!@#$%^&*?_\-+=]/.test(pw);
-        document.getElementById('rq-len').classList.toggle('met',hL);
-        document.getElementById('rq-up').classList.toggle('met',hU);
-        document.getElementById('rq-num').classList.toggle('met',hN);
-        document.getElementById('rq-sym').classList.toggle('met',hS);
+        ['rq-len','rq-up','rq-num','rq-sym'].forEach((id,i)=>document.getElementById(id).classList.toggle('met',[hL,hU,hN,hS][i]));
         const score=[hL,hU,hN,hS].filter(Boolean).length;
         const colors=['#ef4444','#f97316','#eab308','#16a34a'];
         const labels=[{t:'Too weak',c:'#ef4444'},{t:'Weak',c:'#f97316'},{t:'Fair',c:'#eab308'},{t:'Strong ✓',c:'#16a34a'}];
@@ -553,19 +385,15 @@
         if(pw.length===0){label.textContent='';}else{label.textContent=labels[score-1]?.t||'';label.style.color=labels[score-1]?.c||'';}
     };
 
-    /* ══ HELPERS ══ */
+    /* HELPERS */
     const setBtn=(id,loading,text)=>{const b=document.getElementById(id);b.disabled=loading;b.innerHTML=loading?'<span class="spinner"></span>Please wait...':text;};
     const msg=(id,text,type)=>{const el=document.getElementById(id);el.textContent=text;el.className='msg '+(type||'');};
 
-    /* ══ BOOT SEQUENCE ══ */
+    /* BOOT */
     window.showBoot=async()=>{
         document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
         document.getElementById('pg-boot').classList.add('active');
-        ['chk-device','chk-session','chk-token','chk-sub','chk-sync','chk-sec'].forEach(id=>{
-            const el=document.getElementById(id);
-            el.className='chk';
-            el.querySelector('.chk-icon').textContent='·';
-        });
+        ['chk-device','chk-session','chk-token','chk-sub','chk-sync','chk-sec'].forEach(id=>{const el=document.getElementById(id);el.className='chk';el.querySelector('.chk-icon').textContent='·';});
         document.getElementById('boot-bar').style.width='0%';
         document.getElementById('boot-status').textContent='Initialising...';
         await runBoot();
@@ -574,198 +402,170 @@
     async function runBoot(){
         const bar=document.getElementById('boot-bar');
         const status=document.getElementById('boot-status');
-        const setChk=(id,state,icon)=>{const el=document.getElementById(id);const ico=el.querySelector('.chk-icon');el.className='chk '+state;ico.textContent=icon||(state==='done'?'✓':state==='fail'?'✗':'·');};
-        const prog=pct=>{bar.style.width=pct+'%';};
+        const setChk=(id,state,icon)=>{const el=document.getElementById(id);el.className='chk '+state;el.querySelector('.chk-icon').textContent=icon||(state==='done'?'✓':state==='fail'?'✗':'·');};
+        const prog=p=>{bar.style.width=p+'%';};
         const wait=ms=>new Promise(r=>setTimeout(r,ms));
 
-        // Step 1 — Device ID
         await wait(300);setChk('chk-device','running','');status.textContent='Reading device identity...';
         const deviceId=window.getDeviceID();
         await wait(700);setChk('chk-device','done');prog(17);
 
-        // Step 2 — Session
         await wait(200);setChk('chk-session','running','');status.textContent='Checking saved session...';
-        let session=null;
-        try{session=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
+        let session=null;try{session=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
         await wait(600);
 
         if(session&&session.uid&&session.token){
             setChk('chk-session','done');prog(34);
-
-            // Step 3 — Token
             await wait(200);setChk('chk-token','running','');status.textContent='Verifying access token...';
-            const tokenOk=session.token&&session.token.length>10;
             await wait(600);
-            if(!tokenOk){setChk('chk-token','fail');prog(51);await wait(500);try{localStorage.removeItem('nmedea_session');}catch(e){}showPage('pg-login');return;}
+            if(!session.token||session.token.length<10){setChk('chk-token','fail');prog(51);await wait(500);try{localStorage.removeItem('nmedea_session');}catch(e){}showPage('pg-login');return;}
             setChk('chk-token','done');prog(51);
 
-            // Step 4 — Subscription
             await wait(200);setChk('chk-sub','running','');status.textContent='Checking subscription...';
             let isSubscribed=session.subscribed;
-            if(session.isFree&&session.freeExpiry){
-                if(Date.now()>new Date(session.freeExpiry).getTime()){
-                    isSubscribed=false;session.subscribed=false;session.isFree=false;
-                    try{localStorage.setItem('nmedea_session',JSON.stringify(session));}catch(e){}
-                }
+            if(session.isFree&&session.freeExpiry&&Date.now()>new Date(session.freeExpiry).getTime()){
+                isSubscribed=false;session.subscribed=false;session.isFree=false;
+                try{localStorage.setItem('nmedea_session',JSON.stringify(session));}catch(e){}
             }
             await wait(700);setChk('chk-sub',isSubscribed?'done':'fail');prog(68);
 
-            // Step 5 — Sync
             await wait(200);setChk('chk-sync','running','');status.textContent='Syncing with nmedea...';
             await wait(800);setChk('chk-sync','done');prog(85);
 
-            // Step 6 — Security
             await wait(200);setChk('chk-sec','running','');status.textContent='Applying security protocols...';
             const deviceMatch=!session.deviceId||session.deviceId===deviceId;
             await wait(700);setChk('chk-sec',deviceMatch?'done':'fail');prog(100);
             await wait(500);
 
-            if(isSubscribed&&deviceMatch){
-                status.textContent='Access granted ✓';
+            if(deviceMatch){
+                status.textContent=isSubscribed?'Access granted ✓':'Trial expired';
                 await wait(400);
-                loadDashboard(session);
+                loadDash(session,isSubscribed);
                 showPage('pg-dash');
-            } else if(!isSubscribed){
-                status.textContent='Subscription expired';
-                await wait(400);
-                loadDashboard(session);
-                showPage('pg-dash');
-                document.getElementById('exp-banner').classList.add('show');
-                document.getElementById('conn-pill').className='conn-pill off';
-                document.getElementById('conn-txt').textContent='Expired';
             } else {
                 try{localStorage.removeItem('nmedea_session');}catch(e){}
                 showPage('pg-login');
             }
-
         } else {
-            // No session — quick checks then login
             setChk('chk-session','done');prog(34);
-            for(const[id,p] of [['chk-token',51],['chk-sub',68],['chk-sync',85],['chk-sec',100]]){
+            for(const[id,p]of [['chk-token',51],['chk-sub',68],['chk-sync',85],['chk-sec',100]]){
                 await wait(150);setChk(id,'running','');await wait(350);setChk(id,'done');prog(p);
             }
-            await wait(300);status.textContent='No session found';
-            await wait(300);showPage('pg-login');
+            await wait(300);status.textContent='No session found';await wait(300);showPage('pg-login');
         }
     }
 
-    /* ══ DASHBOARD ══ */
-    function loadDashboard(session){
-        if(!session)return;
+    /* LOAD DASHBOARD */
+    function loadDash(session,isSubscribed){
         const name=session.name||'User';
         const initial=name.charAt(0).toUpperCase();
         document.getElementById('dash-av').textContent=initial;
+        document.getElementById('big-av').textContent=initial;
+        document.getElementById('big-name').textContent=name;
+        document.getElementById('big-email').textContent=session.email||'';
         document.getElementById('s-av').textContent=initial;
         document.getElementById('s-name').textContent=name;
-        document.getElementById('s-email').textContent=session.email||'—';
+        document.getElementById('s-email').textContent=session.email||'';
         document.getElementById('s-balance').textContent='R'+(session.balance||0);
-        document.getElementById('s-device').textContent=(session.deviceId||'—').substring(0,18)+'...';
+        document.getElementById('s-device').textContent=(session.deviceId||'').substring(0,18)+'...';
         if(session.createdAt)document.getElementById('s-since').textContent=new Date(session.createdAt).toLocaleDateString('en-ZA');
         if(session.freeExpiry)document.getElementById('s-expiry').textContent=new Date(session.freeExpiry).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'});
-        if(!session.isFree&&session.subscribed){
+
+        if(!isSubscribed){
+            document.getElementById('conn-pill').className='conn-pill off';
+            document.getElementById('conn-txt').textContent='Expired';
+            document.getElementById('exp-banner').classList.add('show');
+            document.getElementById('plan-pill').textContent='Expired';
+            document.getElementById('plan-pill').className='plan-pill exp';
+            document.getElementById('topup-btn').classList.add('show');
+            document.getElementById('s-status').textContent='Expired';
+            document.getElementById('s-status').className='sval red';
+        } else if(!session.isFree){
+            document.getElementById('plan-pill').innerHTML='✓ Active Plan';
+            document.getElementById('plan-pill').className='plan-pill paid';
             document.getElementById('s-plan').textContent='Active Plan ✓';
             document.getElementById('s-plan').className='sval green';
         }
 
-        // Check expiry every 30 seconds
+        // Check expiry every 30s
         setInterval(()=>{
             if(!session.isFree||!session.freeExpiry)return;
             if(Date.now()>new Date(session.freeExpiry).getTime()){
                 document.getElementById('exp-banner').classList.add('show');
                 document.getElementById('conn-pill').className='conn-pill off';
                 document.getElementById('conn-txt').textContent='Expired';
-                document.getElementById('s-status').textContent='Expired';
-                document.getElementById('s-status').className='sval red';
+                document.getElementById('plan-pill').textContent='Expired';
+                document.getElementById('plan-pill').className='plan-pill exp';
+                document.getElementById('topup-btn').classList.add('show');
             }
         },30000);
     }
 
-    /* ══ SHEET ══ */
+    /* SHEET */
     window.openSheet=()=>{document.getElementById('overlay').classList.add('open');document.getElementById('sheet').classList.add('open');};
     window.closeSheet=()=>{document.getElementById('overlay').classList.remove('open');document.getElementById('sheet').classList.remove('open');};
-    window.showPaySheet=()=>{document.getElementById('overlay').classList.add('open');document.getElementById('pay-sheet').classList.add('open');};
-    window.closePaySheet=()=>{document.getElementById('overlay').classList.remove('open');document.getElementById('pay-sheet').classList.remove('open');};
 
-    /* ══ SIGN OUT ══ */
+    /* SIGN OUT */
     window.doSignOut=()=>{
         if(!confirm('Sign out of nmedea?'))return;
         try{localStorage.removeItem('nmedea_session');}catch(e){}
-        showPage('pg-login');
-        closeSheet();
+        closeSheet();showPage('pg-login');
     };
 
-    /* ══ DELETE ══ */
+    /* DELETE */
     window.confirmDelete=async()=>{
-        if(!confirm('Delete your account permanently? This cannot be undone.'))return;
+        if(!confirm('Delete account permanently? Cannot be undone.'))return;
         try{localStorage.removeItem('nmedea_session');localStorage.removeItem('nmedea_device_id');}catch(e){}
-        showPage('pg-login');
-        closeSheet();
+        closeSheet();showPage('pg-login');
     };
 
-    /* ══ STARTUP ══ */
+    /* STARTUP */
     window.addEventListener('load',()=>{
         try{
-            const session=JSON.parse(localStorage.getItem('nmedea_session')||'null');
-            if(session&&session.uid&&session.token){
-                showBoot();
-            } else {
-                showPage('pg-login');
-            }
-        } catch(e){showPage('pg-login');}
+            const s=JSON.parse(localStorage.getItem('nmedea_session')||'null');
+            if(s&&s.uid&&s.token){showBoot();}else{showPage('pg-login');}
+        }catch(e){showPage('pg-login');}
     });
 
-    /* ══ ENTER KEY ══ */
+    /* ENTER KEY */
     document.addEventListener('keydown',e=>{
         if(e.key!=='Enter')return;
-        const active=document.querySelector('.page.active')?.id;
-        if(active==='pg-login')window.doLogin&&window.doLogin();
-        if(active==='pg-reg1')window.doStep1&&window.doStep1();
-        if(active==='pg-reg2')window.doStep2&&window.doStep2();
-        if(active==='pg-forgot')window.doForgot&&window.doForgot();
+        const a=document.querySelector('.page.active')?.id;
+        if(a==='pg-login')window.doLogin?.();
+        if(a==='pg-reg1')window.doStep1?.();
+        if(a==='pg-reg2')window.doStep2?.();
+        if(a==='pg-forgot')window.doForgot?.();
     });
-
 </script>
 
-<!-- ════════════════════════════════
-     FIREBASE
-════════════════════════════════ -->
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile,sendPasswordResetEmail,onAuthStateChanged,signOut,deleteUser}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import{getFirestore,doc,setDoc,getDoc,collection,where,query,getDocs,enableIndexedDbPersistence}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const app=initializeApp({apiKey:"AIzaSyBreKi86gv26Eig7hym4WFhAB70VbVWW5g",authDomain:"checkers-225fb.firebaseapp.com",projectId:"checkers-225fb",storageBucket:"checkers-225fb.firebasestorage.app",messagingSenderId:"75322611034",appId:"1:75322611034:web:d3725be1ae7b640b408f63"});
-const auth=getAuth(app);
-const db=getFirestore(app);
+const auth=getAuth(app);const db=getFirestore(app);
 enableIndexedDbPersistence(db).catch(()=>{});
 
-const setBtn=(id,loading,text)=>{const b=document.getElementById(id);b.disabled=loading;b.innerHTML=loading?'<span class="spinner"></span>Please wait...':text;};
-const msg=(id,text,type)=>{const el=document.getElementById(id);el.textContent=text;el.className='msg '+(type||'');};
-
+const setBtn=(id,l,t)=>{const b=document.getElementById(id);b.disabled=l;b.innerHTML=l?'<span class="spinner"></span>Please wait...':t;};
+const msg=(id,t,type)=>{const el=document.getElementById(id);el.textContent=t;el.className='msg '+(type||'');};
 let regData={};
 
-/* ── SYNC SESSION WHEN ONLINE ── */
 onAuthStateChanged(auth,async user=>{
     if(!user)return;
     try{
         const snap=await getDoc(doc(db,'users',user.uid));
         if(!snap.exists())return;
         const data=snap.data();
-        let s=null;
-        try{s=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
+        let s=null;try{s=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
         if(!s)return;
-        s.balance=data.balance??s.balance;
-        s.subscribed=data.subscribed??s.subscribed;
-        s.isFree=data.isFree??s.isFree;
-        s.freeExpiry=data.freeExpiry??s.freeExpiry;
-        s.createdAt=data.createdAt??s.createdAt;
+        s.balance=data.balance??s.balance;s.subscribed=data.subscribed??s.subscribed;s.isFree=data.isFree??s.isFree;s.freeExpiry=data.freeExpiry??s.freeExpiry;s.createdAt=data.createdAt??s.createdAt;
         try{localStorage.setItem('nmedea_session',JSON.stringify(s));}catch(e){}
-        document.getElementById('s-balance').textContent='R'+(data.balance||0);
-        if(data.createdAt)document.getElementById('s-since').textContent=new Date(data.createdAt).toLocaleDateString('en-ZA');
+        try{document.getElementById('s-balance').textContent='R'+(data.balance||0);}catch(e){}
+        if(data.createdAt)try{document.getElementById('s-since').textContent=new Date(data.createdAt).toLocaleDateString('en-ZA');}catch(e){}
     }catch(e){}
 });
 
-/* ── LOGIN ── */
 window.doLogin=async()=>{
     const email=document.getElementById('l-email').value.trim();
     const pass=document.getElementById('l-pass').value;
@@ -773,45 +573,26 @@ window.doLogin=async()=>{
     setBtn('l-btn',true,'Sign In');
     try{
         const cred=await signInWithEmailAndPassword(auth,email,pass);
-        let userData=null;
-        try{const snap=await getDoc(doc(db,'users',cred.user.uid));if(snap.exists())userData=snap.data();}catch(e){}
-        const deviceId=window.getDeviceID();
-        try{
-            localStorage.setItem('nmedea_session',JSON.stringify({
-                uid:cred.user.uid,
-                token:userData?.token||('tok_'+crypto.randomUUID()),
-                freeExpiry:userData?.freeExpiry||null,
-                subscribed:userData?.subscribed??true,
-                isFree:userData?.isFree??false,
-                balance:userData?.balance||0,
-                name:userData?.name||cred.user.displayName||'',
-                email:cred.user.email,
-                createdAt:userData?.createdAt||null,
-                deviceId:deviceId
-            }));
-        }catch(e){}
+        let ud=null;try{const sn=await getDoc(doc(db,'users',cred.user.uid));if(sn.exists())ud=sn.data();}catch(e){}
+        try{localStorage.setItem('nmedea_session',JSON.stringify({uid:cred.user.uid,token:ud?.token||('tok_'+crypto.randomUUID()),freeExpiry:ud?.freeExpiry||null,subscribed:ud?.subscribed??true,isFree:ud?.isFree??false,balance:ud?.balance||0,name:ud?.name||cred.user.displayName||'',email:cred.user.email,createdAt:ud?.createdAt||null,deviceId:window.getDeviceID()}));}catch(e){}
         window.showBoot();
     }catch(e){
         const m={'auth/invalid-credential':'Invalid email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/too-many-requests':'Too many attempts. Please wait.'};
-        msg('l-msg',m[e.code]||'Login failed. Try again.','err');
-        setBtn('l-btn',false,'Sign In');
+        msg('l-msg',m[e.code]||'Login failed. Try again.','err');setBtn('l-btn',false,'Sign In');
     }
 };
 
-/* ── STEP 1 ── */
 window.doStep1=async()=>{
     const name=document.getElementById('r-name').value.trim();
     const email=document.getElementById('r-email').value.trim();
     if(!name){msg('r1-msg','Please enter your name.','err');return;}
     if(!email.includes('@')){msg('r1-msg','Please enter a valid email.','err');return;}
     const deviceId=window.getDeviceID();
-    try{const used=localStorage.getItem('nmedea_trial_used_'+deviceId);if(used){msg('r1-msg','Free trial already used on this device. Please pay R10.','err');return;}}catch(e){}
-    try{const q=query(collection(db,'users'),where('deviceId','==',deviceId),where('usedFreeTrial','==',true));const snap=await getDocs(q);if(!snap.empty){msg('r1-msg','Free trial already used on this device.','err');try{localStorage.setItem('nmedea_trial_used_'+deviceId,'1');}catch(e2){}return;}}catch(e){}
-    regData.name=name;regData.email=email;regData.deviceId=deviceId;
-    window.showPage('pg-reg2');
+    try{if(localStorage.getItem('nmedea_trial_used_'+deviceId)){msg('r1-msg','Free trial already used on this device.','err');return;}}catch(e){}
+    try{const q=query(collection(db,'users'),where('deviceId','==',deviceId),where('usedFreeTrial','==',true));const sn=await getDocs(q);if(!sn.empty){msg('r1-msg','Free trial already used on this device.','err');try{localStorage.setItem('nmedea_trial_used_'+deviceId,'1');}catch(e){}return;}}catch(e){}
+    regData={name,email,deviceId};showPage('pg-reg2');
 };
 
-/* ── STEP 2 ── */
 window.doStep2=()=>{
     const pass=document.getElementById('r-pass').value;
     const pass2=document.getElementById('r-pass2').value;
@@ -819,11 +600,10 @@ window.doStep2=()=>{
     if(!hL||!hU||!hN||!hS){msg('r2-msg','Please meet all password requirements.','err');return;}
     if(pass!==pass2){msg('r2-msg',"Passwords don't match.",'err');return;}
     regData.pass=pass;
-    document.getElementById('device-id-show').textContent=window.getDeviceID();
-    window.showPage('pg-reg3');
+    document.getElementById('dev-id-show').textContent=window.getDeviceID();
+    showPage('pg-reg3');
 };
 
-/* ── CREATE ACCOUNT ── */
 window.doCreateAccount=async()=>{
     setBtn('r3-btn',true,'Claim Free Access');msg('r3-msg','','');
     try{
@@ -831,18 +611,16 @@ window.doCreateAccount=async()=>{
         await updateProfile(cred.user,{displayName:regData.name});
         const token=crypto.randomUUID();
         const freeExpiry=new Date(Date.now()+15*60*1000).toISOString();
-        await setDoc(doc(db,'users',cred.user.uid),{name:regData.name,email:regData.email,deviceId:regData.deviceId,token:token,balance:0,subscribed:true,usedFreeTrial:true,freeExpiry:freeExpiry,isFree:true,createdAt:new Date().toISOString(),history:[]});
-        const session={uid:cred.user.uid,token:token,freeExpiry:freeExpiry,subscribed:true,isFree:true,balance:0,name:regData.name,email:regData.email,deviceId:regData.deviceId,createdAt:new Date().toISOString()};
+        await setDoc(doc(db,'users',cred.user.uid),{name:regData.name,email:regData.email,deviceId:regData.deviceId,token,balance:0,subscribed:true,usedFreeTrial:true,freeExpiry,isFree:true,createdAt:new Date().toISOString(),history:[]});
+        const session={uid:cred.user.uid,token,freeExpiry,subscribed:true,isFree:true,balance:0,name:regData.name,email:regData.email,deviceId:regData.deviceId,createdAt:new Date().toISOString()};
         try{localStorage.setItem('nmedea_session',JSON.stringify(session));localStorage.setItem('nmedea_trial_used_'+regData.deviceId,'1');}catch(e){}
         window.showBoot();
     }catch(e){
-        const m={'auth/email-already-in-use':'This email is already registered. Please sign in.','auth/weak-password':'Password too weak.','auth/invalid-email':'Invalid email address.'};
-        msg('r3-msg',m[e.code]||'Registration failed. Try again.','err');
-        setBtn('r3-btn',false,'Claim Free Access');
+        const m={'auth/email-already-in-use':'Email already registered. Please sign in.','auth/weak-password':'Password too weak.','auth/invalid-email':'Invalid email.'};
+        msg('r3-msg',m[e.code]||'Registration failed. Try again.','err');setBtn('r3-btn',false,'Claim Free Access');
     }
 };
 
-/* ── FORGOT ── */
 window.doForgot=async()=>{
     const email=document.getElementById('f-email').value.trim();
     if(!email){msg('f-msg','Please enter your email.','err');return;}
@@ -852,24 +630,19 @@ window.doForgot=async()=>{
     setBtn('f-btn',false,'Send Reset Link');
 };
 
-/* ── SIGN OUT ── */
 window.doSignOut=async()=>{
     if(!confirm('Sign out of nmedea?'))return;
     try{await signOut(auth);}catch(e){}
     try{localStorage.removeItem('nmedea_session');}catch(e){}
-    window.closeSheet();
-    window.showPage('pg-login');
+    closeSheet();showPage('pg-login');
 };
 
-/* ── DELETE ── */
 window.confirmDelete=async()=>{
-    if(!confirm('Delete your account permanently?'))return;
+    if(!confirm('Delete account permanently?'))return;
     try{const user=auth.currentUser;if(user)await deleteUser(user);}catch(e){}
     try{localStorage.removeItem('nmedea_session');localStorage.removeItem('nmedea_device_id');}catch(e){}
-    window.closeSheet();
-    window.showPage('pg-login');
+    closeSheet();showPage('pg-login');
 };
-
 </script>
 </body>
 </html>
