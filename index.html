@@ -340,6 +340,22 @@
     /* PAGE SWITCH */
     window.showPage=id=>{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');};
 
+    /* SESSION — cookies + localStorage for MIT App Inventor compatibility */
+    window.saveSession=data=>{
+        const str=JSON.stringify(data);
+        try{localStorage.setItem('nmedea_session',str);}catch(e){}
+        try{const exp=new Date(Date.now()+30*24*60*60*1000).toUTCString();document.cookie='nmedea_session='+encodeURIComponent(str)+';expires='+exp+';path=/';}catch(e){}
+    };
+    window.loadSession=()=>{
+        try{const s=JSON.parse(localStorage.getItem('nmedea_session')||'null');if(s&&s.uid)return s;}catch(e){}
+        try{const m=document.cookie.split(';').find(c=>c.trim().startsWith('nmedea_session='));if(m){const v=decodeURIComponent(m.split('=').slice(1).join('='));const s=JSON.parse(v);if(s&&s.uid)return s;}}catch(e){}
+        return null;
+    };
+    window.clearSession=()=>{
+        try{localStorage.removeItem('nmedea_session');}catch(e){}
+        try{document.cookie='nmedea_session=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';}catch(e){}
+    };
+
     /* DEVICE ID */
     window.getDeviceID=()=>{
         try{const s=localStorage.getItem('nmedea_device_id');if(s)return s;}catch(e){}
@@ -411,21 +427,21 @@
         await wait(700);setChk('chk-device','done');prog(17);
 
         await wait(200);setChk('chk-session','running','');status.textContent='Checking saved session...';
-        let session=null;try{session=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
+        let session=null;try{session=window.loadSession();}catch(e){}
         await wait(600);
 
         if(session&&session.uid&&session.token){
             setChk('chk-session','done');prog(34);
             await wait(200);setChk('chk-token','running','');status.textContent='Verifying access token...';
             await wait(600);
-            if(!session.token||session.token.length<10){setChk('chk-token','fail');prog(51);await wait(500);try{localStorage.removeItem('nmedea_session');}catch(e){}showPage('pg-login');return;}
+            if(!session.token||session.token.length<10){setChk('chk-token','fail');prog(51);await wait(500);try{window.clearSession();}catch(e){}showPage('pg-login');return;}
             setChk('chk-token','done');prog(51);
 
             await wait(200);setChk('chk-sub','running','');status.textContent='Checking subscription...';
             let isSubscribed=session.subscribed;
             if(session.isFree&&session.freeExpiry&&Date.now()>new Date(session.freeExpiry).getTime()){
                 isSubscribed=false;session.subscribed=false;session.isFree=false;
-                try{localStorage.setItem('nmedea_session',JSON.stringify(session));}catch(e){}
+                window.saveSession(session);
             }
             await wait(700);setChk('chk-sub',isSubscribed?'done':'fail');prog(68);
 
@@ -443,7 +459,7 @@
                 loadDash(session,isSubscribed);
                 showPage('pg-dash');
             } else {
-                try{localStorage.removeItem('nmedea_session');}catch(e){}
+                try{window.clearSession();}catch(e){}
                 showPage('pg-login');
             }
         } else {
@@ -456,7 +472,7 @@
     }
 
     /* LOAD DASHBOARD */
-    function loadDash(session,isSubscribed){
+    window.loadDash=function loadDash(session,isSubscribed){
         const name=session.name||'User';
         const initial=name.charAt(0).toUpperCase();
         document.getElementById('dash-av').textContent=initial;
@@ -508,21 +524,21 @@
     /* SIGN OUT */
     window.doSignOut=()=>{
         if(!confirm('Sign out of nmedea?'))return;
-        try{localStorage.removeItem('nmedea_session');}catch(e){}
+        try{window.clearSession();}catch(e){}
         closeSheet();showPage('pg-login');
     };
 
     /* DELETE */
     window.confirmDelete=async()=>{
         if(!confirm('Delete account permanently? Cannot be undone.'))return;
-        try{localStorage.removeItem('nmedea_session');localStorage.removeItem('nmedea_device_id');}catch(e){}
+        try{window.clearSession();localStorage.removeItem('nmedea_device_id');}catch(e){}
         closeSheet();showPage('pg-login');
     };
 
     /* STARTUP */
     window.addEventListener('load',()=>{
         try{
-            const s=JSON.parse(localStorage.getItem('nmedea_session')||'null');
+            const s=window.loadSession();
             if(s&&s.uid&&s.token){showBoot();}else{showPage('pg-login');}
         }catch(e){showPage('pg-login');}
     });
@@ -557,10 +573,10 @@ onAuthStateChanged(auth,async user=>{
         const snap=await getDoc(doc(db,'users',user.uid));
         if(!snap.exists())return;
         const data=snap.data();
-        let s=null;try{s=JSON.parse(localStorage.getItem('nmedea_session')||'null');}catch(e){}
+        let s=null;try{s=window.loadSession();}catch(e){}
         if(!s)return;
         s.balance=data.balance??s.balance;s.subscribed=data.subscribed??s.subscribed;s.isFree=data.isFree??s.isFree;s.freeExpiry=data.freeExpiry??s.freeExpiry;s.createdAt=data.createdAt??s.createdAt;
-        try{localStorage.setItem('nmedea_session',JSON.stringify(s));}catch(e){}
+        window.saveSession(s);
         try{document.getElementById('s-balance').textContent='R'+(data.balance||0);}catch(e){}
         if(data.createdAt)try{document.getElementById('s-since').textContent=new Date(data.createdAt).toLocaleDateString('en-ZA');}catch(e){}
     }catch(e){}
@@ -574,8 +590,15 @@ window.doLogin=async()=>{
     try{
         const cred=await signInWithEmailAndPassword(auth,email,pass);
         let ud=null;try{const sn=await getDoc(doc(db,'users',cred.user.uid));if(sn.exists())ud=sn.data();}catch(e){}
-        try{localStorage.setItem('nmedea_session',JSON.stringify({uid:cred.user.uid,token:ud?.token||('tok_'+crypto.randomUUID()),freeExpiry:ud?.freeExpiry||null,subscribed:ud?.subscribed??true,isFree:ud?.isFree??false,balance:ud?.balance||0,name:ud?.name||cred.user.displayName||'',email:cred.user.email,createdAt:ud?.createdAt||null,deviceId:window.getDeviceID()}));}catch(e){}
-        setTimeout(()=>window.showBoot(),300);
+        window.saveSession({uid:cred.user.uid,token:ud?.token||('tok_'+crypto.randomUUID()),freeExpiry:ud?.freeExpiry||null,subscribed:ud?.subscribed??true,isFree:ud?.isFree??false,balance:ud?.balance||0,name:ud?.name||cred.user.displayName||'',email:cred.user.email,createdAt:ud?.createdAt||null,deviceId:window.getDeviceID()});
+        setTimeout(()=>{
+            try{window.showBoot();}catch(err){
+                // showBoot crashed — go straight to dashboard
+                const s=window.loadSession();
+                if(s&&s.uid){window.loadDash(s,s.subscribed);window.showPage('pg-dash');}
+                else{window.showPage('pg-login');}
+            }
+        },300);
     }catch(e){
         const m={'auth/invalid-credential':'Invalid email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/too-many-requests':'Too many attempts. Please wait.'};
         msg('l-msg',m[e.code]||'Login failed. Try again.','err');setBtn('l-btn',false,'Sign In');
@@ -633,14 +656,14 @@ window.doForgot=async()=>{
 window.doSignOut=async()=>{
     if(!confirm('Sign out of nmedea?'))return;
     try{await signOut(auth);}catch(e){}
-    try{localStorage.removeItem('nmedea_session');}catch(e){}
+    try{window.clearSession();}catch(e){}
     closeSheet();showPage('pg-login');
 };
 
 window.confirmDelete=async()=>{
     if(!confirm('Delete account permanently?'))return;
     try{const user=auth.currentUser;if(user)await deleteUser(user);}catch(e){}
-    try{localStorage.removeItem('nmedea_session');localStorage.removeItem('nmedea_device_id');}catch(e){}
+    try{window.clearSession();localStorage.removeItem('nmedea_device_id');}catch(e){}
     closeSheet();showPage('pg-login');
 };
 </script>
