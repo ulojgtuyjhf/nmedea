@@ -575,7 +575,7 @@ window.doLogin=async()=>{
         const cred=await signInWithEmailAndPassword(auth,email,pass);
         let ud=null;try{const sn=await getDoc(doc(db,'users',cred.user.uid));if(sn.exists())ud=sn.data();}catch(e){}
         try{localStorage.setItem('nmedea_session',JSON.stringify({uid:cred.user.uid,token:ud?.token||('tok_'+crypto.randomUUID()),freeExpiry:ud?.freeExpiry||null,subscribed:ud?.subscribed??true,isFree:ud?.isFree??false,balance:ud?.balance||0,name:ud?.name||cred.user.displayName||'',email:cred.user.email,createdAt:ud?.createdAt||null,deviceId:window.getDeviceID()}));}catch(e){}
-        window.showBoot();
+        setTimeout(()=>window.showBoot(),300);
     }catch(e){
         const m={'auth/invalid-credential':'Invalid email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/too-many-requests':'Too many attempts. Please wait.'};
         msg('l-msg',m[e.code]||'Login failed. Try again.','err');setBtn('l-btn',false,'Sign In');
@@ -614,7 +614,7 @@ window.doCreateAccount=async()=>{
         await setDoc(doc(db,'users',cred.user.uid),{name:regData.name,email:regData.email,deviceId:regData.deviceId,token,balance:0,subscribed:true,usedFreeTrial:true,freeExpiry,isFree:true,createdAt:new Date().toISOString(),history:[]});
         const session={uid:cred.user.uid,token,freeExpiry,subscribed:true,isFree:true,balance:0,name:regData.name,email:regData.email,deviceId:regData.deviceId,createdAt:new Date().toISOString()};
         try{localStorage.setItem('nmedea_session',JSON.stringify(session));localStorage.setItem('nmedea_trial_used_'+regData.deviceId,'1');}catch(e){}
-        window.showBoot();
+        setTimeout(()=>window.showBoot(),300);
     }catch(e){
         const m={'auth/email-already-in-use':'Email already registered. Please sign in.','auth/weak-password':'Password too weak.','auth/invalid-email':'Invalid email.'};
         msg('r3-msg',m[e.code]||'Registration failed. Try again.','err');setBtn('r3-btn',false,'Claim Free Access');
