@@ -345,6 +345,8 @@
         const str=JSON.stringify(data);
         try{localStorage.setItem('nmedea_session',str);}catch(e){}
         try{const exp=new Date(Date.now()+30*24*60*60*1000).toUTCString();document.cookie='nmedea_session='+encodeURIComponent(str)+';expires='+exp+';path=/';}catch(e){}
+        // Send to MIT App Inventor TinyDB
+        try{if(window.AppInventor){window.AppInventor.setWebViewString(str);}}catch(e){}
     };
     window.loadSession=()=>{
         try{const s=JSON.parse(localStorage.getItem('nmedea_session')||'null');if(s&&s.uid)return s;}catch(e){}
