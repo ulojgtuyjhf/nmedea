@@ -5,3 +5,4 @@ nltk
 beautifulsoup4
 html5lib
 gunicorn
+python-dotenv
