@@ -36,25 +36,24 @@ def understand(query):
     memory["queries"].append(query)
     save_memory(memory)
 
-    prompt = f"""You are an AI browser assistant. The user said: "{query}"
+    prompt = f"""You are an AI browser. User said: "{query}"
 
-Analyze exactly what they want and respond in this exact JSON only:
+Reply ONLY this JSON, nothing else:
 {{
-  "action": "one of: answer, open_website, show_images, show_results",
-  "understood": "one sentence of what user wants",
-  "search_query": "best search query for this",
-  "direct_url": "if user said open/go to a specific site put full URL here else empty string",
+  "action": "answer OR open_website OR show_images OR show_results",
+  "understood": "one sentence what user wants",
+  "search_query": "best search query",
+  "direct_url": "full URL if user wants to open a site, else empty",
   "quantity": 5,
-  "answer": "if action is answer write a full natural conversational response here else empty string"
+  "answer": "if action is answer, full response here, else empty"
 }}
 
 Rules:
-- If user says open/go to a website: action=open_website, put the URL in direct_url
-- If user asks for images: action=show_images
-- If user asks a question: action=answer, write the full answer in the answer field
-- If user wants results/recommendations: action=show_results
-- quantity means how many results or images they want, default 5
-- Never add any text outside the JSON"""
+- open/go to site -> action=open_website, direct_url=full URL
+- wants images/photos/pictures -> action=show_images
+- asks a question -> action=answer
+- wants results/recommendations/list -> action=show_results
+- quantity = exact number user asked for, default 5"""
 
     text = ask_groq(prompt)
     start = text.find('{')
@@ -66,10 +65,7 @@ Rules:
             "action": "open_website",
             "url": data.get("direct_url", ""),
             "understood": data.get("understood", ""),
-            "answer": "",
-            "images": [],
-            "results": [],
-            "sources": []
+            "answer": "", "images": [], "results": [], "sources": []
         }
 
     if data["action"] == "answer":
@@ -78,10 +74,11 @@ Rules:
             "url": "",
             "understood": data.get("understood", ""),
             "answer": data.get("answer", ""),
-            "images": [],
-            "results": [],
-            "sources": []
+            "images": [], "results": [], "sources": []
         }
+
+    want_images = data["action"] == "show_images"
+    qty = int(data.get("quantity", 5))
 
     tavily = requests.post(
         "https://api.tavily.com/search",
@@ -89,28 +86,40 @@ Rules:
             "api_key": TAVILY_KEY,
             "query": data["search_query"],
             "search_depth": "advanced",
-            "include_images": data["action"] == "show_images",
+            "include_images": True,
+            "include_image_descriptions": True,
             "include_answer": True,
-            "max_results": data.get("quantity", 5)
+            "max_results": qty
         },
         timeout=30
     ).json()
 
+    # extract images properly
     images = []
-    if data["action"] == "show_images":
-        for img in tavily.get("images", []):
-            src = img if isinstance(img, str) else img.get("url", "")
-            if src:
-                images.append(src)
-        images = images[:data.get("quantity", 5)]
+    for img in tavily.get("images", []):
+        if isinstance(img, str) and img.startswith("http"):
+            images.append(img)
+        elif isinstance(img, dict):
+            url = img.get("url", "")
+            if url.startswith("http"):
+                images.append(url)
+
+    # also pull images from results
+    for r in tavily.get("results", []):
+        img = r.get("image", "")
+        if img and img.startswith("http") and img not in images:
+            images.append(img)
+
+    images = images[:qty]
 
     results = []
-    if data["action"] == "show_results":
-        for r in tavily.get("results", [])[:data.get("quantity", 5)]:
+    if not want_images:
+        for r in tavily.get("results", [])[:qty]:
             results.append({
                 "title": r.get("title", ""),
                 "url": r.get("url", ""),
-                "description": r.get("content", "")[:200]
+                "description": r.get("content", "")[:200],
+                "image": r.get("image", "")
             })
 
     sources = []
@@ -121,13 +130,11 @@ Rules:
         except:
             pass
 
-    answer = tavily.get("answer", "") or data.get("understood", "")
-
     return {
         "action": data["action"],
         "url": "",
         "understood": data.get("understood", ""),
-        "answer": answer,
+        "answer": tavily.get("answer", "") or data.get("understood", ""),
         "images": images,
         "results": results,
         "sources": sources
