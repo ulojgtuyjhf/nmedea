@@ -1,0 +1,7 @@
+flask
+flask-cors
+requests
+nltk
+beautifulsoup4
+html5lib
+gunicorn
