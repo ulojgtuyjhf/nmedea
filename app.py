@@ -1,23 +1,20 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import os
+import os, json, nltk
 
-# Download NLTK data on startup
-import nltk
 nltk.download('punkt', quiet=True)
 nltk.download('stopwords', quiet=True)
 nltk.download('punkt_tab', quiet=True)
 nltk.download('averaged_perceptron_tagger_eng', quiet=True)
 
 from intent import understand, ask_groq
-import json
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='templates', static_url_path='')
 CORS(app)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return send_from_directory('templates', 'index.html')
 
 @app.route("/search", methods=["POST"])
 def search():
