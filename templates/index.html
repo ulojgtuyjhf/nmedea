@@ -1,132 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>nmedea</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#fff;--surface:#f5f5f5;--border:rgba(0,0,0,0.09);--text:#111;--muted:#888}
-html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow:hidden}
-#browser{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>nmedea</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* TOOLBAR */
-#toolbar{height:54px;background:#f0f0f0;display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0;border-bottom:1px solid var(--border);z-index:10}
-.app-icon{width:30px;height:30px;border-radius:8px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
-.nav-btn{width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
-.nav-btn:hover{background:rgba(0,0,0,0.07)}
-.nav-btn svg{width:16px;height:16px}
-#search-wrap{flex:1;position:relative;display:flex;align-items:center}
-#search-bar{width:100%;height:36px;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:0 42px 0 36px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
-#search-bar::placeholder{color:var(--muted)}
-#search-bar:focus{border-color:rgba(0,0,0,0.3);box-shadow:0 0 0 3px rgba(0,0,0,0.05)}
-#search-bar.ai-glow{border-color:transparent!important;animation:border-ai 2.5s linear infinite}
-@keyframes border-ai{0%{box-shadow:0 0 0 2px #4f8ef7}25%{box-shadow:0 0 0 2px #9b72f7}50%{box-shadow:0 0 0 2px #f76b8a}75%{box-shadow:0 0 0 2px #f7c94f}100%{box-shadow:0 0 0 2px #4f8ef7}}
-#bar-left-icon{position:absolute;left:12px;display:flex;align-items:center;pointer-events:none;color:#aaa}
-#bar-left-icon svg{width:13px;height:13px}
-#bar-left-icon.secure{color:#1a9e5c}
-#url-label{position:absolute;left:36px;right:42px;font-size:12px;color:#444;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none}
-#go-btn{position:absolute;right:5px;width:28px;height:28px;border-radius:50%;border:none;background:#111;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;box-shadow:0 2px 8px rgba(0,0,0,0.18)}
-#go-btn:hover{transform:scale(1.1) rotate(-10deg)}
-#go-btn svg{width:12px;height:12px}
-#dots-btn{width:32px;height:32px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
-#dots-btn:hover{background:rgba(0,0,0,0.07)}
-.dots-icon{display:flex;flex-direction:column;gap:3.5px;align-items:center}
-.dots-icon span{width:4px;height:4px;border-radius:50%;background:#444;display:block}
+    /* THEMES */
+    :root{
+      --bg:#ffffff;--surface:#f5f5f5;--border:rgba(0,0,0,0.09);
+      --text:#111;--muted:#888;--blue:#1a73e8;
+      --card:#fff;--toolbar:#f0f0f0;--input:#fff;
+    }
+    [data-theme="dark"]{
+      --bg:#0f0f0f;--surface:#1a1a1a;--border:rgba(255,255,255,0.08);
+      --text:#f0f0f0;--muted:#888;--blue:#4f9eff;
+      --card:#1a1a1a;--toolbar:#151515;--input:#1a1a1a;
+    }
+    [data-theme="sepia"]{
+      --bg:#f8f1e4;--surface:#ede3d0;--border:rgba(0,0,0,0.1);
+      --text:#3b2f1e;--muted:#8a7560;--blue:#7c4a00;
+      --card:#f3ead8;--toolbar:#ede3d0;--input:#f3ead8;
+    }
+    [data-theme="midnight"]{
+      --bg:#0d1117;--surface:#161b22;--border:rgba(255,255,255,0.06);
+      --text:#e6edf3;--muted:#7d8590;--blue:#58a6ff;
+      --card:#161b22;--toolbar:#0d1117;--input:#161b22;
+    }
 
-/* PROGRESS */
-#progress{height:2px;width:0%;background:linear-gradient(90deg,#4f8ef7,#9b72f7,#f76b8a,#f7c94f,#4f8ef7);background-size:300% 100%;transition:width 0.4s ease;flex-shrink:0;animation:pg 2s linear infinite}
-@keyframes pg{0%{background-position:0%}100%{background-position:300%}}
+    html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow:hidden;transition:background 0.3s,color 0.3s}
+    #browser{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden;position:relative}
 
-/* SUGGESTIONS */
-#suggestions{position:absolute;top:42px;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:300;display:none;overflow:hidden}
-.sug-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:#333;transition:background 0.1s}
-.sug-item:hover{background:var(--surface)}
-.sug-item svg{width:13px;height:13px;color:#bbb;flex-shrink:0}
+    /* TOOLBAR */
+    #toolbar{height:54px;background:var(--toolbar);display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0;border-bottom:1px solid var(--border);z-index:10;transition:background 0.3s}
+    .app-icon{display:flex;align-items:center;gap:6px;flex-shrink:0;text-decoration:none}
+    .app-icon-box{width:28px;height:28px;border-radius:7px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+    .app-icon-label{font-size:13px;font-weight:600;color:var(--text);letter-spacing:-0.3px}
+    .app-icon-ai{font-size:9px;font-weight:700;color:#1a73e8;background:#e8f0fe;padding:1px 5px;border-radius:4px;margin-left:2px}
+    @media(max-width:600px){
+      .app-icon-label{display:none}
+      .app-icon-ai{display:none}
+      #toolbar{padding:0 8px;gap:4px}
+      .nav-btn{width:28px;height:28px}
+      #back-btn{display:none}
+      #refresh-btn{display:none}
+      #new-btn{display:none}
+    }
+    .nav-btn{width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;flex-shrink:0}
+    .nav-btn:hover{background:rgba(128,128,128,0.12)}
+    .nav-btn svg{width:16px;height:16px}
+    #search-wrap{flex:1;position:relative;display:flex;align-items:center}
+    #search-bar{width:100%;height:36px;background:var(--input);border:1.5px solid var(--border);border-radius:8px;padding:0 42px 0 36px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+    #search-bar::placeholder{color:var(--muted)}
+    #search-bar:focus{border-color:rgba(128,128,128,0.4);box-shadow:0 0 0 3px rgba(128,128,128,0.08)}
+    #search-bar.ai-glow{border-color:transparent!important;animation:border-ai 2.5s linear infinite}
+    @keyframes border-ai{0%{box-shadow:0 0 0 2px #4f8ef7}25%{box-shadow:0 0 0 2px #9b72f7}50%{box-shadow:0 0 0 2px #f76b8a}75%{box-shadow:0 0 0 2px #f7c94f}100%{box-shadow:0 0 0 2px #4f8ef7}}
+    #bar-left-icon{position:absolute;left:12px;display:flex;align-items:center;pointer-events:none;color:var(--muted)}
+    #bar-left-icon svg{width:13px;height:13px}
+    #bar-left-icon.secure{color:#1a9e5c}
+    #url-label{position:absolute;left:36px;right:42px;font-size:12px;color:var(--muted);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none}
+    #go-btn{position:absolute;right:5px;width:28px;height:28px;border-radius:50%;border:none;background:#111;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;box-shadow:0 2px 8px rgba(0,0,0,0.18)}
+    #go-btn:hover{transform:scale(1.1) rotate(-10deg)}
+    #go-btn svg{width:12px;height:12px}
+    #dots-btn{width:32px;height:32px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+    #dots-btn:hover{background:rgba(128,128,128,0.12)}
+    .dots-icon{display:flex;flex-direction:column;gap:3.5px;align-items:center}
+    .dots-icon span{width:4px;height:4px;border-radius:50%;background:var(--text);display:block}
 
-/* DOTS PANEL */
-#dots-panel{display:none;position:fixed;width:260px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:200;overflow:hidden}
-#dots-panel.open{display:block;animation:panel-in 0.18s ease}
-@keyframes panel-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.panel-profile{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
-.panel-avatar{width:38px;height:38px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
-.panel-user-name{font-size:13.5px;font-weight:600}
-.panel-user-sub{font-size:11px;color:var(--muted);margin-top:2px}
-.panel-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:11px 16px 5px}
-.panel-history-list{padding:0 8px 8px;max-height:160px;overflow-y:auto}
-.history-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;font-size:12.5px;color:#333;transition:background 0.12s}
-.history-item:hover{background:var(--surface)}
-.history-item svg{width:12px;height:12px;color:var(--muted)}
-.history-empty{font-size:12px;color:var(--muted);padding:8px 16px 12px}
-.panel-divider{height:1px;background:var(--border);margin:4px 0}
-.panel-action{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;color:#333;cursor:pointer;transition:background 0.12s}
-.panel-action:hover{background:var(--surface)}
-.panel-action svg{width:14px;height:14px;color:var(--muted)}
+    /* NEW CHAT BTN like pencil icon */
+    #new-btn svg{stroke:var(--text)}
 
-/* HOME */
-#home{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.home-logo{font-size:38px;font-weight:700;letter-spacing:-1px;color:#111;margin-bottom:28px}
-.home-logo span{color:#888;font-weight:300}
-#home-search-wrap{position:relative;width:100%;max-width:520px}
-#home-search{width:100%;height:46px;border:1.5px solid var(--border);border-radius:12px;padding:0 52px 0 18px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;background:#fff;transition:border-color 0.2s,box-shadow 0.2s}
-#home-search::placeholder{color:#bbb}
-#home-search:focus{border-color:rgba(0,0,0,0.25);box-shadow:0 0 0 3px rgba(0,0,0,0.05)}
-#home-search.ai-glow{border-color:transparent!important;animation:border-ai 2.5s linear infinite}
-#home-go{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:8px;border:none;background:#111;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
-#home-go svg{width:14px;height:14px}
-#home-suggestions{position:absolute;top:52px;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:300;display:none;overflow:hidden}
-#home-history{margin-top:22px;width:100%;max-width:520px;display:none}
-#home-history.has-items{display:block}
-.home-history-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#bbb;margin-bottom:8px}
-#home-history-list{display:flex;flex-wrap:wrap;gap:6px}
-.home-history-item{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:var(--surface);font-size:12px;color:#555;cursor:pointer;border:1px solid var(--border)}
-.home-history-item svg{width:10px;height:10px;color:#bbb}
+    /* PROGRESS */
+    #progress{height:2px;width:0%;background:linear-gradient(90deg,#4f8ef7,#9b72f7,#f76b8a,#f7c94f,#4f8ef7);background-size:300% 100%;transition:width 0.4s ease;flex-shrink:0;animation:pg 2s linear infinite}
+    @keyframes pg{0%{background-position:0%}100%{background-position:300%}}
 
-/* RESULT */
-#result-page{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);z-index:5;pointer-events:none}
-#result-page.visible{transform:translateY(0);pointer-events:all}
-#result-scroll{flex:1;overflow-y:auto;padding:24px 20px 40px;display:flex;flex-direction:column;align-items:center}
-.result-inner{width:100%;max-width:640px}
-#query-echo{font-size:20px;font-weight:600;color:#111;margin-bottom:12px;line-height:1.3}
+    /* SUGGESTIONS */
+    #suggestions{position:absolute;top:42px;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;display:none;overflow:hidden}
+    .sug-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text);transition:background 0.1s}
+    .sug-item:hover{background:var(--surface)}
+    .sug-item svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
 
-/* SHIMMER STATUS */
-#status-wrap{margin-bottom:16px;min-height:22px}
-.status-line{display:inline-block;font-size:13px;font-style:italic;color:transparent;background:linear-gradient(90deg,#bbb 0%,#111 40%,#bbb 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;animation:shine 1.5s linear infinite}
-@keyframes shine{0%{background-position:200%}100%{background-position:-200%}}
+    /* DOTS PANEL */
+    #dots-panel{display:none;position:fixed;width:260px;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.15);z-index:200;overflow:hidden}
+    #dots-panel.open{display:block;animation:panel-in 0.18s ease}
+    @keyframes panel-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .panel-profile{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+    .panel-avatar{width:38px;height:38px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+    .panel-user-name{font-size:13.5px;font-weight:600;color:var(--text)}
+    .panel-user-sub{font-size:11px;color:var(--muted);margin-top:2px}
+    .panel-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:11px 16px 5px}
+    .panel-history-list{padding:0 8px 8px;max-height:160px;overflow-y:auto}
+    .history-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;font-size:12.5px;color:var(--text);transition:background 0.12s}
+    .history-item:hover{background:var(--surface)}
+    .history-item svg{width:12px;height:12px;color:var(--muted)}
+    .history-empty{font-size:12px;color:var(--muted);padding:8px 16px 12px}
+    .panel-divider{height:1px;background:var(--border);margin:4px 0}
+    .panel-action{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;color:var(--text);cursor:pointer;transition:background 0.12s}
+    .panel-action:hover{background:var(--surface)}
+    .panel-action svg{width:14px;height:14px;color:var(--muted)}
 
-/* SOURCE ICONS during search */
-#live-sources{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;min-height:0}
-.src-chip{display:flex;align-items:center;gap:5px;padding:4px 10px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:#555;animation:pop-in 0.3s ease;text-decoration:none}
-.src-chip:hover{background:var(--surface)}
-@keyframes pop-in{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
-.src-chip img{width:13px;height:13px;border-radius:2px}
+    /* PREFERENCES PANEL */
+    #pref-panel{position:fixed;top:0;right:-320px;width:300px;height:100%;background:var(--card);border-left:1px solid var(--border);z-index:500;box-shadow:-8px 0 32px rgba(0,0,0,0.12);transition:right 0.3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+    #pref-panel.open{right:0}
+    #pref-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:499;display:none;opacity:0;transition:opacity 0.3s}
+    #pref-overlay.open{display:block;opacity:1}
+    .pref-header{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border)}
+    .pref-back{width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .pref-back svg{width:18px;height:18px}
+    .pref-title{font-size:15px;font-weight:600;color:var(--text)}
+    .pref-body{padding:20px;flex:1;overflow-y:auto}
+    .pref-section-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px}
+    .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+    .theme-option{padding:12px;border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:border-color 0.2s,background 0.2s;font-size:12px;font-weight:500;color:var(--text)}
+    .theme-option:hover{border-color:#888}
+    .theme-option.active{border-color:#1a73e8;color:#1a73e8}
+    .theme-option .theme-preview{width:100%;height:32px;border-radius:6px;margin-bottom:6px;border:1px solid rgba(0,0,0,0.08)}
 
-/* ANSWER */
-#card-body{font-size:14px;line-height:1.85;color:#222;white-space:pre-wrap}
+    /* HOME */
+    #home{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+    .home-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+    .home-logo-box{width:42px;height:42px;border-radius:12px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+    .home-logo-text{font-size:28px;font-weight:700;letter-spacing:-1px;color:var(--text)}
+    .home-logo-ai{font-size:11px;font-weight:700;color:#1a73e8;background:#e8f0fe;padding:2px 7px;border-radius:5px;margin-left:4px;align-self:flex-start;margin-top:4px}
+    #home-search-wrap{position:relative;width:100%;max-width:560px}
+    #home-search{width:100%;height:48px;border:1.5px solid var(--border);border-radius:12px;padding:0 54px 0 18px;font-family:'Inter',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--input);box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
+    #home-search::placeholder{color:var(--muted)}
+    #home-search:focus{border-color:rgba(128,128,128,0.3);box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+    #home-search.ai-glow{border-color:transparent!important;animation:border-ai 2.5s linear infinite}
+    #home-go{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:8px;border:none;background:#111;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    #home-go svg{width:15px;height:15px}
+    #home-suggestions{position:absolute;top:54px;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;display:none;overflow:hidden}
+    #home-history{margin-top:22px;width:100%;max-width:560px;display:none}
+    #home-history.has-items{display:block}
+    .home-history-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px}
+    #home-history-list{display:flex;flex-wrap:wrap;gap:6px}
+    .home-history-item{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:var(--surface);font-size:12px;color:var(--text);cursor:pointer;border:1px solid var(--border)}
+    .home-history-item svg{width:10px;height:10px;color:var(--muted)}
 
-/* shimmer placeholder */
-.shim-block{height:13px;border-radius:6px;margin-bottom:10px;background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shim 1.2s infinite}
-@keyframes shim{0%{background-position:200%}100%{background-position:-200%}}
+    /* RESULT PAGE */
+    #result-page{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);z-index:5;pointer-events:none}
+    #result-page.visible{transform:translateY(0);pointer-events:all}
 
-/* IMAGES */
-#images-out{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-#images-out img{height:120px;width:160px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--border)}
+    /* TABS */
+    #tabs{display:none;align-items:center;gap:0;padding:0 16px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;overflow-x:auto}
+    #tabs.visible{display:flex}
+    .tab{display:flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+    .tab:hover{color:var(--text)}
+    .tab.active{color:var(--text);border-bottom-color:var(--text)}
+    .tab svg{width:14px;height:14px}
 
-/* RESULTS LIST */
-#results-out{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-.res-card{display:flex;gap:12px;padding:12px;border:1px solid var(--border);border-radius:12px;text-decoration:none;color:inherit;transition:background 0.12s}
-.res-card:hover{background:var(--surface)}
-.res-card-favicon{width:28px;height:28px;border-radius:6px;flex-shrink:0;background:#eee}
-.res-card-title{font-size:13px;font-weight:600;color:#111;margin-bottom:3px}
-.res-card-desc{font-size:12px;color:var(--muted);line-height:1.5}
-.res-card-domain{font-size:11px;color:#bbb;margin-top:3px}
-</style>
+    #result-scroll{flex:1;overflow-y:auto;padding:16px 16px 40px;display:flex;flex-direction:column;align-items:center}
+    .result-inner{width:100%;max-width:680px}
+    #query-echo{font-size:13px;color:var(--muted);margin-bottom:12px}
+
+    /* STATUS — thinking */
+    #status-wrap{margin-bottom:14px;min-height:20px}
+    .status-shine{display:inline-block;font-size:13px;font-style:italic;color:transparent;background:linear-gradient(90deg,var(--muted) 0%,var(--text) 40%,var(--muted) 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;animation:shine 1.4s linear infinite}
+    @keyframes shine{0%{background-position:200%}100%{background-position:-200%}}
+
+    /* SOURCE CHIPS */
+    #live-sources{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+    .src-chip{display:flex;align-items:center;gap:5px;padding:4px 10px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted);text-decoration:none;transition:background 0.12s;animation:pop 0.3s ease;background:var(--card)}
+    .src-chip:hover{background:var(--surface)}
+    @keyframes pop{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+    .src-chip img{width:13px;height:13px;border-radius:2px}
+
+    /* SHIMMER */
+    .shim{height:13px;border-radius:6px;margin-bottom:10px;background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%);background-size:200% 100%;animation:shim 1.2s infinite}
+    @keyframes shim{0%{background-position:200%}100%{background-position:-200%}}
+
+    /* ANSWER */
+    #answer-section{display:none}
+    #answer-section.visible{display:block}
+    #card-body{font-size:14px;line-height:1.85;color:var(--text);white-space:pre-wrap;margin-bottom:16px}
+
+    /* IMAGES GALLERY */
+    #images-section{display:none}
+    #images-section.visible{display:block}
+    #images-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+    .img-tile{position:relative;cursor:pointer;border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:4/3}
+    .img-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.2s}
+    .img-tile:hover img{transform:scale(1.05)}
+    .img-tile-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background 0.2s;display:flex;align-items:center;justify-content:center}
+    .img-tile:hover .img-tile-overlay{background:rgba(0,0,0,0.2)}
+    .img-open-icon{opacity:0;color:#fff;transition:opacity 0.2s}
+    .img-tile:hover .img-open-icon{opacity:1}
+    .img-open-icon svg{width:20px;height:20px}
+
+    /* RESULTS / LINKS */
+    #links-section{display:none}
+    #links-section.visible{display:block}
+    #results-out{display:flex;flex-direction:column;gap:8px}
+    .res-card{display:flex;gap:12px;padding:12px;border:1px solid var(--border);border-radius:12px;text-decoration:none;color:inherit;transition:background 0.12s;background:var(--card)}
+    .res-card:hover{background:var(--surface)}
+    .res-left{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+    .res-favicon{width:28px;height:28px;border-radius:6px;background:var(--surface)}
+    .res-body{flex:1}
+    .res-url{font-size:11px;color:var(--muted);margin-bottom:3px}
+    .res-title{font-size:13.5px;font-weight:600;color:var(--blue);margin-bottom:4px;line-height:1.3}
+    .res-desc{font-size:12px;color:var(--muted);line-height:1.5}
+    .res-img{width:80px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)}
+  </style>
 </head>
 <body>
 <div id="browser">
   <div id="toolbar">
-    <div class="app-icon">N</div>
+    <button id="home-logo-btn" style="border:none;cursor:pointer;background:transparent;padding:0;display:flex;align-items:center;flex-shrink:0">
+      <div class="app-icon-box">N</div>
+    </button>
     <button class="nav-btn" id="back-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
@@ -138,17 +221,22 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
         <svg id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <svg id="icon-lock" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
-      <input id="search-bar" type="text" placeholder="Ask anything…" autocomplete="off" spellcheck="false"/>
+      <input id="search-bar" type="text" placeholder="Ask anything or say open a website…" autocomplete="off" spellcheck="false"/>
       <span id="url-label"></span>
       <button id="go-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
       <div id="suggestions"></div>
     </div>
+    <!-- New chat pencil icon -->
+    <button class="nav-btn" id="new-btn" title="New search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </button>
     <button id="dots-btn"><div class="dots-icon"><span></span><span></span><span></span></div></button>
   </div>
   <div id="progress"></div>
 
+  <!-- DOTS PANEL -->
   <div id="dots-panel">
     <div class="panel-profile">
       <div class="panel-avatar">N</div>
@@ -158,13 +246,62 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
     <div class="panel-history-list" id="panel-history"><div class="history-empty">No searches yet.</div></div>
     <div class="panel-divider"></div>
     <div class="panel-action" id="new-chat-panel-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       New Search
+    </div>
+    <div class="panel-action" id="panel-back-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Go Back
+    </div>
+    <div class="panel-action" id="panel-refresh-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Refresh
+    </div>
+    <div class="panel-action" id="pref-open-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Preferences
     </div>
   </div>
 
+  <!-- PREFERENCES PANEL -->
+  <div id="pref-overlay"></div>
+  <div id="pref-panel">
+    <div class="pref-header">
+      <button class="pref-back" id="pref-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="pref-title">Preferences</span>
+    </div>
+    <div class="pref-body">
+      <div class="pref-section-label">Theme</div>
+      <div class="theme-grid">
+        <div class="theme-option active" data-theme="light" onclick="setTheme('light',this)">
+          <div class="theme-preview" style="background:#ffffff;border:1px solid #e0e0e0"></div>
+          Light
+        </div>
+        <div class="theme-option" data-theme="dark" onclick="setTheme('dark',this)">
+          <div class="theme-preview" style="background:#0f0f0f"></div>
+          Dark
+        </div>
+        <div class="theme-option" data-theme="sepia" onclick="setTheme('sepia',this)">
+          <div class="theme-preview" style="background:#f8f1e4"></div>
+          Sepia
+        </div>
+        <div class="theme-option" data-theme="midnight" onclick="setTheme('midnight',this)">
+          <div class="theme-preview" style="background:#0d1117"></div>
+          Midnight
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME -->
   <div id="home">
-    <div class="home-logo">nmed<span>ea</span></div>
+    <div class="home-logo">
+      <div class="home-logo-box">N</div>
+      <span class="home-logo-text">nmedea</span>
+      <span class="home-logo-ai">AI</span>
+    </div>
     <div id="home-search-wrap">
       <input id="home-search" type="text" placeholder="Ask me anything…" autocomplete="off"/>
       <button id="home-go">
@@ -178,54 +315,127 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
     </div>
   </div>
 
+  <!-- RESULT PAGE -->
   <div id="result-page">
+    <!-- TABS -->
+    <div id="tabs">
+      <div class="tab active" id="tab-answer" onclick="switchTab('answer')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Answer
+      </div>
+      <div class="tab" id="tab-images" onclick="switchTab('images')" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Images
+      </div>
+      <div class="tab" id="tab-links" onclick="switchTab('links')" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><globe/><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Links
+      </div>
+    </div>
+
     <div id="result-scroll">
       <div class="result-inner">
         <div id="query-echo"></div>
-        <div id="status-wrap"><span class="status-line" id="status-line" style="display:none"></span></div>
+        <div id="status-wrap"></div>
         <div id="live-sources"></div>
-        <div id="card-body"></div>
-        <div id="images-out"></div>
-        <div id="results-out"></div>
+
+        <!-- ANSWER TAB -->
+        <div id="answer-section" class="visible">
+          <div id="card-body"></div>
+        </div>
+
+        <!-- IMAGES TAB -->
+        <div id="images-section">
+          <div id="images-gallery"></div>
+        </div>
+
+        <!-- LINKS TAB -->
+        <div id="links-section">
+          <div id="results-out"></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const searchBar     = document.getElementById('search-bar');
-const homeSearch    = document.getElementById('home-search');
-const goBtn         = document.getElementById('go-btn');
-const homeGo        = document.getElementById('home-go');
-const backBtn       = document.getElementById('back-btn');
-const refreshBtn    = document.getElementById('refresh-btn');
-const progress      = document.getElementById('progress');
-const home          = document.getElementById('home');
-const resultPage    = document.getElementById('result-page');
-const queryEcho     = document.getElementById('query-echo');
-const cardBody      = document.getElementById('card-body');
-const liveSources   = document.getElementById('live-sources');
-const imagesOut     = document.getElementById('images-out');
-const resultsOut    = document.getElementById('results-out');
-const statusLine    = document.getElementById('status-line');
-const dotsBtn       = document.getElementById('dots-btn');
-const dotsPanel     = document.getElementById('dots-panel');
-const panelHistory  = document.getElementById('panel-history');
-const barLeftIcon   = document.getElementById('bar-left-icon');
-const iconSearch    = document.getElementById('icon-search');
-const iconLock      = document.getElementById('icon-lock');
-const urlLabel      = document.getElementById('url-label');
-const suggestions   = document.getElementById('suggestions');
-const homeSugg      = document.getElementById('home-suggestions');
+const searchBar    = document.getElementById('search-bar');
+const homeSearch   = document.getElementById('home-search');
+const goBtn        = document.getElementById('go-btn');
+const homeGo       = document.getElementById('home-go');
+const backBtn      = document.getElementById('back-btn');
+const refreshBtn   = document.getElementById('refresh-btn');
+const newBtn       = document.getElementById('new-btn');
+const progress     = document.getElementById('progress');
+const home         = document.getElementById('home');
+const resultPage   = document.getElementById('result-page');
+const queryEcho    = document.getElementById('query-echo');
+const cardBody     = document.getElementById('card-body');
+const liveSources  = document.getElementById('live-sources');
+const imagesGallery= document.getElementById('images-gallery');
+const resultsOut   = document.getElementById('results-out');
+const statusWrap   = document.getElementById('status-wrap');
+const dotsBtn      = document.getElementById('dots-btn');
+const dotsPanel    = document.getElementById('dots-panel');
+const panelHistory = document.getElementById('panel-history');
+const barLeftIcon  = document.getElementById('bar-left-icon');
+const iconSearch   = document.getElementById('icon-search');
+const iconLock     = document.getElementById('icon-lock');
+const urlLabel     = document.getElementById('url-label');
+const suggestions  = document.getElementById('suggestions');
+const homeSugg     = document.getElementById('home-suggestions');
+const tabs         = document.getElementById('tabs');
+const prefPanel    = document.getElementById('pref-panel');
+const prefOverlay  = document.getElementById('pref-overlay');
 
 let busy = false;
 let lastQuery = '';
 let currentUrl = '';
 let searchHistory = JSON.parse(localStorage.getItem('nmh') || '[]');
+let currentTheme = localStorage.getItem('nmt') || 'light';
 let suggTimeout = null;
+let activeTab = 'answer';
 
-// AI-powered suggestions
-async function fetchAISuggestions(val, box) {
+// Apply saved theme
+applyTheme(currentTheme);
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme === 'light' ? '' : theme);
+  document.querySelectorAll('.theme-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === theme);
+  });
+}
+
+function setTheme(theme, el) {
+  currentTheme = theme;
+  localStorage.setItem('nmt', theme);
+  applyTheme(theme);
+}
+
+// Preferences panel
+document.getElementById('pref-open-btn').addEventListener('click', () => {
+  dotsPanel.classList.remove('open');
+  prefPanel.classList.add('open');
+  prefOverlay.classList.add('open');
+});
+document.getElementById('pref-close').addEventListener('click', closePref);
+prefOverlay.addEventListener('click', closePref);
+function closePref() {
+  prefPanel.classList.remove('open');
+  prefOverlay.classList.remove('open');
+}
+
+// Tabs
+function switchTab(tab) {
+  activeTab = tab;
+  ['answer','images','links'].forEach(t => {
+    document.getElementById(`tab-${t}`)?.classList.toggle('active', t === tab);
+    document.getElementById(`${t}-section`)?.classList.toggle('visible', t === tab);
+  });
+}
+
+// AI suggestions
+async function fetchSuggestions(val, box) {
   if (!val || val.length < 2) { box.style.display='none'; return; }
   try {
     const r = await fetch('/suggest', {
@@ -244,13 +454,14 @@ async function fetchAISuggestions(val, box) {
   } catch(e) { box.style.display='none'; }
 }
 
-function onInput(input, box) {
+searchBar.addEventListener('input', () => {
   clearTimeout(suggTimeout);
-  suggTimeout = setTimeout(() => fetchAISuggestions(input.value.trim(), box), 350);
-}
-
-searchBar.addEventListener('input', () => onInput(searchBar, suggestions));
-homeSearch.addEventListener('input', () => onInput(homeSearch, homeSugg));
+  suggTimeout = setTimeout(() => fetchSuggestions(searchBar.value.trim(), suggestions), 350);
+});
+homeSearch.addEventListener('input', () => {
+  clearTimeout(suggTimeout);
+  suggTimeout = setTimeout(() => fetchSuggestions(homeSearch.value.trim(), homeSugg), 350);
+});
 
 document.addEventListener('click', e => {
   if (!suggestions.contains(e.target) && e.target !== searchBar) suggestions.style.display='none';
@@ -258,14 +469,14 @@ document.addEventListener('click', e => {
   if (!dotsPanel.contains(e.target) && e.target !== dotsBtn) dotsPanel.classList.remove('open');
 });
 
-function openPanel(anchor) {
-  const r = anchor.getBoundingClientRect();
-  dotsPanel.style.top   = (r.bottom + 8) + 'px';
+dotsBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const r = dotsBtn.getBoundingClientRect();
+  dotsPanel.style.top = (r.bottom + 8) + 'px';
   dotsPanel.style.right = (window.innerWidth - r.right) + 'px';
   dotsPanel.classList.toggle('open');
   renderHistory();
-}
-dotsBtn.addEventListener('click', e => { e.stopPropagation(); openPanel(dotsBtn); });
+});
 
 function renderHistory() {
   const hEl   = document.getElementById('home-history');
@@ -310,13 +521,13 @@ function startGlow() { searchBar.classList.add('ai-glow'); homeSearch.classList.
 function stopGlow()  { searchBar.classList.remove('ai-glow'); homeSearch.classList.remove('ai-glow'); }
 
 function setStatus(msg) {
-  if (!msg) { statusLine.style.display='none'; return; }
-  statusLine.textContent = msg;
-  statusLine.style.display = 'inline-block';
+  if (!msg) { statusWrap.innerHTML = ''; return; }
+  statusWrap.innerHTML = `<span class="status-shine">${msg}</span>`;
 }
 
 function showHome() {
   resultPage.classList.remove('visible');
+  tabs.classList.remove('visible');
   home.style.display = 'flex';
   searchBar.value = '';
   homeSearch.value = '';
@@ -326,6 +537,9 @@ function showHome() {
   setProgress(0);
   setStatus('');
   liveSources.innerHTML = '';
+  imagesGallery.innerHTML = '';
+  resultsOut.innerHTML = '';
+  cardBody.innerHTML = '';
   renderHistory();
 }
 
@@ -337,14 +551,13 @@ function fillAndSearch(q) {
   doSearch(q);
 }
 
-function addSourceChip(domain, url) {
-  const a = document.createElement('a');
-  a.className = 'src-chip';
-  a.href = url;
-  a.target = '_blank';
-  a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${domain}&sz=32" onerror="this.style.display='none'"><span>${domain}</span>`;
-  liveSources.appendChild(a);
-}
+const STATUS_MSGS = [
+  'Understanding what you mean…',
+  'Searching across the web…',
+  'Going through results…',
+  'Composing your answer…',
+  'Almost ready…'
+];
 
 async function doSearch(queryOverride) {
   const query = (queryOverride || searchBar.value || homeSearch.value).trim();
@@ -363,35 +576,37 @@ async function doSearch(queryOverride) {
 
   home.style.display = 'none';
   resultPage.classList.add('visible');
-  queryEcho.textContent = query;
+  tabs.classList.remove('visible');
+  queryEcho.textContent = 'Search results for: ' + query;
   searchBar.value = query;
   cardBody.innerHTML = '';
-  imagesOut.innerHTML = '';
+  imagesGallery.innerHTML = '';
   resultsOut.innerHTML = '';
   liveSources.innerHTML = '';
+
+  // reset tabs
+  document.getElementById('tab-images').style.display = 'none';
+  document.getElementById('tab-links').style.display = 'none';
+  switchTab('answer');
+
   startGlow();
   setProgress(10);
-  setStatus('Reading what you mean…');
+  setStatus(STATUS_MSGS[0]);
 
-  // shimmer placeholder
+  // shimmer
   cardBody.innerHTML = `
-    <div class="shim-block" style="width:100%"></div>
-    <div class="shim-block" style="width:85%"></div>
-    <div class="shim-block" style="width:60%"></div>
-    <div class="shim-block" style="width:90%"></div>
-    <div class="shim-block" style="width:75%"></div>`;
+    <div class="shim" style="width:100%"></div>
+    <div class="shim" style="width:82%"></div>
+    <div class="shim" style="width:65%"></div>
+    <div class="shim" style="width:90%"></div>
+    <div class="shim" style="width:75%"></div>`;
 
-  // show sources appearing live as shimmer grows
-  setProgress(30);
-  await new Promise(r => setTimeout(r, 400));
-  setStatus('Searching the web…');
-  setProgress(55);
-  await new Promise(r => setTimeout(r, 400));
-  setStatus('Reading sources…');
-  setProgress(75);
-  await new Promise(r => setTimeout(r, 300));
-  setStatus('Putting it together…');
-  setProgress(90);
+  let msgIdx = 0;
+  const msgInt = setInterval(() => {
+    msgIdx = Math.min(msgIdx + 1, STATUS_MSGS.length - 1);
+    setStatus(STATUS_MSGS[msgIdx]);
+    setProgress(Math.min(85, 10 + msgIdx * 18));
+  }, 900);
 
   try {
     const res = await fetch('/search', {
@@ -401,47 +616,65 @@ async function doSearch(queryOverride) {
     });
     const data = await res.json();
 
+    clearInterval(msgInt);
     setProgress(100);
     stopGlow();
     setStatus('');
     await new Promise(r => setTimeout(r, 150));
     setProgress(0);
 
+    // open website directly
     if (data.action === 'open_website' && data.url) {
+      setBarUrl(data.url);
       window.location.href = data.url;
       busy = false;
       return;
     }
 
-    // show source chips
+    // source chips
     liveSources.innerHTML = '';
     if (data.sources && data.sources.length) {
-      data.sources.forEach(s => addSourceChip(s.domain, s.url));
+      data.sources.forEach(s => {
+        const a = document.createElement('a');
+        a.className = 'src-chip';
+        a.href = s.url;
+        a.target = '_blank';
+        a.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=${s.domain}&sz=32" onerror="this.style.display='none'"><span>${s.domain}</span>`;
+        liveSources.appendChild(a);
+      });
       setBarUrl(data.sources[0]?.url || query);
     } else {
       setBarUrl(query);
     }
 
-    // clear shimmer, write answer
+    // answer
     cardBody.innerHTML = '';
-    if (data.answer) {
-      cardBody.textContent = data.answer;
-    }
+    if (data.answer) cardBody.textContent = data.answer;
 
-    // images
-    imagesOut.innerHTML = '';
+    // images gallery
+    imagesGallery.innerHTML = '';
     if (data.images && data.images.length) {
+      document.getElementById('tab-images').style.display = 'flex';
       data.images.forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.onclick = () => window.open(src, '_blank');
-        imagesOut.appendChild(img);
+        if (!src) return;
+        const tile = document.createElement('div');
+        tile.className = 'img-tile';
+        tile.innerHTML = `
+          <img src="${src}" onerror="this.parentElement.style.display='none'" loading="lazy">
+          <div class="img-tile-overlay">
+            <div class="img-open-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </div>
+          </div>`;
+        tile.onclick = () => window.open(src, '_blank');
+        imagesGallery.appendChild(tile);
       });
     }
 
-    // results
+    // links/results
     resultsOut.innerHTML = '';
     if (data.results && data.results.length) {
+      document.getElementById('tab-links').style.display = 'flex';
       data.results.forEach(r => {
         let domain = '';
         try { domain = new URL(r.url).hostname.replace('www.',''); } catch(e) {}
@@ -451,17 +684,25 @@ async function doSearch(queryOverride) {
         a.href = r.url;
         a.target = '_blank';
         a.innerHTML = `
-          <img class="res-card-favicon" src="${favicon}" onerror="this.style.display='none'">
-          <div>
-            <div class="res-card-title">${r.title}</div>
-            <div class="res-card-desc">${r.description}</div>
-            <div class="res-card-domain">${domain}</div>
-          </div>`;
+          <div class="res-left">
+            <img class="res-favicon" src="${favicon}" onerror="this.style.display='none'">
+          </div>
+          <div class="res-body">
+            <div class="res-url">${domain}</div>
+            <div class="res-title">${r.title}</div>
+            <div class="res-desc">${r.description}</div>
+          </div>
+          ${r.image ? `<img class="res-img" src="${r.image}" onerror="this.style.display='none'" loading="lazy">` : ''}`;
         resultsOut.appendChild(a);
       });
     }
 
+    // show tabs if needed
+    const hasTabs = data.images?.length || data.results?.length;
+    if (hasTabs) tabs.classList.add('visible');
+
   } catch(e) {
+    clearInterval(msgInt);
     stopGlow();
     setProgress(0);
     setStatus('');
@@ -470,14 +711,41 @@ async function doSearch(queryOverride) {
   busy = false;
 }
 
-searchBar.addEventListener('focus', () => {
-  searchBar.style.color = '';
+// Default bar shows nmedea.com
+function setDefaultBar() {
+  iconSearch.style.display = 'block';
+  iconLock.style.display = 'none';
+  barLeftIcon.classList.remove('secure');
+  searchBar.style.color = 'var(--muted)';
+  searchBar.value = 'nmedea.com';
   urlLabel.style.display = 'none';
-  if (lastQuery) { searchBar.value = lastQuery; searchBar.select(); }
+}
+setDefaultBar();
+
+searchBar.addEventListener('focus', () => {
+  // highlight all on tap
+  if (searchBar.value === 'nmedea.com' || !lastQuery) {
+    searchBar.value = lastQuery || '';
+    searchBar.style.color = '';
+    setTimeout(() => searchBar.select(), 10);
+  } else {
+    searchBar.style.color = '';
+    searchBar.value = lastQuery;
+    setTimeout(() => searchBar.select(), 10);
+  }
+  urlLabel.style.display = 'none';
 });
 searchBar.addEventListener('blur', () => {
-  setTimeout(() => { if (currentUrl) setBarUrl(currentUrl); }, 200);
+  setTimeout(() => {
+    if (currentUrl) {
+      setBarUrl(currentUrl);
+    } else {
+      setDefaultBar();
+    }
+  }, 200);
 });
+
+document.getElementById('home-logo-btn').addEventListener('click', showHome);
 searchBar.addEventListener('keydown', e => {
   if (e.key === 'Enter') { suggestions.style.display='none'; doSearch(); }
   if (e.key === 'Escape') { suggestions.style.display='none'; searchBar.blur(); }
@@ -488,10 +756,13 @@ homeSearch.addEventListener('keydown', e => {
 goBtn.addEventListener('click', () => doSearch());
 homeGo.addEventListener('click', () => doSearch());
 backBtn.addEventListener('click', showHome);
+newBtn.addEventListener('click', showHome);
 refreshBtn.addEventListener('click', () => { if(lastQuery) doSearch(lastQuery); });
 document.getElementById('new-chat-panel-btn').addEventListener('click', () => {
   dotsPanel.classList.remove('open'); showHome();
 });
+document.getElementById("panel-back-btn").addEventListener("click", () => { dotsPanel.classList.remove("open"); showHome(); });
+document.getElementById("panel-refresh-btn").addEventListener("click", () => { dotsPanel.classList.remove("open"); if(lastQuery) doSearch(lastQuery); });
 renderHistory();
 </script>
 </body>
