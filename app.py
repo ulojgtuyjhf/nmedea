@@ -1,5 +1,14 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+import os
+
+# Download NLTK data on startup
+import nltk
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('punkt_tab', quiet=True)
+nltk.download('averaged_perceptron_tagger_eng', quiet=True)
+
 from intent import understand, ask_groq
 import json
 
@@ -21,9 +30,9 @@ def search():
 def suggest():
     data = request.json
     query = data.get("query", "")
-    prompt = f"""The user is typing in a search bar: "{query}"
-Give 5 smart AI-powered search suggestions that complete or extend what they might be looking for.
-Reply with only a JSON array of 5 strings, nothing else. Example: ["suggestion 1","suggestion 2","suggestion 3","suggestion 4","suggestion 5"]"""
+    prompt = f"""User is typing: "{query}"
+Give 5 smart search suggestions. Reply ONLY a JSON array of 5 strings, nothing else:
+["suggestion 1","suggestion 2","suggestion 3","suggestion 4","suggestion 5"]"""
     try:
         text = ask_groq(prompt)
         start = text.find('[')
@@ -34,4 +43,5 @@ Reply with only a JSON array of 5 strings, nothing else. Example: ["suggestion 1
         return jsonify({"suggestions": []})
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host="0.0.0.0", port=port)
