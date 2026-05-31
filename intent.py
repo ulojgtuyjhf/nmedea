@@ -18,14 +18,14 @@ def save_memory(memory):
     with open(MEMORY_FILE, 'w') as f:
         json.dump(memory, f, indent=2)
 
-def ask_groq(prompt):
+def ask_groq(prompt, max_tokens=2000):
     r = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
         json={
             "model": "llama-3.3-70b-versatile",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 1000
+            "max_tokens": max_tokens
         },
         timeout=30
     )
@@ -36,49 +36,102 @@ def understand(query):
     memory["queries"].append(query)
     save_memory(memory)
 
-    prompt = f"""You are an AI browser. User said: "{query}"
+    # Step 1: AI understands exactly what user wants
+    intent_prompt = f"""You are the world's most powerful AI search engine. A user said: "{query}"
 
-Reply ONLY this JSON, nothing else:
+Analyze exactly what they want. Reply ONLY this JSON, nothing else:
 {{
   "action": "answer OR open_website OR show_images OR show_results",
-  "understood": "one sentence what user wants",
-  "search_query": "best search query",
-  "direct_url": "full URL if user wants to open a site, else empty",
+  "understood": "what the user wants in one clear sentence",
+  "search_query": "the perfect search query to find exactly this",
+  "direct_url": "if user wants to open a specific website, the full URL, else empty string",
   "quantity": 5,
-  "answer": "if action is answer, full response here, else empty"
+  "language": "language to respond in if user specified, else english",
+  "answer": "if action is answer: write a COMPLETE, DETAILED, UNLIMITED response covering everything about this topic. Be thorough, informative and natural. No word limits. else empty string"
 }}
 
 Rules:
-- open/go to site -> action=open_website, direct_url=full URL
-- wants images/photos/pictures -> action=show_images
-- asks a question -> action=answer
-- wants results/recommendations/list -> action=show_results
-- quantity = exact number user asked for, default 5"""
+- open/go to/visit a site -> action=open_website, direct_url=full URL
+- wants images/photos/pictures -> action=show_images, quantity=exact number they asked for
+- wants a list/results/recommendations -> action=show_results, quantity=exact number they asked for  
+- asks any question or wants information -> action=answer, write COMPLETE unlimited answer
+- quantity: use EXACTLY what user requested, default 5
+- If user asks in another language, respond in that language
+- NEVER truncate the answer. Write everything."""
 
-    text = ask_groq(prompt)
+    text = ask_groq(intent_prompt, max_tokens=3000)
     start = text.find('{')
     end = text.rfind('}') + 1
     data = json.loads(text[start:end])
 
-    if data["action"] == "open_website":
+    action = data.get("action", "answer")
+    quantity = int(data.get("quantity", 5))
+
+    if action == "open_website":
         return {
             "action": "open_website",
             "url": data.get("direct_url", ""),
             "understood": data.get("understood", ""),
-            "answer": "", "images": [], "results": [], "sources": []
+            "answer": "",
+            "images": [],
+            "results": [],
+            "sources": []
         }
 
-    if data["action"] == "answer":
-        return {
-            "action": "answer",
-            "url": "",
-            "understood": data.get("understood", ""),
-            "answer": data.get("answer", ""),
-            "images": [], "results": [], "sources": []
-        }
+    if action == "answer":
+        # For pure answers, still search for context to make answer richer
+        try:
+            tavily = requests.post(
+                "https://api.tavily.com/search",
+                json={
+                    "api_key": TAVILY_KEY,
+                    "query": data["search_query"],
+                    "search_depth": "advanced",
+                    "include_answer": True,
+                    "max_results": 3
+                },
+                timeout=20
+            ).json()
+            
+            # Combine AI answer with web context for richer response
+            web_context = tavily.get("answer", "")
+            ai_answer = data.get("answer", "")
+            
+            if web_context and web_context not in ai_answer:
+                full_answer = ai_answer
+            else:
+                full_answer = ai_answer
 
-    want_images = data["action"] == "show_images"
-    qty = int(data.get("quantity", 5))
+            sources = []
+            for r in tavily.get("results", [])[:3]:
+                try:
+                    domain = r.get("url","").split("/")[2].replace("www.","")
+                    sources.append({"domain": domain, "url": r.get("url","")})
+                except:
+                    pass
+
+            return {
+                "action": "answer",
+                "url": "",
+                "understood": data.get("understood", ""),
+                "answer": full_answer,
+                "images": [],
+                "results": [],
+                "sources": sources
+            }
+        except:
+            return {
+                "action": "answer",
+                "url": "",
+                "understood": data.get("understood", ""),
+                "answer": data.get("answer", ""),
+                "images": [],
+                "results": [],
+                "sources": []
+            }
+
+    # For images and results, use Tavily
+    want_images = action == "show_images"
 
     tavily = requests.post(
         "https://api.tavily.com/search",
@@ -89,12 +142,12 @@ Rules:
             "include_images": True,
             "include_image_descriptions": True,
             "include_answer": True,
-            "max_results": qty
+            "max_results": max(quantity, 7)
         },
         timeout=30
     ).json()
 
-    # extract images properly
+    # Extract images - get EXACTLY what was requested
     images = []
     for img in tavily.get("images", []):
         if isinstance(img, str) and img.startswith("http"):
@@ -104,24 +157,25 @@ Rules:
             if url.startswith("http"):
                 images.append(url)
 
-    # also pull images from results
+    # Also get images from results
     for r in tavily.get("results", []):
         img = r.get("image", "")
         if img and img.startswith("http") and img not in images:
             images.append(img)
 
-    images = images[:qty]
+    images = images[:quantity]
 
+    # Extract results
     results = []
-    if not want_images:
-        for r in tavily.get("results", [])[:qty]:
-            results.append({
-                "title": r.get("title", ""),
-                "url": r.get("url", ""),
-                "description": r.get("content", "")[:200],
-                "image": r.get("image", "")
-            })
+    for r in tavily.get("results", [])[:quantity]:
+        results.append({
+            "title": r.get("title", ""),
+            "url": r.get("url", ""),
+            "description": r.get("content", "")[:300],
+            "image": r.get("image", "")
+        })
 
+    # Sources
     sources = []
     for r in tavily.get("results", [])[:5]:
         try:
@@ -130,11 +184,13 @@ Rules:
         except:
             pass
 
+    answer = tavily.get("answer", "") or data.get("understood", "")
+
     return {
-        "action": data["action"],
+        "action": action,
         "url": "",
         "understood": data.get("understood", ""),
-        "answer": tavily.get("answer", "") or data.get("understood", ""),
+        "answer": answer,
         "images": images,
         "results": results,
         "sources": sources
