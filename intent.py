@@ -1,195 +1,141 @@
-import requests
-import json
-import os
+import requests, json, os
 from dotenv import load_dotenv
 load_dotenv()
 
 GROQ_TOKEN = os.getenv("GROQ_TOKEN")
 TAVILY_KEY = os.getenv("TAVILY_KEY")
-MEMORY_FILE = "memory.json"
 
-def load_memory():
-    if os.path.exists(MEMORY_FILE):
-        with open(MEMORY_FILE, 'r') as f:
-            return json.load(f)
-    return {"queries": []}
-
-def save_memory(memory):
-    with open(MEMORY_FILE, 'w') as f:
-        json.dump(memory, f, indent=2)
-
-def ask_groq(prompt, max_tokens=2000):
+def ask_groq(prompt, max_tokens=3000):
     r = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
-        json={
-            "model": "llama-3.3-70b-versatile",
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens
-        },
+        json={"model":"llama-3.3-70b-versatile","messages":[{"role":"user","content":prompt}],"max_tokens":max_tokens},
         timeout=30
     )
     return r.json()["choices"][0]["message"]["content"].strip()
 
 def understand(query):
-    memory = load_memory()
-    memory["queries"].append(query)
-    save_memory(memory)
+    prompt = f"""You are the world's most powerful AI search engine. User said: "{query}"
 
-    # Step 1: AI understands exactly what user wants
-    intent_prompt = f"""You are the world's most powerful AI search engine. A user said: "{query}"
-
-Analyze exactly what they want. Reply ONLY this JSON, nothing else:
+Reply ONLY this JSON:
 {{
-  "action": "answer OR open_website OR show_images OR show_results",
-  "understood": "what the user wants in one clear sentence",
-  "search_query": "the perfect search query to find exactly this",
-  "direct_url": "if user wants to open a specific website, the full URL, else empty string",
+  "action": "answer OR open_website OR show_images OR show_results OR answer_with_images",
+  "understood": "what user wants in one clear sentence",
+  "search_query": "perfect search query for this",
+  "image_search_query": "if images needed: specific image search query e.g. 'fast cars photos 4k'",
+  "direct_url": "full URL if user wants to open a site, else empty",
   "quantity": 5,
-  "language": "language to respond in if user specified, else english",
-  "answer": "if action is answer: write a COMPLETE, DETAILED, UNLIMITED response covering everything about this topic. Be thorough, informative and natural. No word limits. else empty string"
+  "answer": "if action is answer or answer_with_images: COMPLETE DETAILED response, no word limit, else empty"
 }}
 
 Rules:
-- open/go to/visit a site -> action=open_website, direct_url=full URL
-- wants images/photos/pictures -> action=show_images, quantity=exact number they asked for
-- wants a list/results/recommendations -> action=show_results, quantity=exact number they asked for  
-- asks any question or wants information -> action=answer, write COMPLETE unlimited answer
-- quantity: use EXACTLY what user requested, default 5
-- If user asks in another language, respond in that language
-- NEVER truncate the answer. Write everything."""
+- open/go to site -> action=open_website
+- wants images/photos -> action=show_images, NO answer
+- asks question AND wants images -> action=answer_with_images
+- asks question/information -> action=answer
+- wants list/results -> action=show_results
+- quantity = EXACT number user requested, default 5"""
 
-    text = ask_groq(intent_prompt, max_tokens=3000)
+    text = ask_groq(prompt)
     start = text.find('{')
     end = text.rfind('}') + 1
     data = json.loads(text[start:end])
 
     action = data.get("action", "answer")
-    quantity = int(data.get("quantity", 5))
+    qty = int(data.get("quantity", 5))
 
     if action == "open_website":
-        return {
-            "action": "open_website",
-            "url": data.get("direct_url", ""),
-            "understood": data.get("understood", ""),
-            "answer": "",
-            "images": [],
-            "results": [],
-            "sources": []
-        }
+        return {"action":"open_website","url":data.get("direct_url",""),"understood":data.get("understood",""),"answer":"","images":[],"results":[],"sources":[]}
 
-    if action == "answer":
-        # For pure answers, still search for context to make answer richer
+    images = []
+    results = []
+    sources = []
+    answer = data.get("answer", "")
+
+    needs_images = action in ["show_images", "answer_with_images"]
+    needs_results = action == "show_results"
+    needs_web = action in ["answer", "answer_with_images", "show_results"]
+
+    if needs_images:
+        # Fetch real images directly from web
+        img_query = data.get("image_search_query") or data.get("search_query", query) + " photos"
         try:
-            tavily = requests.post(
+            tv = requests.post(
                 "https://api.tavily.com/search",
                 json={
                     "api_key": TAVILY_KEY,
-                    "query": data["search_query"],
+                    "query": img_query,
                     "search_depth": "advanced",
-                    "include_answer": True,
-                    "max_results": 3
+                    "include_images": True,
+                    "include_image_descriptions": True,
+                    "max_results": max(qty + 5, 10)
                 },
-                timeout=20
+                timeout=30
             ).json()
-            
-            # Combine AI answer with web context for richer response
-            web_context = tavily.get("answer", "")
-            ai_answer = data.get("answer", "")
-            
-            if web_context and web_context not in ai_answer:
-                full_answer = ai_answer
-            else:
-                full_answer = ai_answer
 
-            sources = []
-            for r in tavily.get("results", [])[:3]:
+            for img in tv.get("images", []):
+                if isinstance(img, str) and img.startswith("http"):
+                    images.append({"url": img, "source": ""})
+                elif isinstance(img, dict):
+                    url = img.get("url", "")
+                    if url.startswith("http"):
+                        images.append({"url": url, "source": ""})
+
+            # Match sources to images
+            for i, r in enumerate(tv.get("results", [])):
                 try:
                     domain = r.get("url","").split("/")[2].replace("www.","")
-                    sources.append({"domain": domain, "url": r.get("url","")})
+                    if i < len(images):
+                        images[i]["source"] = domain
+                    src_url = r.get("url","")
+                    if not any(s["url"] == src_url for s in sources):
+                        sources.append({"domain": domain, "url": src_url})
                 except:
                     pass
 
-            return {
-                "action": "answer",
-                "url": "",
-                "understood": data.get("understood", ""),
-                "answer": full_answer,
-                "images": [],
-                "results": [],
-                "sources": sources
-            }
-        except:
-            return {
-                "action": "answer",
-                "url": "",
-                "understood": data.get("understood", ""),
-                "answer": data.get("answer", ""),
-                "images": [],
-                "results": [],
-                "sources": []
-            }
+            images = images[:qty]
 
-    # For images and results, use Tavily
-    want_images = action == "show_images"
-
-    tavily = requests.post(
-        "https://api.tavily.com/search",
-        json={
-            "api_key": TAVILY_KEY,
-            "query": data["search_query"],
-            "search_depth": "advanced",
-            "include_images": True,
-            "include_image_descriptions": True,
-            "include_answer": True,
-            "max_results": max(quantity, 7)
-        },
-        timeout=30
-    ).json()
-
-    # Extract images - get EXACTLY what was requested
-    images = []
-    for img in tavily.get("images", []):
-        if isinstance(img, str) and img.startswith("http"):
-            images.append(img)
-        elif isinstance(img, dict):
-            url = img.get("url", "")
-            if url.startswith("http"):
-                images.append(url)
-
-    # Also get images from results
-    for r in tavily.get("results", []):
-        img = r.get("image", "")
-        if img and img.startswith("http") and img not in images:
-            images.append(img)
-
-    images = images[:quantity]
-
-    # Extract results
-    results = []
-    for r in tavily.get("results", [])[:quantity]:
-        results.append({
-            "title": r.get("title", ""),
-            "url": r.get("url", ""),
-            "description": r.get("content", "")[:300],
-            "image": r.get("image", "")
-        })
-
-    # Sources
-    sources = []
-    for r in tavily.get("results", [])[:5]:
-        try:
-            domain = r.get("url","").split("/")[2].replace("www.","")
-            sources.append({"domain": domain, "url": r.get("url","")})
-        except:
+        except Exception as e:
             pass
 
-    answer = tavily.get("answer", "") or data.get("understood", "")
+    if needs_web:
+        try:
+            tv = requests.post(
+                "https://api.tavily.com/search",
+                json={
+                    "api_key": TAVILY_KEY,
+                    "query": data.get("search_query", query),
+                    "search_depth": "advanced",
+                    "include_answer": True,
+                    "max_results": qty if needs_results else 3
+                },
+                timeout=30
+            ).json()
+
+            if needs_results:
+                for r in tv.get("results", [])[:qty]:
+                    results.append({
+                        "title": r.get("title",""),
+                        "url": r.get("url",""),
+                        "description": r.get("content","")[:300],
+                        "image": r.get("image","")
+                    })
+
+            for r in tv.get("results", [])[:5]:
+                try:
+                    domain = r.get("url","").split("/")[2].replace("www.","")
+                    if not any(s["domain"] == domain for s in sources):
+                        sources.append({"domain": domain, "url": r.get("url","")})
+                except:
+                    pass
+
+        except:
+            pass
 
     return {
         "action": action,
         "url": "",
-        "understood": data.get("understood", ""),
+        "understood": data.get("understood",""),
         "answer": answer,
         "images": images,
         "results": results,
