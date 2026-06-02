@@ -1,9 +1,8 @@
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 import requests
 import json
 import os
-import base64
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,7 +10,7 @@ load_dotenv()
 GROQ_TOKEN = os.getenv("GROQ_TOKEN")
 TAVILY_KEY = os.getenv("TAVILY_KEY")
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder='templates', static_url_path='')
 CORS(app)
 
 MEMORY_FILE = "memory.json"
@@ -25,6 +24,24 @@ def load_memory():
 def save_memory(memory):
     with open(MEMORY_FILE, 'w') as f:
         json.dump(memory, f, indent=2)
+
+def ask_groq(prompt):
+    """Call Groq API for text completion"""
+    try:
+        r = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
+            json={
+                "model": "llama-3.3-70b-versatile",
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 1000
+            },
+            timeout=30
+        )
+        return r.json()["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        print(f"Groq error: {e}")
+        return ""
 
 def ask_groq_vision(image_base64, prompt):
     """Use Groq's Llama 3.2 Vision model to describe an image"""
@@ -68,42 +85,162 @@ def ask_groq_vision(image_base64, prompt):
         )
         result = response.json()
         if "error" in result:
-            print(f"Groq API error: {result}")
+            print(f"Groq Vision error: {result}")
             return "I'm having trouble seeing right now. Please try again."
         return result["choices"][0]["message"]["content"].strip()
     except Exception as e:
         print(f"Vision error: {e}")
         return "I couldn't process this image. Please try again with better lighting."
 
-def search_tavily(query, max_results=5):
-    """Search the web using Tavily"""
-    if not TAVILY_KEY:
-        return {"answer": "Tavily API key not configured", "results": []}
-    
+def understand(query):
+    """Process user query and return appropriate response"""
+    memory = load_memory()
+    memory["queries"].append(query)
+    save_memory(memory)
+
+    prompt = f"""You are an AI browser assistant. The user said: "{query}"
+
+Analyze exactly what they want and respond in this exact JSON only:
+{{
+  "action": "one of: answer, open_website, show_images, show_results",
+  "understood": "one sentence of what user wants",
+  "search_query": "best search query for this",
+  "direct_url": "if user said open/go to a specific site put full URL here else empty string",
+  "quantity": 5,
+  "answer": "if action is answer write a full natural conversational response here else empty string"
+}}
+
+Rules:
+- If user says open/go to a website: action=open_website, put the URL in direct_url
+- If user asks for images: action=show_images
+- If user asks a question: action=answer, write the full answer in the answer field
+- If user wants results/recommendations: action=show_results
+- quantity means how many results or images they want, default 5
+- Never add any text outside the JSON"""
+
+    text = ask_groq(prompt)
+    start = text.find('{')
+    end = text.rfind('}') + 1
+    data = json.loads(text[start:end])
+
+    if data["action"] == "open_website":
+        return {
+            "action": "open_website",
+            "url": data.get("direct_url", ""),
+            "understood": data.get("understood", ""),
+            "answer": "",
+            "images": [],
+            "results": [],
+            "sources": []
+        }
+
+    if data["action"] == "answer":
+        return {
+            "action": "answer",
+            "url": "",
+            "understood": data.get("understood", ""),
+            "answer": data.get("answer", ""),
+            "images": [],
+            "results": [],
+            "sources": []
+        }
+
+    # Search with Tavily
     try:
-        response = requests.post(
+        tavily = requests.post(
             "https://api.tavily.com/search",
             json={
                 "api_key": TAVILY_KEY,
-                "query": query,
-                "search_depth": "basic",
+                "query": data["search_query"],
+                "search_depth": "advanced",
+                "include_images": data["action"] == "show_images",
                 "include_answer": True,
-                "max_results": max_results
+                "max_results": data.get("quantity", 5)
             },
             timeout=30
-        )
-        return response.json()
+        ).json()
     except Exception as e:
         print(f"Tavily error: {e}")
-        return {"answer": "Search unavailable", "results": []}
+        tavily = {"images": [], "results": [], "answer": ""}
 
-@app.route('/')
-def index():
-    return send_from_directory('.', 'index.html')
+    images = []
+    if data["action"] == "show_images":
+        for img in tavily.get("images", []):
+            src = img if isinstance(img, str) else img.get("url", "")
+            if src:
+                images.append(src)
+        images = images[:data.get("quantity", 5)]
 
-@app.route('/vision', methods=['POST'])
+    results = []
+    if data["action"] == "show_results":
+        for r in tavily.get("results", [])[:data.get("quantity", 5)]:
+            results.append({
+                "title": r.get("title", ""),
+                "url": r.get("url", ""),
+                "description": r.get("content", "")[:200]
+            })
+
+    sources = []
+    for r in tavily.get("results", [])[:5]:
+        try:
+            domain = r.get("url", "").split("/")[2].replace("www.", "")
+            sources.append({"domain": domain, "url": r.get("url", "")})
+        except:
+            pass
+
+    answer = tavily.get("answer", "") or data.get("understood", "")
+
+    return {
+        "action": data["action"],
+        "url": "",
+        "understood": data.get("understood", ""),
+        "answer": answer,
+        "images": images,
+        "results": results,
+        "sources": sources
+    }
+
+@app.route("/")
+def home():
+    return send_from_directory('templates', 'index.html')
+
+@app.route("/search", methods=["POST"])
+def search():
+    data = request.json
+    query = data.get("query", "")
+    if not query:
+        return jsonify({"error": "No query provided"}), 400
+    result = understand(query)
+    return jsonify(result)
+
+@app.route("/suggest", methods=["POST"])
+def suggest():
+    data = request.json
+    query = data.get("query", "")
+    if len(query) < 2:
+        return jsonify({"suggestions": []})
+    
+    prompt = f"""User is typing: "{query}"
+Give 5 smart search suggestions. Reply ONLY a JSON array of 5 strings, nothing else:
+["suggestion 1","suggestion 2","suggestion 3","suggestion 4","suggestion 5"]"""
+    try:
+        text = ask_groq(prompt)
+        start = text.find('[')
+        end = text.rfind(']') + 1
+        suggestions = json.loads(text[start:end])
+        return jsonify({"suggestions": suggestions[:5]})
+    except:
+        return jsonify({"suggestions": [
+            f"{query} meaning",
+            f"what is {query}",
+            f"{query} explained",
+            f"{query} definition",
+            f"{query} examples"
+        ][:5]})
+
+@app.route("/vision", methods=["POST"])
 def vision():
-    """Handle camera image and return AI description with speech"""
+    """Handle camera image and return AI description"""
     data = request.json
     image_base64 = data.get('image')
     user_query = data.get('query', 'Describe what you see in detail')
@@ -121,7 +258,6 @@ The user says: "{user_query}"
 Describe what you see in this image in a natural, helpful way. 
 Be specific about objects, people, colors, actions, and context.
 Keep it conversational but informative. 
-If you recognize anything interesting, mention it.
 Respond as if you're talking directly to the user."""
 
     description = ask_groq_vision(image_base64, prompt)
@@ -138,77 +274,7 @@ Respond as if you're talking directly to the user."""
         "success": True
     })
 
-@app.route('/search', methods=['POST'])
-def search():
-    data = request.json
-    query = data.get('query', '')
-    
-    if not query:
-        return jsonify({"error": "No query"}), 400
-    
-    memory = load_memory()
-    if "queries" not in memory:
-        memory["queries"] = []
-    memory["queries"].append(query)
-    save_memory(memory)
-    
-    intent_prompt = f"""User query: "{query}"
-    
-Analyze and respond in JSON only:
-{{
-    "action": "answer or search",
-    "search_query": "optimized search query if action is search",
-    "direct_answer": "if simple question, answer directly here"
-}}"""
-
-    try:
-        r = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
-            json={
-                "model": "llama-3.3-70b-versatile",
-                "messages": [{"role": "user", "content": intent_prompt}],
-                "max_tokens": 200
-            },
-            timeout=30
-        )
-        intent_text = r.json()["choices"][0]["message"]["content"]
-        # Clean up JSON
-        start = intent_text.find('{')
-        end = intent_text.rfind('}') + 1
-        intent = json.loads(intent_text[start:end])
-        
-        if intent.get("action") == "answer" and intent.get("direct_answer"):
-            return jsonify({
-                "action": "answer",
-                "answer": intent["direct_answer"],
-                "sources": []
-            })
-        
-        search_query = intent.get("search_query", query)
-        tavily_result = search_tavily(search_query, 5)
-        
-        return jsonify({
-            "action": "search",
-            "answer": tavily_result.get("answer", ""),
-            "results": [
-                {
-                    "title": r.get("title", ""),
-                    "url": r.get("url", ""),
-                    "description": r.get("content", "")[:300]
-                }
-                for r in tavily_result.get("results", [])[:5]
-            ],
-            "sources": [
-                {"domain": r.get("url", "").split("/")[2].replace("www.", ""), "url": r.get("url", "")}
-                for r in tavily_result.get("results", [])[:3]
-            ]
-        })
-    except Exception as e:
-        print(f"Search error: {e}")
-        return jsonify({"error": str(e), "answer": "Sorry, I couldn't process that."}), 500
-
-@app.route('/history', methods=['GET'])
+@app.route("/history", methods=["GET"])
 def get_history():
     memory = load_memory()
     return jsonify({
@@ -216,25 +282,10 @@ def get_history():
         "vision_history": memory.get("vision_history", [])[:10]
     })
 
-@app.route('/suggest', methods=['POST'])
-def suggest():
-    """Simple suggestion endpoint for autocomplete"""
-    data = request.json
-    query = data.get('query', '')
-    if len(query) < 2:
-        return jsonify({"suggestions": []})
-    
-    # Return some basic suggestions
-    suggestions = [
-        f"{query} meaning",
-        f"{query} definition",
-        f"{query} images",
-        f"what is {query}",
-        f"{query} news"
-    ][:3]
-    return jsonify({"suggestions": suggestions})
+@app.route("/health", methods=["GET"])
+def health():
+    return "OK", 200
 
-if __name__ == '__main__':
-    # IMPORTANT: For Render.com - bind to 0.0.0.0 and use PORT env var
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host="0.0.0.0", port=port)
