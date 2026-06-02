@@ -28,7 +28,6 @@ def save_memory(memory):
 
 def ask_groq_vision(image_base64, prompt):
     """Use Groq's Llama 3.2 Vision model to describe an image"""
-    # Remove data:image/jpeg;base64, prefix if present
     if ',' in image_base64:
         image_base64 = image_base64.split(',')[1]
     
@@ -68,6 +67,9 @@ def ask_groq_vision(image_base64, prompt):
             timeout=60
         )
         result = response.json()
+        if "error" in result:
+            print(f"Groq API error: {result}")
+            return "I'm having trouble seeing right now. Please try again."
         return result["choices"][0]["message"]["content"].strip()
     except Exception as e:
         print(f"Vision error: {e}")
@@ -75,6 +77,9 @@ def ask_groq_vision(image_base64, prompt):
 
 def search_tavily(query, max_results=5):
     """Search the web using Tavily"""
+    if not TAVILY_KEY:
+        return {"answer": "Tavily API key not configured", "results": []}
+    
     try:
         response = requests.post(
             "https://api.tavily.com/search",
@@ -106,12 +111,10 @@ def vision():
     if not image_base64:
         return jsonify({"error": "No image provided"}), 400
     
-    # Store in memory
     memory = load_memory()
     if "vision_history" not in memory:
         memory["vision_history"] = []
     
-    # Get AI description using Groq Vision
     prompt = f"""You are nmedea, an AI assistant with vision capabilities. 
 The user says: "{user_query}"
 
@@ -123,12 +126,11 @@ Respond as if you're talking directly to the user."""
 
     description = ask_groq_vision(image_base64, prompt)
     
-    # Save to history
     memory["vision_history"].insert(0, {
         "description": description,
         "timestamp": data.get('timestamp', '')
     })
-    memory["vision_history"] = memory["vision_history"][:20]  # keep last 20
+    memory["vision_history"] = memory["vision_history"][:20]
     save_memory(memory)
     
     return jsonify({
@@ -138,7 +140,6 @@ Respond as if you're talking directly to the user."""
 
 @app.route('/search', methods=['POST'])
 def search():
-    """Regular text search using Tavily"""
     data = request.json
     query = data.get('query', '')
     
@@ -151,7 +152,6 @@ def search():
     memory["queries"].append(query)
     save_memory(memory)
     
-    # First, understand intent with Groq
     intent_prompt = f"""User query: "{query}"
     
 Analyze and respond in JSON only:
@@ -172,7 +172,11 @@ Analyze and respond in JSON only:
             },
             timeout=30
         )
-        intent = json.loads(r.json()["choices"][0]["message"]["content"])
+        intent_text = r.json()["choices"][0]["message"]["content"]
+        # Clean up JSON
+        start = intent_text.find('{')
+        end = intent_text.rfind('}') + 1
+        intent = json.loads(intent_text[start:end])
         
         if intent.get("action") == "answer" and intent.get("direct_answer"):
             return jsonify({
@@ -181,7 +185,6 @@ Analyze and respond in JSON only:
                 "sources": []
             })
         
-        # Search with Tavily
         search_query = intent.get("search_query", query)
         tavily_result = search_tavily(search_query, 5)
         
@@ -202,6 +205,7 @@ Analyze and respond in JSON only:
             ]
         })
     except Exception as e:
+        print(f"Search error: {e}")
         return jsonify({"error": str(e), "answer": "Sorry, I couldn't process that."}), 500
 
 @app.route('/history', methods=['GET'])
@@ -212,5 +216,25 @@ def get_history():
         "vision_history": memory.get("vision_history", [])[:10]
     })
 
+@app.route('/suggest', methods=['POST'])
+def suggest():
+    """Simple suggestion endpoint for autocomplete"""
+    data = request.json
+    query = data.get('query', '')
+    if len(query) < 2:
+        return jsonify({"suggestions": []})
+    
+    # Return some basic suggestions
+    suggestions = [
+        f"{query} meaning",
+        f"{query} definition",
+        f"{query} images",
+        f"what is {query}",
+        f"{query} news"
+    ][:3]
+    return jsonify({"suggestions": suggestions})
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # IMPORTANT: For Render.com - bind to 0.0.0.0 and use PORT env var
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
