@@ -1,15 +1,13 @@
-import requests
-import json
 import os
-from dotenv import load_dotenv
+import json
+import requests
 
-load_dotenv()
-
+# Retrieve keys directly from Render's Environment settings
 GROQ_TOKEN = os.getenv("GROQ_TOKEN")
 TAVILY_KEY = os.getenv("TAVILY_KEY")
 
 def ask_groq_json(prompt, max_tokens=3000):
-    """Safely queries Groq expecting a JSON response."""
+    """Queries Groq expecting a structured JSON response object."""
     try:
         r = requests.post(
             "https://api.groq.com/openai/v1/chat/completions",
@@ -18,27 +16,24 @@ def ask_groq_json(prompt, max_tokens=3000):
                 "model": "llama-3.3-70b-versatile",
                 "messages": [{"role": "user", "content": prompt}],
                 "max_tokens": max_tokens,
-                # Force JSON mode to prevent Groq from returning conversational text outside the markdown
-                "response_format": {"type": "json_object"} 
+                "response_format": {"type": "json_object"}
             },
             timeout=30
         )
         r.raise_for_status()
         text = r.json()["choices"][0]["message"]["content"].strip()
         
-        # Robust JSON extraction
         start = text.find('{')
         end = text.rfind('}') + 1
         if start == -1 or end == 0:
-            raise ValueError("No JSON object found in LLM response.")
+            raise ValueError("No JSON object found in response.")
             
         return json.loads(text[start:end])
     except Exception as e:
-        print(f"[Groq Error]: {e}")
-        # Fallback safe dictionary so your app doesn't crash
+        # Prevent server crashes by returning a safe default structure
         return {
             "action": "answer",
-            "understood": "Failed to parse intent.",
+            "understood": "Failed to parse system intent smoothly.",
             "search_query": prompt[:50],
             "image_search_query": "",
             "direct_url": "",
@@ -46,7 +41,7 @@ def ask_groq_json(prompt, max_tokens=3000):
         }
 
 def ask_groq_to_synthesize(query, web_context):
-    """Uses web data to write a highly accurate, real-time answer."""
+    """Uses live web data context to write an accurate, up-to-date response."""
     prompt = f"""You are an advanced AI search assistant. 
 User Query: "{query}"
 
@@ -69,11 +64,10 @@ Based on the live context above, write a COMPLETE, DETAILED, and thoroughly comp
         r.raise_for_status()
         return r.json()["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        print(f"[Synthesis Error]: {e}")
-        return "Error synthesizing live search results."
+        return "Error synthesizing live search results cleanly."
 
 def understand(query):
-    # Step 1: Query the LLM purely to understand INTENT and get perfect search queries
+    """Main parsing and execution broker mapping user prompts to search actions."""
     intent_prompt = f"""You are the intent parsing engine for a powerful search tool. User said: "{query}"
 
 Reply ONLY with a JSON object containing these keys:
@@ -100,7 +94,6 @@ Rules:
     qty = int(data.get("quantity", 5))
     understood = data.get("understood", "")
     
-    # Initialize your exact return structure
     output_payload = {
         "action": action,
         "url": "",
@@ -118,7 +111,7 @@ Rules:
     images, results, sources = [], [], []
     web_context_chunks = []
 
-    # Step 2: Fetch Web Context / Results if needed
+    # Gather search results or text intelligence data
     if action in ["show_results", "answer", "answer_with_images"]:
         try:
             tv_res = requests.post("https://api.tavily.com/search", json={
@@ -132,7 +125,6 @@ Rules:
             if tv_res.status_code == 200:
                 tv_data = tv_res.json()
                 
-                # Build the results list if user wanted list/recommendations
                 if action == "show_results":
                     for r in tv_data.get("results", [])[:qty]:
                         results.append({
@@ -142,7 +134,6 @@ Rules:
                             "image": r.get("image", "")
                         })
                 
-                # Build up sources and aggregate text context for generation
                 for r in tv_data.get("results", []):
                     content = r.get("content", "")
                     web_context_chunks.append(f"Source: {r.get('url','')}\nContent: {content}\n---")
@@ -153,10 +144,10 @@ Rules:
                             sources.append({"domain": dom, "url": r.get("url", "")})
                     except:
                         pass
-        except Exception as e:
-            print(f"[Tavily Web Search Error]: {e}")
+        except Exception:
+            pass
 
-    # Step 3: Fetch Images if requested
+    # Gather image assets
     if action in ["show_images", "answer_with_images"]:
         img_q = data.get("image_search_query") or data.get("search_query", query) + " photos high quality"
         try:
@@ -170,8 +161,6 @@ Rules:
             
             if tv_img.status_code == 200:
                 tv_img_data = tv_img.json()
-                
-                # Pre-map domains from current sources for matching
                 src_map = {s["domain"]: s["url"] for s in sources}
                 
                 for img in tv_img_data.get("images", []):
@@ -192,15 +181,14 @@ Rules:
                     images.append({"url": url, "source": dom})
                     if len(images) >= qty: 
                         break
-        except Exception as e:
-            print(f"[Tavily Image Search Error]: {e}")
+        except Exception:
+            pass
 
-    # Step 4: Generate a factual Answer based on the gathered Web Context
+    # Assemble everything into the exact return structure required by your app
     if action in ["answer", "answer_with_images"] and web_context_chunks:
         context_string = "\n".join(web_context_chunks)
         output_payload["answer"] = ask_groq_to_synthesize(query, context_string)
 
-    # Assign final values back to payload
     output_payload["images"] = images
     output_payload["results"] = results
     output_payload["sources"] = sources
