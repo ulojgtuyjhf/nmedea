@@ -15,7 +15,16 @@
       --text:#0e0e0c;--muted:#888;--accent:#1a1a1a;
       --card:#ffffff;--toolbar:#ffffff;--input:#f0f0ee;--red:#d94040;
       --pill:#e8e8e6;--pill-text:#444;--blue:#1a6af0;
+      --base-font:15px;
     }
+    html{font-size:var(--base-font)}
+    /* density variants */
+    [data-density="compact"] .lCard{padding:10px 12px}
+    [data-density="compact"] #answerBody{padding:14px 16px;font-size:13.5px;line-height:1.8}
+    [data-density="compact"] .rSec{margin-bottom:16px}
+    [data-density="comfortable"] .lCard{padding:18px 16px}
+    [data-density="comfortable"] #answerBody{padding:24px 26px;line-height:2.1}
+    [data-density="comfortable"] .rSec{margin-bottom:32px}
     [data-theme="dark"]{
       --bg:#0c0c0c;--surface:#161616;--border:rgba(255,255,255,0.07);
       --text:#efefef;--muted:#555;--accent:#efefef;
@@ -612,13 +621,88 @@
       <span class="pfT">Preferences</span>
     </div>
     <div class="pfBody">
-      <div class="pfL">Theme</div>
-      <div class="tgrid">
-        <div class="topt active" data-theme="light" onclick="setTheme('light',this)"><div class="tprev" style="background:#f7f7f5;border:1px solid #e5e5e5"></div>Light</div>
-        <div class="topt" data-theme="dark" onclick="setTheme('dark',this)"><div class="tprev" style="background:#0c0c0c"></div>Dark</div>
-        <div class="topt" data-theme="sepia" onclick="setTheme('sepia',this)"><div class="tprev" style="background:#f5edd8"></div>Sepia</div>
-        <div class="topt" data-theme="midnight" onclick="setTheme('midnight',this)"><div class="tprev" style="background:#0d1117"></div>Midnight</div>
+
+      <!-- THEME -->
+      <div class="pfSec">
+        <div class="pfL">Theme</div>
+        <div class="tgrid">
+          <div class="topt active" data-theme="light" onclick="setTheme('light',this)"><div class="tprev" style="background:#f7f7f5;border:1px solid #e5e5e5"></div>Light</div>
+          <div class="topt" data-theme="dark" onclick="setTheme('dark',this)"><div class="tprev" style="background:#0c0c0c"></div>Dark</div>
+          <div class="topt" data-theme="sepia" onclick="setTheme('sepia',this)"><div class="tprev" style="background:#f5edd8"></div>Sepia</div>
+          <div class="topt" data-theme="midnight" onclick="setTheme('midnight',this)"><div class="tprev" style="background:#0d1117"></div>Midnight</div>
+        </div>
       </div>
+
+      <!-- ACCENT COLOUR -->
+      <div class="pfSec">
+        <div class="pfL">Accent Colour</div>
+        <div class="accentGrid" id="accentGrid">
+          <div class="accentDot active" data-accent="#1a6af0" style="background:#1a6af0" onclick="setAccent('#1a6af0',this)"></div>
+          <div class="accentDot" data-accent="#9b72f7" style="background:#9b72f7" onclick="setAccent('#9b72f7',this)"></div>
+          <div class="accentDot" data-accent="#f76b8a" style="background:#f76b8a" onclick="setAccent('#f76b8a',this)"></div>
+          <div class="accentDot" data-accent="#f7c94f" style="background:#f7c94f" onclick="setAccent('#f7c94f',this)"></div>
+          <div class="accentDot" data-accent="#2ecc71" style="background:#2ecc71" onclick="setAccent('#2ecc71',this)"></div>
+          <div class="accentDot" data-accent="#e67e22" style="background:#e67e22" onclick="setAccent('#e67e22',this)"></div>
+          <div class="accentDot" data-accent="#e74c3c" style="background:#e74c3c" onclick="setAccent('#e74c3c',this)"></div>
+          <div class="accentDot" data-accent="#1abc9c" style="background:#1abc9c" onclick="setAccent('#1abc9c',this)"></div>
+        </div>
+      </div>
+
+      <!-- DENSITY -->
+      <div class="pfSec">
+        <div class="pfL">Display Density</div>
+        <div class="densGrid">
+          <div class="densOpt" data-density="compact" onclick="setDensity('compact',this)">Compact</div>
+          <div class="densOpt active" data-density="default" onclick="setDensity('default',this)">Default</div>
+          <div class="densOpt" data-density="comfortable" onclick="setDensity('comfortable',this)">Spacious</div>
+        </div>
+      </div>
+
+      <!-- TOGGLES -->
+      <div class="pfSec">
+        <div class="pfL">Settings</div>
+        <div style="background:var(--surface);border-radius:13px;padding:0 14px">
+          <div class="pfRow">
+            <div class="pfRowL">
+              <div class="pfRowTitle">Show images with answers</div>
+              <div class="pfRowSub">Fetch images alongside results</div>
+            </div>
+            <label class="tog"><input type="checkbox" id="togImages" checked onchange="savePref('showImages',this.checked)"><span class="togSlide"></span></label>
+          </div>
+          <div class="pfRow">
+            <div class="pfRowL">
+              <div class="pfRowTitle">Trending strip</div>
+              <div class="pfRowSub">Show trending topics on home</div>
+            </div>
+            <label class="tog"><input type="checkbox" id="togTrend" checked onchange="savePref('showTrend',this.checked);document.getElementById('trendStrip').style.display=this.checked?'':'none'"><span class="togSlide"></span></label>
+          </div>
+          <div class="pfRow">
+            <div class="pfRowL">
+              <div class="pfRowTitle">Auto-scroll trending</div>
+              <div class="pfRowSub">Desktop only</div>
+            </div>
+            <label class="tog"><input type="checkbox" id="togScroll" checked onchange="savePref('autoScroll',this.checked);this.checked?startTrendScroll():clearInterval(autoT)"><span class="togSlide"></span></label>
+          </div>
+          <div class="pfRow" style="border-bottom:none">
+            <div class="pfRowL">
+              <div class="pfRowTitle">Colour loading animation</div>
+              <div class="pfRowSub">Glow on search bar while loading</div>
+            </div>
+            <label class="tog"><input type="checkbox" id="togGlow" checked onchange="savePref('glowAnim',this.checked)"><span class="togSlide"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- FONT SIZE -->
+      <div class="pfSec">
+        <div class="pfL">Font Size</div>
+        <div class="densGrid">
+          <div class="densOpt" data-font="small" onclick="setFont('small',this)">Small</div>
+          <div class="densOpt active" data-font="medium" onclick="setFont('medium',this)">Medium</div>
+          <div class="densOpt" data-font="large" onclick="setFont('large',this)">Large</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -795,6 +879,8 @@
         </button>
         <div id="homeAutoBox"></div>
       </div>
+      <!-- colour-cycling bar shown while searching -->
+      <div id="homeSearchBar"></div>
       <div class="homeHint">Powered by AI · Ask anything · Get direct answers</div>
 
       <!-- AI QUICK CARDS — populated by loadQuickCards() -->
@@ -834,7 +920,7 @@
               <div id="srcChips"></div>
             </div>
 
-            <div id="lnkDivider" class="secDiv" style="display:none"></div>
+            <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
 
             <!-- web results -->
             <div id="linksSection" class="rSec" style="display:none">
@@ -913,8 +999,63 @@ function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t==='light'?'':t);
   document.querySelectorAll('.topt').forEach(el=>el.classList.toggle('active',el.dataset.theme===t));
 }
-function setTheme(t){theme=t;localStorage.setItem('nmt',t);applyTheme(t);}
+function setTheme(t,el){theme=t;localStorage.setItem('nmt',t);applyTheme(t);}
 applyTheme(theme);
+
+// ── ACCENT COLOUR ──
+function setAccent(color,el){
+  document.documentElement.style.setProperty('--blue',color);
+  localStorage.setItem('nma',color);
+  document.querySelectorAll('.accentDot').forEach(d=>d.classList.toggle('active',d.dataset.accent===color));
+}
+const savedAccent=localStorage.getItem('nma');
+if(savedAccent)setAccent(savedAccent,null);
+
+// ── DENSITY ──
+function setDensity(d,el){
+  document.documentElement.setAttribute('data-density',d);
+  localStorage.setItem('nmd',d);
+  document.querySelectorAll('.densOpt[data-density]').forEach(o=>o.classList.toggle('active',o.dataset.density===d));
+}
+const savedDensity=localStorage.getItem('nmd')||'default';
+setDensity(savedDensity,null);
+
+// ── FONT SIZE ──
+const fontMap={small:'13px',medium:'15px',large:'17px'};
+function setFont(f,el){
+  document.documentElement.style.setProperty('--base-font',fontMap[f]||'15px');
+  localStorage.setItem('nmf',f);
+  document.querySelectorAll('.densOpt[data-font]').forEach(o=>o.classList.toggle('active',o.dataset.font===f));
+}
+const savedFont=localStorage.getItem('nmf')||'medium';
+setFont(savedFont,null);
+
+// ── PREFS SAVE/LOAD ──
+function savePref(k,v){localStorage.setItem('pref_'+k,v?'1':'0');}
+function loadPrefs(){
+  const gi=document.getElementById('togImages'),gt=document.getElementById('togTrend'),gs=document.getElementById('togScroll'),gg=document.getElementById('togGlow');
+  if(gi)gi.checked=localStorage.getItem('pref_showImages')!=='0';
+  if(gt){gt.checked=localStorage.getItem('pref_showTrend')!=='0';document.getElementById('trendStrip').style.display=gt.checked?'':'none';}
+  if(gs)gs.checked=localStorage.getItem('pref_autoScroll')!=='0';
+  if(gg)gg.checked=localStorage.getItem('pref_glowAnim')!=='0';
+  // sync density / font selectors
+  document.querySelectorAll('.densOpt[data-density]').forEach(o=>o.classList.toggle('active',o.dataset.density===savedDensity));
+  document.querySelectorAll('.densOpt[data-font]').forEach(o=>o.classList.toggle('active',o.dataset.font===savedFont));
+  if(savedAccent)document.querySelectorAll('.accentDot').forEach(d=>d.classList.toggle('active',d.dataset.accent===savedAccent));
+}
+
+// ── SEARCH GLOW HELPERS ──
+function startSearchGlow(){
+  const glowOn=localStorage.getItem('pref_glowAnim')!=='0';
+  if(glowOn){SI.classList.add('searching');HS.classList.add('searching');}
+  const bar=document.getElementById('homeSearchBar');
+  if(bar)bar.classList.add('active');
+}
+function stopSearchGlow(){
+  SI.classList.remove('searching');HS.classList.remove('searching');
+  const bar=document.getElementById('homeSearchBar');
+  if(bar)bar.classList.remove('active');
+}
 
 // ── SPLASH ──
 auth.onAuthStateChanged(u=>{
@@ -923,6 +1064,7 @@ auth.onAuthStateChanged(u=>{
   home.style.display='flex';
   if(u){upUI(u);loadHist(u.uid);}
   else upUI(null);
+  loadPrefs();
   loadRecs();
   loadQuickCards();
 });
@@ -1093,21 +1235,21 @@ async function doSearch(qOv){
   saveHist(q);
   home.style.display='none';rp.classList.add('vis');
   qe.textContent=q;SI.value=q;updateClearBtns();
-  clearResults();skelWrap.style.display='block';startProg();
+  clearResults();skelWrap.style.display='block';startProg();startSearchGlow();
   let mi=0;sw.innerHTML=glowStatus(STATUSMSGS[0]);
   const mt=setInterval(()=>{mi=Math.min(mi+1,STATUSMSGS.length-1);sw.innerHTML=glowStatus(STATUSMSGS[mi]);},900);
   document.getElementById('rScroll').scrollTop=0;
   try{
     const res=await fetch('/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
     const data=await res.json();
-    clearInterval(mt);endProg();skelWrap.style.display='none';sw.innerHTML='';
+    clearInterval(mt);endProg();stopSearchGlow();skelWrap.style.display='none';sw.innerHTML='';
     if(data.action==='open_website'&&data.url){window.location.href=data.url;busy=false;return;}
     if(data.action==='social'&&!data.answer&&!data.results?.length){
       // pure social card — still render with whatever came back
     }
     renderResults(data,q);
   }catch(err){
-    clearInterval(mt);endProg();skelWrap.style.display='none';sw.innerHTML='';
+    clearInterval(mt);endProg();stopSearchGlow();skelWrap.style.display='none';sw.innerHTML='';
     ab.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 0;gap:12px">'
       +'<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
       +'<div style="font-size:15px;font-weight:600;color:var(--text)">We\'re doing some maintenance</div>'
