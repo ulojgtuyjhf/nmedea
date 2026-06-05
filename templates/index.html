@@ -82,7 +82,7 @@
     .nbtn:hover,.nbtn:active{background:var(--surface);color:var(--text)}
     .nbtn svg{width:16px;height:16px}
     @media(max-width:600px){#backBtn,#refreshBtn,#newBtn{display:none}}
-    #sw{flex:1;position:relative;display:flex;align-items:center;min-width:0}
+    #sw{flex:1;position:relative;display:flex;align-items:center;min-width:0;z-index:200}
     #searchInput{width:100%;height:36px;background:var(--input);border:1.5px solid var(--border);border-radius:18px;padding:0 58px 0 36px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
     #searchInput::placeholder{color:var(--muted)}
     #searchInput:focus{border-color:rgba(128,128,128,0.35);box-shadow:0 0 0 3px rgba(0,0,0,0.05)}
@@ -172,23 +172,6 @@
       font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;
       color:var(--muted);white-space:nowrap;
     }
-
-    /* AUTOCOMPLETE */
-    #autoBox,#homeAutoBox{
-      position:absolute;top:42px;left:0;right:0;
-      background:var(--card);border:1px solid var(--border);
-      border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.13);
-      z-index:400;display:none;overflow:hidden;
-    }
-    #homeAutoBox{top:62px}
-    .ai-row{
-      display:flex;align-items:center;gap:10px;padding:11px 15px;
-      cursor:pointer;font-size:13.5px;color:var(--text);
-      border-bottom:1px solid var(--border);transition:background 0.1s;
-    }
-    .ai-row:last-child{border-bottom:none}
-    .ai-row:hover,.ai-row:active{background:var(--surface)}
-    .ai-row svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
 
     /* HISTORY SIDE PANEL */
     #histOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;display:none;backdrop-filter:blur(2px)}
@@ -356,23 +339,30 @@
        HOME PAGE
     ══════════════════════════════════════ */
     #homePage{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:20px 16px 40px}
-    .homeInner{width:100%;max-width:640px;display:flex;flex-direction:column;align-items:center}
+    .homeInner{width:100%;max-width:640px;display:flex;flex-direction:column;align-items:center;position:relative}
     .homeLogo{display:flex;align-items:center;gap:11px;margin-bottom:28px}
     .homeLogoIcon{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#1a1a1a,#444);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;font-family:'DM Serif Display',serif}
     .homeLogoText{font-size:30px;font-weight:400;letter-spacing:-0.5px;color:var(--text);font-family:'DM Serif Display',serif}
     .homeLogoAi{font-size:10px;font-weight:700;color:var(--blue);background:rgba(26,106,240,0.09);padding:3px 7px;border-radius:5px;margin-left:4px;align-self:flex-start;margin-top:8px}
-    #homeSW{position:relative;width:100%;margin-bottom:8px}
-    #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 96px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
+    #homeSW{position:relative;width:100%;margin-bottom:0;z-index:200}
+    #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 90px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
     #homeSearch::placeholder{color:var(--muted)}
     #homeSearch:focus{border-color:rgba(128,128,128,0.28);box-shadow:0 8px 28px rgba(0,0,0,0.09)}
-    #homeSearch.glow{border-color:transparent!important;animation:glow 2.5s linear infinite}
     #homeClearBtn{position:absolute;right:50px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
     #homeClearBtn svg{width:14px;height:14px}
     #homeGo{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:10px;border:none;background:var(--text);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
     #homeGo:active{transform:translateY(-50%) scale(0.91)}
     #homeGo svg{width:14px;height:14px}
-    #homeAutoBox{position:absolute;top:62px;left:0;right:0}
-    .homeHint{font-size:12px;color:var(--muted);margin-bottom:26px;text-align:center}
+    /* autocomplete dropdown — absolutely positioned, properly layered */
+    #homeAutoBox{
+      position:absolute;top:calc(100% + 6px);left:0;right:0;
+      background:var(--card);border:1px solid var(--border);
+      border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,0.14);
+      z-index:500;display:none;overflow:hidden;
+    }
+    #homeSearchBar{height:3px;width:100%;border-radius:0 0 15px 15px;margin-bottom:10px;background:linear-gradient(90deg,#4f8ef7,#9b72f7,#f76b8a,#f7c94f,#4f8ef7);background-size:300%;display:none;animation:pgAnim 2s linear infinite}
+    #homeSearchBar.active{display:block}
+    .homeHint{font-size:12px;color:var(--muted);margin-top:10px;margin-bottom:22px;text-align:center}
     .quickGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-bottom:8px}
     .qCard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:background 0.12s,transform 0.15s,box-shadow 0.15s}
     .qCard:hover{background:var(--surface);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.1)}
@@ -381,6 +371,17 @@
     .qCardIcon svg{width:28px;height:28px}
     .qCardTitle{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
     .qCardSub{font-size:11px;color:var(--muted);line-height:1.5}
+    /* also fix toolbar autocomplete */
+    #autoBox{
+      position:absolute;top:calc(100% + 6px);left:0;right:0;
+      background:var(--card);border:1px solid var(--border);
+      border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,0.14);
+      z-index:500;display:none;overflow:hidden;
+    }
+    .ai-row{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;font-size:13.5px;color:var(--text);border-bottom:1px solid var(--border);transition:background 0.1s}
+    .ai-row:last-child{border-bottom:none}
+    .ai-row:hover,.ai-row:active{background:var(--surface)}
+    .ai-row svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
 
     /* ══════════════════════════════════════
        RESULT PAGE — mobile single col, desktop two-col
@@ -476,17 +477,22 @@
     #heroImgSrc img{width:14px;height:14px;border-radius:3px;flex-shrink:0}
     #heroImgSrc span{font-size:11px;color:#fff;opacity:0.9}
 
-    /* MASONRY GRID */
+    /* MASONRY GRID — any number of images */
     #imgGrid{columns:2;column-gap:8px}
     @media(min-width:480px){#imgGrid{columns:3}}
-    /* on desktop right panel, keep 2 cols */
     @media(min-width:860px){#rRight #imgGrid{columns:2}}
+    /* when images section is in left col (full results), show more cols */
+    @media(min-width:860px){#rLeft #imgGrid{columns:4}}
+    .imgCount{font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+    .imgCount svg{width:11px;height:11px}
     .imgTile{cursor:pointer;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface);break-inside:avoid;margin-bottom:8px;display:inline-block;width:100%;transition:transform 0.2s,box-shadow 0.2s;position:relative}
     .imgTile:hover{transform:scale(1.02);box-shadow:0 8px 28px rgba(0,0,0,0.18)}
-    .imgTile img{width:100%;display:block;object-fit:cover;min-height:80px;background:var(--surface)}
+    .imgTile img{width:100%;display:block;object-fit:cover;min-height:60px;background:var(--surface);opacity:0;transition:opacity 0.3s ease}
+    .imgTile img.loaded{opacity:1}
     .imgTileSrc{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);display:flex;align-items:center;gap:4px;opacity:0;transition:opacity 0.2s}
     .imgTile:hover .imgTileSrc{opacity:1}
     .imgTileSrc img{width:11px;height:11px;border-radius:2px;flex-shrink:0}
+    .imgTileSrc span{font-size:10px;color:#fff}
     .imgTileSrc span{font-size:10px;color:#fff}
 
     /* WEB RESULT CARDS */
@@ -1293,20 +1299,41 @@ function renderResults(data, q){
       const src=typeof imgs[0]==='string'?imgs[0]:imgs[0].url;
       const domain=typeof imgs[0]==='object'&&imgs[0].source?imgs[0].source:'';
       heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
+      heroImg.onload=()=>{heroImg.style.opacity='1';};
+      heroImg.style.opacity='0';heroImg.style.transition='opacity 0.4s';
       heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>':'';
       heroImgWrap.style.display='block';hasImages=true;
     } else if(imgs.length>1){
       ig.innerHTML='';
+      // count badge
+      const existingCount=imagesSection.querySelector('.imgCount');
+      if(existingCount)existingCount.remove();
+      const countEl=document.createElement('div');countEl.className='imgCount';
+      countEl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+imgs.length+' images';
+      imagesSection.querySelector('.secLbl').after(countEl);
       imgs.forEach(imgObj=>{
         const src=typeof imgObj==='string'?imgObj:imgObj.url;
         const domain=typeof imgObj==='object'&&imgObj.source?imgObj.source:'';
         if(!src)return;
         const tile=document.createElement('div');tile.className='imgTile';
-        tile.innerHTML='<img src="'+src+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'">'
-          +(domain?'<div class="imgTileSrc"><img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span></div>':'');
+        const imgEl=document.createElement('img');
+        imgEl.loading='lazy';imgEl.alt='';
+        imgEl.onerror=()=>{tile.style.display='none';};
+        imgEl.onload=()=>imgEl.classList.add('loaded');
+        imgEl.src=src;
+        tile.appendChild(imgEl);
+        if(domain){
+          const srcDiv=document.createElement('div');srcDiv.className='imgTileSrc';
+          srcDiv.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>';
+          tile.appendChild(srcDiv);
+        }
         tile.addEventListener('click',()=>window.open(src,'_blank'));
         ig.appendChild(tile);
       });
+      // large catalogs (>6) go full width in left col
+      if(imgs.length>6){
+        document.getElementById('rLeft').prepend(imagesSection);
+      }
       imagesSection.style.display='block';hasImages=true;
     }
   }

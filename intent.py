@@ -7,61 +7,58 @@ TAVILY_KEY = os.getenv("TAVILY_KEY")   # images only
 EXA_KEY    = os.getenv("EXA_KEY")      # web search + social
 
 
-# ─────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
 #  GROQ
-# ─────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
 def ask_groq(prompt, max_tokens=3000):
-    try:
-        r = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
-            json={"model":"llama-3.3-70b-versatile","messages":[{"role":"user","content":prompt}],"max_tokens":max_tokens},
-            timeout=30,
-        )
-        # Check for HTTP errors (like 401 Unauthorized or 429 Rate Limit)
-        r.raise_for_status()
-        
-        data = r.json()
-        
-        # Safely extract choices
-        if "choices" in data and len(data["choices"]) > 0:
-            return data["choices"][0]["message"]["content"].strip()
-        else:
-            print(f"[groq error] Unexpected JSON format: {data}")
-            return "{}"
-            
-    except Exception as e:
-        print(f"[groq error] {e}")
-        # Return an empty JSON object string as a fallback
-        return "{}"
+    r = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
+        json={"model":"llama-3.3-70b-versatile",
+              "messages":[{"role":"user","content":prompt}],
+              "max_tokens":max_tokens},
+        timeout=30,
+    )
+    return r.json()["choices"][0]["message"]["content"].strip()
 
 
-# ─────────────────────────────────────────
-#  QUANTITY EXTRACTOR
-# ─────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
+#  QUANTITY EXTRACTOR  — reads "100 images", "give me 10 photos", etc.
+# ─────────────────────────────────────────────────────────────────
 def extract_quantity(query: str):
-    word_map = {"one":1,"two":2,"three":3,"four":4,"five":5,
-                "six":6,"seven":7,"eight":8,"nine":9,"ten":10,
-                "eleven":11,"twelve":12,"fifteen":15,"twenty":20}
+    word_map = {
+        "one":1,"two":2,"three":3,"four":4,"five":5,
+        "six":6,"seven":7,"eight":8,"nine":9,"ten":10,
+        "eleven":11,"twelve":12,"fifteen":15,"twenty":20,
+        "thirty":30,"fifty":50,"hundred":100,"a hundred":100,
+    }
     q = query.lower()
     for word, num in word_map.items():
-        if re.search(r'\b'+word+r'\b', q):
+        if re.search(r'\b' + re.escape(word) + r'\b', q):
             return num
-    m = re.search(r'\b(\d{1,2})\s*(?:image|photo|picture|pic|result|link|item|news|article)s?\b', q)
+    # digit before or after image/photo/result/etc
+    m = re.search(
+        r'\b(\d{1,3})\s*(?:image|photo|picture|pic|result|link|item|news|article|video)s?\b',
+        q)
     if m: return int(m.group(1))
-    m2 = re.search(r'\bgive\s+me\s+(\d{1,2})\b', q)
+    # "give me 25" / "show me 50"
+    m2 = re.search(r'\b(?:give|show|fetch|find|get)\s+me\s+(\d{1,3})\b', q)
     if m2: return int(m2.group(1))
+    # bare digit at start: "100 images of cats"
+    m3 = re.search(r'^(\d{1,3})\s+\w', q)
+    if m3: return int(m3.group(1))
     return None
 
 
-# ─────────────────────────────────────────
-#  EXA — web search
-# ─────────────────────────────────────────
-def exa_search(query: str, num: int = 5, include_text: bool = True):
+# ─────────────────────────────────────────────────────────────────
+#  EXA  — neural web search
+# ─────────────────────────────────────────────────────────────────
+def exa_search(query: str, num: int = 5, include_text: bool = True, site: str = None):
     try:
+        q = f"site:{site} {query}" if site else query
         payload = {
-            "query": query,
-            "numResults": num,
+            "query": q,
+            "numResults": min(num, 10),
             "type": "neural",
             "useAutoprompt": True,
             "contents": {
@@ -95,120 +92,156 @@ def exa_search(query: str, num: int = 5, include_text: bool = True):
         return []
 
 
-# ─────────────────────────────────────────
-#  TAVILY — images only
-# ─────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
+#  TAVILY  — images (supports large batches via multiple calls)
+# ─────────────────────────────────────────────────────────────────
 def tavily_images(query: str, qty: int):
-    try:
-        tv = requests.post(
-            "https://api.tavily.com/search",
-            json={"api_key":TAVILY_KEY,"query":query,"search_depth":"advanced",
-                  "include_images":True,"include_image_descriptions":True,"max_results":qty+10},
-            timeout=30,
-        ).json()
-        src_map = {}
-        for item in tv.get("results", []):
-            try:
-                dom = item["url"].split("/")[2].replace("www.", "")
-                src_map[dom] = item["url"]
-            except: pass
-        images = []
-        for img in tv.get("images", []):
-            url = img if isinstance(img, str) else img.get("url", "")
-            if not url.startswith("http"): continue
-            dom = next((d for d in src_map if d.lower() in url.lower()), "")
-            if not dom and src_map:
-                keys = list(src_map.keys())
-                dom = keys[min(len(images), len(keys)-1)]
-            images.append({"url": url, "source": dom})
-            if len(images) >= qty: break
-        return images
-    except Exception as e:
-        print(f"[tavily image error] {e}")
-        return []
+    """Fetch up to `qty` images. Makes multiple Tavily calls if qty > 20."""
+    all_images = []
+    seen_urls = set()
+    batch = min(qty + 10, 30)  # Tavily max per call
+
+    # Run up to 5 calls to reach high qty (e.g. 100)
+    calls_needed = min(5, (qty + batch - 1) // max(batch - 10, 1))
+    for call_i in range(calls_needed):
+        if len(all_images) >= qty:
+            break
+        # vary query slightly on later calls to get different images
+        q = query if call_i == 0 else f"{query} {'hd photos' if call_i==1 else 'high resolution' if call_i==2 else 'gallery' if call_i==3 else 'collection'}"
+        try:
+            tv = requests.post(
+                "https://api.tavily.com/search",
+                json={"api_key": TAVILY_KEY, "query": q,
+                      "search_depth": "advanced",
+                      "include_images": True,
+                      "include_image_descriptions": True,
+                      "max_results": batch},
+                timeout=30,
+            ).json()
+            src_map = {}
+            for item in tv.get("results", []):
+                try:
+                    dom = item["url"].split("/")[2].replace("www.", "")
+                    src_map[dom] = item["url"]
+                except: pass
+            for img in tv.get("images", []):
+                url = img if isinstance(img, str) else img.get("url", "")
+                if not url.startswith("http") or url in seen_urls:
+                    continue
+                seen_urls.add(url)
+                dom = next((d for d in src_map if d.lower() in url.lower()), "")
+                if not dom and src_map:
+                    keys = list(src_map.keys())
+                    dom = keys[min(len(all_images), len(keys)-1)]
+                all_images.append({"url": url, "source": dom})
+                if len(all_images) >= qty:
+                    break
+        except Exception as e:
+            print(f"[tavily image error call {call_i}] {e}")
+    return all_images[:qty]
 
 
-# ─────────────────────────────────────────
-#  SOCIAL MEDIA META — fetch OG tags
-# ─────────────────────────────────────────
-SOCIAL_DOMAINS = {
-    "tiktok": "tiktok.com",
-    "youtube": "youtube.com",
-    "youtu.be": "youtube.com",
-    "instagram": "instagram.com",
-    "twitter": "twitter.com",
-    "x.com": "x.com",
-    "facebook": "facebook.com",
-}
-
+# ─────────────────────────────────────────────────────────────────
+#  SOCIAL METADATA
+# ─────────────────────────────────────────────────────────────────
 SOCIAL_COLORS = {
     "tiktok":    {"bg":"#010101","text":"#ffffff","label":"TikTok"},
     "youtube":   {"bg":"#ff0000","text":"#ffffff","label":"YouTube"},
     "instagram": {"bg":"#e1306c","text":"#ffffff","label":"Instagram"},
     "twitter":   {"bg":"#1da1f2","text":"#ffffff","label":"Twitter / X"},
-    "x.com":     {"bg":"#000000","text":"#ffffff","label":"X"},
+    "x":         {"bg":"#000000","text":"#ffffff","label":"X"},
     "facebook":  {"bg":"#1877f2","text":"#ffffff","label":"Facebook"},
+    "reddit":    {"bg":"#ff4500","text":"#ffffff","label":"Reddit"},
 }
-
-SOCIAL_URL_PATTERNS = [
-    (r'(https?://)?(www\.)?tiktok\.com/@[\w.]+/video/\d+', 'tiktok'),
-    (r'(https?://)?(vm\.)?tiktok\.com/\w+', 'tiktok'),
-    (r'(https?://)?(www\.)?youtube\.com/watch\?v=[\w-]+', 'youtube'),
-    (r'(https?://)?(www\.)?youtu\.be/[\w-]+', 'youtube'),
-    (r'(https?://)?(www\.)?instagram\.com/(?:p|reel|tv)/[\w-]+', 'instagram'),
-    (r'(https?://)?(www\.)?twitter\.com/\w+/status/\d+', 'twitter'),
-    (r'(https?://)?(www\.)?x\.com/\w+/status/\d+', 'x.com'),
-    (r'(https?://)?(www\.)?facebook\.com/(?:watch|reel|video)', 'facebook'),
+SOCIAL_SITES = {
+    "tiktok":"tiktok.com","youtube":"youtube.com","youtu.be":"youtube.com",
+    "instagram":"instagram.com","twitter":"twitter.com","x":"x.com",
+    "facebook":"facebook.com","reddit":"reddit.com",
+}
+SOCIAL_URL_RE = [
+    (r'(?:https?://)?(?:www\.)?tiktok\.com/@[\w.]+/video/\d+', 'tiktok'),
+    (r'(?:https?://)?(?:vm\.)?tiktok\.com/\w+', 'tiktok'),
+    (r'(?:https?://)?(?:www\.)?youtube\.com/watch\?v=[\w-]+', 'youtube'),
+    (r'(?:https?://)?(?:www\.)?youtu\.be/[\w-]+', 'youtube'),
+    (r'(?:https?://)?(?:www\.)?instagram\.com/(?:p|reel|tv)/[\w-]+', 'instagram'),
+    (r'(?:https?://)?(?:www\.)?twitter\.com/\w+/status/\d+', 'twitter'),
+    (r'(?:https?://)?(?:www\.)?x\.com/\w+/status/\d+', 'x'),
+    (r'(?:https?://)?(?:www\.)?facebook\.com/(?:watch|reel|video)', 'facebook'),
+    (r'(?:https?://)?(?:www\.)?reddit\.com/r/\w+/comments/\w+', 'reddit'),
 ]
 
-def detect_social_url(query: str):
-    """Returns (full_url, platform) or (None, None)."""
-    for pat, platform in SOCIAL_URL_PATTERNS:
+def detect_social_url(query):
+    for pat, plat in SOCIAL_URL_RE:
         m = re.search(pat, query, re.IGNORECASE)
         if m:
             raw = m.group(0)
             if not raw.startswith("http"):
                 raw = "https://" + raw
-            return raw, platform
+            return raw, plat
     return None, None
 
-def fetch_og_meta(url: str, platform: str) -> dict:
-    """Fetch Open Graph / oEmbed metadata for a social URL."""
-    meta = {"url": url, "platform": platform, "title": "", "description": "",
-            "thumbnail": "", "author": "", "color": SOCIAL_COLORS.get(platform, {"bg":"#333","text":"#fff","label":platform.capitalize()})}
-    try:
-        # Try oEmbed for YouTube
-        if platform == "youtube":
-            vid_match = re.search(r'(?:v=|youtu\.be/)([\w-]+)', url)
-            if vid_match:
-                vid = vid_match.group(1)
-                oe = requests.get(f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid}&format=json", timeout=10).json()
-                meta["title"] = oe.get("title", "")
-                meta["author"] = oe.get("author_name", "")
-                meta["thumbnail"] = f"https://img.youtube.com/vi/{vid}/hqdefault.jpg"
-                return meta
+def detect_social_find(query):
+    """Detect 'find me a tiktok about X' or 'search youtube for X'."""
+    m = re.search(
+        r'\b(?:find|show|get|search|look\s+up|bring|fetch)\b.{0,50}\b(tiktok|youtube|instagram|twitter|x\.com|facebook|reddit)\b',
+        query, re.IGNORECASE)
+    if m:
+        plat = m.group(1).lower().replace(".com","").replace(".","")
+        return plat
+    # also handle "tiktok of X" / "youtube video about X"
+    m2 = re.search(r'\b(tiktok|youtube|instagram|twitter|reddit)\b.{0,10}\b(?:of|about|on|for|with)\b', query, re.IGNORECASE)
+    if m2:
+        return m2.group(1).lower()
+    return None
 
-        # Generic OG tag scrape
-        headers = {"User-Agent": "Mozilla/5.0 (compatible; nmedea/1.0)"}
-        resp = requests.get(url, headers=headers, timeout=12, allow_redirects=True)
+def fetch_og_meta(url, platform):
+    meta = {
+        "url": url, "platform": platform, "title": "", "description": "",
+        "thumbnail": "", "author": "",
+        "color": SOCIAL_COLORS.get(platform, {"bg":"#333","text":"#fff","label":platform.capitalize()}),
+    }
+    try:
+        if platform == "youtube":
+            vid = re.search(r'(?:v=|youtu\.be/)([\w-]+)', url)
+            if vid:
+                v = vid.group(1)
+                oe = requests.get(
+                    f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={v}&format=json",
+                    timeout=10).json()
+                meta["title"] = oe.get("title","")
+                meta["author"] = oe.get("author_name","")
+                meta["thumbnail"] = f"https://img.youtube.com/vi/{v}/hqdefault.jpg"
+                return meta
+        headers = {"User-Agent":"Mozilla/5.0 (compatible; nmedea/1.0; +https://nmedea.app)"}
+        resp = requests.get(url, headers=headers, timeout=14, allow_redirects=True)
         html = resp.text
         def og(prop):
-            m = re.search(r'<meta[^>]+(?:property|name)=["\']og:'+prop+r'["\'][^>]+content=["\']([^"\']+)["\']', html, re.IGNORECASE)
-            if not m:
-                m = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+(?:property|name)=["\']og:'+prop+r'["\']', html, re.IGNORECASE)
-            return m.group(1).strip() if m else ""
-        meta["title"]       = og("title") or re.search(r'<title>([^<]+)</title>', html, re.IGNORECASE) and re.search(r'<title>([^<]+)</title>', html, re.IGNORECASE).group(1) or ""
+            for pat in [
+                rf'<meta[^>]+property=["\']og:{prop}["\'][^>]+content=["\']([^"\']+)["\']',
+                rf'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:{prop}["\']',
+                rf'<meta[^>]+name=["\']og:{prop}["\'][^>]+content=["\']([^"\']+)["\']',
+            ]:
+                m = re.search(pat, html, re.IGNORECASE)
+                if m: return m.group(1).strip()
+            return ""
+        title_m = re.search(r'<title>([^<]+)</title>', html, re.IGNORECASE)
+        meta["title"] = og("title") or (title_m.group(1) if title_m else "")
         meta["description"] = og("description")
-        meta["thumbnail"]   = og("image")
+        meta["thumbnail"] = og("image")
     except Exception as e:
-        print(f"[og fetch error] {e}")
+        print(f"[og error] {e}")
     return meta
 
-def find_social_video(query: str, platform: str) -> dict | None:
-    """Search EXA for a video on a specific platform."""
-    clean = re.sub(r'\b(find|show|get|search|look up|bring|fetch|me|a|an|the|video|videos|on|from|in)\b', '', query, flags=re.IGNORECASE).strip()
-    site = SOCIAL_DOMAINS.get(platform, platform+".com")
-    results = exa_search(f'site:{site} {clean}', num=3, include_text=False)
+def find_social_video(query, platform):
+    site = SOCIAL_SITES.get(platform, platform+".com")
+    # strip intent words to get the actual subject
+    clean = re.sub(
+        r'\b(find|show|get|search|look\s+up|bring|fetch|me|a|an|the|video|videos|post|posts|on|from|in|about|of|for|with)\b',
+        ' ', query, flags=re.IGNORECASE)
+    clean = re.sub(r'\b'+re.escape(platform)+r'\b', '', clean, flags=re.IGNORECASE).strip()
+    results = exa_search(clean, num=4, include_text=False, site=site)
+    if not results:
+        results = exa_search(f"{clean} {site}", num=4, include_text=False)
     if not results:
         return None
     top = results[0]
@@ -217,39 +250,33 @@ def find_social_video(query: str, platform: str) -> dict | None:
         "platform": platform,
         "title": top["title"],
         "description": top["description"],
-        "thumbnail": top.get("image", ""),
+        "thumbnail": top.get("image",""),
         "author": "",
         "color": SOCIAL_COLORS.get(platform, {"bg":"#333","text":"#fff","label":platform.capitalize()}),
+        "all_results": results,  # extra links to show
     }
 
 
-# ─────────────────────────────────────────
-#  MAIN UNDERSTAND
-# ─────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
+#  MAIN  understand()
+# ─────────────────────────────────────────────────────────────────
 def understand(query: str):
     explicit_qty = extract_quantity(query)
 
     # ── Social URL pasted directly? ──
     social_url, social_platform = detect_social_url(query)
 
-    # ── Looking for a video on a platform? ──
-    find_match = re.search(
-        r'\b(find|show|get|search|look up|bring|fetch)\b.{0,40}\b(tiktok|youtube|instagram|twitter|x\.com|facebook)\b',
-        query, re.IGNORECASE
-    )
-    find_platform = find_match.group(2).lower().replace(".", "") if find_match else None
+    # ── Asking to FIND a social video? ──
+    find_platform = detect_social_find(query)
 
-    # If it's purely a social URL with no other text, handle directly
-    if social_url and len(query.strip().split()) <= 6:
+    # Pure social URL — handle immediately, skip Groq
+    if social_url and len(query.split()) <= 8:
         social_meta = fetch_og_meta(social_url, social_platform)
         return {
             "action": "social",
             "url": social_url,
             "understood": f"Show {social_platform} content",
-            "answer": "",
-            "images": [],
-            "results": [],
-            "sources": [],
+            "answer": "", "images": [], "results": [], "sources": [],
             "social": social_meta,
         }
 
@@ -259,91 +286,71 @@ Reply ONLY this JSON, nothing else:
 {{
   "action": "answer OR open_website OR show_images OR show_results OR answer_with_images",
   "understood": "what user wants in one clear sentence",
-  "search_query": "perfect specific search query matching EXACTLY what user asked",
-  "image_search_query": "very specific image query — include gender/age/style/quality descriptors, never swap subject",
+  "search_query": "perfect specific search query matching EXACTLY what user asked — do not change subject, gender, topic",
+  "image_search_query": "very specific image query — preserve EXACT subject, gender, age, style — e.g. if user says boys, write boys NOT girls",
   "direct_url": "full URL if user wants to open a site, else empty string",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
-  "answer": "if action is answer or answer_with_images: COMPLETE detailed response, no word limit. else empty string"
+  "answer": "if action is answer or answer_with_images: COMPLETE detailed response. else empty string"
 }}
 
 Rules:
-- open/go to/visit site → action=open_website
+- open/go to/visit → action=open_website
 - wants images/photos/pictures only → action=show_images, answer=""
-- wants images AND information → action=answer_with_images
-- asks a question or general query → action=answer with FULL answer
+- wants images AND info → action=answer_with_images
+- general question → action=answer, full answer
 - wants list/results/links → action=show_results
 - quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5}
-- image_search_query MUST be faithful to subject gender/type/style"""
+- NEVER change the subject matter of what the user asked"""
 
     text = ask_groq(prompt)
-    
-    # ── Safe JSON parsing logic ──
-    try:
-        start = text.find('{')
-        end = text.rfind('}') + 1
-        
-        if start == -1 or end == 0:
-            raise ValueError("No JSON brackets found in AI response.")
-            
-        data = json.loads(text[start:end])
-    except (json.JSONDecodeError, ValueError) as e:
-        print(f"[json parser error] {e} | Raw AI output: {text}")
-        # Fallback dictionary so the app continues gracefully without a 500 error
-        data = {
-            "action": "answer",
-            "understood": "Could not process request",
-            "search_query": query,
-            "answer": "Sorry, I encountered a temporary error trying to understand your request. Please try again."
-        }
+    start, end = text.find('{'), text.rfind('}')+1
+    data = json.loads(text[start:end])
 
-    action = data.get("action", "answer")
-    qty = max(1, min(explicit_qty or int(data.get("quantity", 5)), 20))
+    action = data.get("action","answer")
+    qty = max(1, min(explicit_qty or int(data.get("quantity",5)), 100))
 
     if action == "open_website":
         return {
-            "action": "open_website",
-            "url": data.get("direct_url", ""),
-            "understood": data.get("understood", ""),
-            "answer": "", "images": [], "results": [], "sources": [], "social": None,
+            "action":"open_website","url":data.get("direct_url",""),
+            "understood":data.get("understood",""),
+            "answer":"","images":[],"results":[],"sources":[],"social":None,
         }
 
     images, results, sources = [], [], []
-    answer = data.get("answer", "")
+    answer = data.get("answer","")
     social_meta = None
 
-    # ── Social video search ──
+    # ── Social find ──
     if find_platform:
         social_meta = find_social_video(query, find_platform)
+        if social_meta:
+            results = social_meta.pop("all_results", [])
 
     # ── Social URL in longer query ──
     if social_url and not social_meta:
         social_meta = fetch_og_meta(social_url, social_platform)
 
     # ── IMAGES via Tavily ──
-    if action in ["show_images", "answer_with_images"]:
+    if action in ["show_images","answer_with_images"]:
         img_q = data.get("image_search_query") or data.get("search_query", query)
         images = tavily_images(img_q, qty)
 
-    # ── WEB RESULTS via EXA ──
-    exa_n = qty if action == "show_results" else 5
-    exa_results = exa_search(data.get("search_query", query), num=exa_n)
+    # ── WEB via EXA ──
+    if not results:
+        exa_n = qty if action == "show_results" else 5
+        exa_results = exa_search(data.get("search_query", query), num=min(exa_n,10))
+        results = exa_results[:qty] if action=="show_results" else exa_results[:4]
 
-    if action == "show_results":
-        results = exa_results[:qty]
-    elif action in ["answer", "answer_with_images"]:
-        results = exa_results[:4]
-    elif action == "show_images":
-        results = exa_results[:4]
-
-    for item in exa_results[:6]:
-        dom = item.get("domain", "")
-        if dom and not any(s["domain"] == dom for s in sources):
-            sources.append({"domain": dom, "url": item["url"]})
+    exa_for_sources = exa_search(data.get("search_query",query), num=5) if not results else results
+    for item in exa_for_sources[:6]:
+        dom = item.get("domain","")
+        if dom and not any(s["domain"]==dom for s in sources):
+            sources.append({"domain":dom,"url":item["url"]})
 
     return {
         "action": action,
         "url": "",
-        "understood": data.get("understood", ""),
+        "understood": data.get("understood",""),
         "answer": answer,
         "images": images,
         "results": results,
