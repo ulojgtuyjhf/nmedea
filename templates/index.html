@@ -323,16 +323,19 @@
     /* DARK MODE CONTRAST FIXES */
     [data-theme="dark"] #homeSearch,[data-theme="dark"] #searchInput{background:#1e1e1e;border-color:rgba(255,255,255,0.1)}
     [data-theme="dark"] #homeSearch:focus,[data-theme="dark"] #searchInput:focus{border-color:rgba(255,255,255,0.2);box-shadow:0 0 0 3px rgba(255,255,255,0.04)}
-    [data-theme="dark"] .lCard{background:#111;border-color:rgba(255,255,255,0.07)}
-    [data-theme="dark"] .lCard:hover{background:#181818}
-    [data-theme="dark"] .lTitle{color:#e8e8e8}
+    [data-theme="dark"] #linksOut{background:#111;border-color:rgba(255,255,255,0.07)}
+    [data-theme="dark"] .lCard{border-bottom-color:rgba(255,255,255,0.06)}
+    [data-theme="dark"] .lCard:hover{background:rgba(255,255,255,0.03)}
+    [data-theme="dark"] .lTitle{color:#7ab3ff}
     [data-theme="dark"] .lDesc{color:#888}
     [data-theme="dark"] #answerBody{background:#111;border-color:rgba(255,255,255,0.07)}
     [data-theme="dark"] .srcChip{background:#1a1a1a;border-color:rgba(255,255,255,0.08)}
     [data-theme="dark"] .imgTile{border-color:rgba(255,255,255,0.07)}
     [data-theme="dark"] .relCard{background:#111;border-color:rgba(255,255,255,0.07)}
     [data-theme="dark"] .socialCard{background:#111;border-color:rgba(255,255,255,0.07)}
-    [data-theme="midnight"] .lCard{background:#161b22;border-color:rgba(255,255,255,0.06)}
+    [data-theme="midnight"] #linksOut{background:#161b22;border-color:rgba(255,255,255,0.06)}
+    [data-theme="midnight"] .lCard{border-bottom-color:rgba(255,255,255,0.05)}
+    [data-theme="midnight"] .lTitle{color:#79c0ff}
     [data-theme="midnight"] #answerBody{background:#161b22;border-color:rgba(255,255,255,0.06)}
 
     /* ══════════════════════════════════════
@@ -495,18 +498,26 @@
     .imgTileSrc span{font-size:10px;color:#fff}
     .imgTileSrc span{font-size:10px;color:#fff}
 
-    /* WEB RESULT CARDS */
-    .lCard{display:flex;gap:13px;padding:14px;margin-bottom:8px;border-radius:14px;border:1px solid var(--border);text-decoration:none;color:inherit;align-items:flex-start;background:var(--card);transition:transform 0.15s,box-shadow 0.15s,background 0.12s;cursor:pointer}
-    .lCard:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.08);background:var(--surface)}
-    .lCard:active{transform:translateY(0);box-shadow:none;opacity:0.85}
-    .lFavWrap{width:36px;height:36px;border-radius:10px;overflow:hidden;background:var(--surface);flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
-    .lFav{width:20px;height:20px;object-fit:contain}
+    /* WEB RESULTS — Google-style divider rows, no card boxes */
+    #linksOut{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .lCard{
+      display:flex;gap:12px;padding:14px 16px;
+      text-decoration:none;color:inherit;align-items:flex-start;
+      background:transparent;cursor:pointer;
+      border-bottom:1px solid var(--border);
+      transition:background 0.12s;
+    }
+    .lCard:last-child{border-bottom:none}
+    .lCard:hover{background:var(--surface)}
+    .lCard:active{opacity:0.8}
+    .lFavWrap{width:32px;height:32px;border-radius:8px;overflow:hidden;background:var(--surface);flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);margin-top:2px}
+    .lFav{width:18px;height:18px;object-fit:contain}
     .lBody{flex:1;min-width:0}
-    .lSiteRow{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+    .lSiteRow{display:flex;align-items:center;gap:5px;margin-bottom:3px}
     .lSite{font-size:11px;color:var(--muted);font-weight:600}
-    .lTitle{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .lTitle{font-size:14px;font-weight:700;color:var(--blue);margin-bottom:4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .lDesc{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .lThumb{width:80px;height:64px;border-radius:9px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);align-self:center}
+    .lThumb{width:72px;height:58px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);align-self:center}
 
     /* SOCIAL / VIDEO PREVIEW CARD */
     .socialCard{
