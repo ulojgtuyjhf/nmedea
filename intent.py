@@ -11,13 +11,29 @@ EXA_KEY    = os.getenv("EXA_KEY")      # web search + social
 #  GROQ
 # ─────────────────────────────────────────
 def ask_groq(prompt, max_tokens=3000):
-    r = requests.post(
-        "https://api.groq.com/openai/v1/chat/completions",
-        headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
-        json={"model":"llama-3.3-70b-versatile","messages":[{"role":"user","content":prompt}],"max_tokens":max_tokens},
-        timeout=30,
-    )
-    return r.json()["choices"][0]["message"]["content"].strip()
+    try:
+        r = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
+            json={"model":"llama-3.3-70b-versatile","messages":[{"role":"user","content":prompt}],"max_tokens":max_tokens},
+            timeout=30,
+        )
+        # Check for HTTP errors (like 401 Unauthorized or 429 Rate Limit)
+        r.raise_for_status()
+        
+        data = r.json()
+        
+        # Safely extract choices
+        if "choices" in data and len(data["choices"]) > 0:
+            return data["choices"][0]["message"]["content"].strip()
+        else:
+            print(f"[groq error] Unexpected JSON format: {data}")
+            return "{}"
+            
+    except Exception as e:
+        print(f"[groq error] {e}")
+        # Return an empty JSON object string as a fallback
+        return "{}"
 
 
 # ─────────────────────────────────────────
@@ -260,8 +276,25 @@ Rules:
 - image_search_query MUST be faithful to subject gender/type/style"""
 
     text = ask_groq(prompt)
-    start, end = text.find('{'), text.rfind('}')+1
-    data = json.loads(text[start:end])
+    
+    # ── Safe JSON parsing logic ──
+    try:
+        start = text.find('{')
+        end = text.rfind('}') + 1
+        
+        if start == -1 or end == 0:
+            raise ValueError("No JSON brackets found in AI response.")
+            
+        data = json.loads(text[start:end])
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"[json parser error] {e} | Raw AI output: {text}")
+        # Fallback dictionary so the app continues gracefully without a 500 error
+        data = {
+            "action": "answer",
+            "understood": "Could not process request",
+            "search_query": query,
+            "answer": "Sorry, I encountered a temporary error trying to understand your request. Please try again."
+        }
 
     action = data.get("action", "answer")
     qty = max(1, min(explicit_qty or int(data.get("quantity", 5)), 20))
