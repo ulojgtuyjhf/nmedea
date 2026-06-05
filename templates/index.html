@@ -418,11 +418,33 @@
     .lDesc{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
     .lThumb{width:80px;height:64px;border-radius:9px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);align-self:center}
 
-    /* RIGHT PANEL RELATED SEARCHES (when no images) */
-    .relCard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:background 0.12s,transform 0.12s;display:flex;align-items:center;gap:10px}
-    .relCard:hover{background:var(--surface);transform:translateX(2px)}
-    .relCard svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
-    .relCard span{font-size:13px;color:var(--text)}
+    /* SOCIAL / VIDEO PREVIEW CARD */
+    .socialCard{
+      background:var(--card);border:1px solid var(--border);border-radius:16px;
+      overflow:hidden;margin-bottom:16px;cursor:pointer;
+      transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:block;color:inherit;
+    }
+    .socialCard:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,0.12)}
+    .socialThumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--surface)}
+    .socialThumbWrap{position:relative;background:var(--surface)}
+    .socialPlay{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,0.28);
+    }
+    .socialPlay svg{width:48px;height:48px;opacity:0.9;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5))}
+    .socialMeta{padding:14px 16px}
+    .socialPlatBadge{
+      display:inline-flex;align-items:center;gap:5px;
+      font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+      padding:3px 8px;border-radius:5px;margin-bottom:8px;
+    }
+    .socialTitle{font-size:14px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .socialDesc{font-size:12px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px}
+    .socialAuthor{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .socialAuthor svg{width:13px;height:13px}
+    .socialStats{display:flex;gap:12px;margin-top:6px}
+    .socialStat{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+    .socialStat svg{width:11px;height:11px}
   </style>
 </head>
 <body>
@@ -701,13 +723,7 @@
       <div class="homeHint">Powered by AI · Ask anything · Get direct answers</div>
 
       <!-- AI QUICK CARDS — populated by loadQuickCards() -->
-      <div class="quickGrid" id="quickGrid">
-        <!-- skeleton placeholders while loading -->
-        <div class="qCardSkel"></div>
-        <div class="qCardSkel"></div>
-        <div class="qCardSkel"></div>
-        <div class="qCardSkel"></div>
-      </div>
+      <div class="quickGrid" id="quickGrid"></div>
     </div>
   </div>
 
@@ -1011,6 +1027,9 @@ async function doSearch(qOv){
     const data=await res.json();
     clearInterval(mt);endProg();skelWrap.style.display='none';sw.innerHTML='';
     if(data.action==='open_website'&&data.url){window.location.href=data.url;busy=false;return;}
+    if(data.action==='social'&&!data.answer&&!data.results?.length){
+      // pure social card — still render with whatever came back
+    }
     renderResults(data,q);
   }catch(err){
     clearInterval(mt);endProg();skelWrap.style.display='none';sw.innerHTML='';
@@ -1027,6 +1046,28 @@ async function doSearch(qOv){
 
 function renderResults(data, q){
   let hasImages=false;
+
+  // ── SOCIAL CARD (video/post metadata) ──
+  if(data.social){
+    const s=data.social;
+    const plat=s.platform||'';
+    const col=s.color||{bg:'#333',text:'#fff',label:plat};
+    const card=document.createElement('a');
+    card.className='socialCard';card.href=s.url;card.target='_blank';card.rel='noopener';
+    const thumbHtml=s.thumbnail
+      ?'<div class="socialThumbWrap"><img class="socialThumb" src="'+s.thumbnail+'" onerror="this.parentElement.style.display=\'none\'"/>'
+        +'<div class="socialPlay"><svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="rgba(0,0,0,0.5)"/><polygon points="10,8 17,12 10,16" fill="white"/></svg></div></div>'
+      :'';
+    card.innerHTML=thumbHtml
+      +'<div class="socialMeta">'
+      +'<div class="socialPlatBadge" style="background:'+col.bg+';color:'+col.text+'">'+col.label+'</div>'
+      +'<div class="socialTitle">'+(s.title||s.url)+'</div>'
+      +(s.description?'<div class="socialDesc">'+s.description+'</div>':'')
+      +(s.author?'<div class="socialAuthor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'+s.author+'</div>':'')
+      +'</div>';
+    // insert before answerSection in rLeft
+    document.getElementById('rLeft').insertBefore(card, document.getElementById('answerSection'));
+  }
 
   // ── RIGHT: IMAGES ──
   if(data.images&&data.images.length){
