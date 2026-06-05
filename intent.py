@@ -11,13 +11,56 @@ EXA_KEY    = os.getenv("EXA_KEY")      # web search + social
 #  GROQ
 # ─────────────────────────────────────────
 def ask_groq(prompt, max_tokens=3000):
-    r = requests.post(
-        "https://api.groq.com/openai/v1/chat/completions",
-        headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
-        json={"model":"llama-3.3-70b-versatile","messages":[{"role":"user","content":prompt}],"max_tokens":max_tokens},
-        timeout=30,
-    )
-    return r.json()["choices"][0]["message"]["content"].strip()
+    try:
+        r = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
+            json={"model":"llama-3.3-70b-versatile","messages":[{"role":"user","content":prompt}],"max_tokens":max_tokens},
+            timeout=30,
+        )
+        
+        # Check if request was successful
+        if r.status_code != 200:
+            error_msg = f"API Error {r.status_code}: {r.text[:200]}"
+            print(error_msg)
+            return f'{{"action": "answer", "understood": "API error occurred", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, I encountered an error: {error_msg}"}}'
+        
+        response_json = r.json()
+        
+        # Validate response structure
+        if "choices" not in response_json:
+            print(f"Unexpected API response: {response_json}")
+            return f'{{"action": "answer", "understood": "Invalid API response", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, I received an invalid response from the AI service."}}'
+        
+        if not response_json["choices"]:
+            print("Empty choices array")
+            return f'{{"action": "answer", "understood": "No response from API", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, I didn't receive a valid response."}}'
+        
+        if "message" not in response_json["choices"][0]:
+            print(f"Missing message in choice: {response_json['choices'][0]}")
+            return f'{{"action": "answer", "understood": "Invalid message format", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, the response format was invalid."}}'
+        
+        if "content" not in response_json["choices"][0]["message"]:
+            print(f"Missing content in message: {response_json['choices'][0]['message']}")
+            return f'{{"action": "answer", "understood": "No content in response", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, the response contained no content."}}'
+        
+        return response_json["choices"][0]["message"]["content"].strip()
+    
+    except requests.exceptions.Timeout:
+        print("Groq API timeout")
+        return f'{{"action": "answer", "understood": "Request timeout", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, the request timed out. Please try again."}}'
+    
+    except requests.exceptions.ConnectionError:
+        print("Failed to connect to Groq API")
+        return f'{{"action": "answer", "understood": "Connection failed", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, I cannot connect to the AI service. Please check your internet connection."}}'
+    
+    except json.JSONDecodeError as e:
+        print(f"JSON decode error: {e}, response text: {r.text[:200] if 'r' in locals() else 'No response'}")
+        return f'{{"action": "answer", "understood": "Invalid JSON response", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, I received an invalid response format."}}'
+    
+    except Exception as e:
+        print(f"Unexpected error in ask_groq: {str(e)}")
+        return f'{{"action": "answer", "understood": "Unexpected error", "search_query": "{prompt[:100]}", "image_search_query": "", "direct_url": "", "quantity": 5, "answer": "Sorry, an unexpected error occurred: {str(e)}"}}'
 
 
 # ─────────────────────────────────────────
