@@ -299,7 +299,7 @@
     .qCardSub{font-size:11px;color:var(--muted);line-height:1.5}
 
     /* ══════════════════════════════════════
-       RESULT PAGE
+       RESULT PAGE — mobile single col, desktop two-col
     ══════════════════════════════════════ */
     #resultPage{
       position:absolute;left:0;right:0;bottom:0;top:52px;
@@ -308,42 +308,74 @@
       z-index:5;pointer-events:none;
     }
     #resultPage.vis{transform:translateY(0);pointer-events:all}
-    #rScroll{flex:1;overflow-y:auto;padding:20px 16px 80px;display:flex;flex-direction:column;align-items:center}
+    #rScroll{flex:1;overflow-y:auto;padding:20px 16px 80px;display:flex;justify-content:center}
     #rScroll::-webkit-scrollbar{width:3px}
     #rScroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-    .rInner{width:100%;max-width:740px}
 
+    /* inner wrapper: single col on mobile, two-col on desktop */
+    .rInner{width:100%;max-width:1100px;display:flex;flex-direction:column;gap:0}
+    /* query echo always full width */
     #qEcho{font-size:24px;font-weight:400;color:var(--text);margin-bottom:20px;font-family:'DM Serif Display',serif;line-height:1.3}
+    /* two-col wrapper — only active on desktop */
+    #rCols{display:flex;flex-direction:column;gap:0;width:100%}
+
+    @media(min-width:860px){
+      #rScroll{padding:28px 32px 80px}
+      #rCols{flex-direction:row;gap:28px;align-items:flex-start}
+      #rLeft{flex:1;min-width:0}
+      #rRight{width:340px;flex-shrink:0;position:sticky;top:0}
+    }
 
     .shimLine{height:13px;border-radius:7px;margin-bottom:11px;background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%);background-size:200% 100%;animation:sm 1.2s infinite}
     @keyframes sm{0%{background-position:200%}100%{background-position:-200%}}
-    .shine{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-style:italic;color:transparent;background:linear-gradient(90deg,var(--muted) 0%,var(--text) 40%,var(--muted) 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;animation:sh 1.4s linear infinite}
-    @keyframes sh{0%{background-position:200%}100%{background-position:-200%}}
-    #statusW{margin-bottom:14px;min-height:20px}
+
+    /* ── GLOW STATUS (restored colour-cycling) ── */
+    .glowMsg{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:500;
+      padding:8px 16px;border-radius:20px;
+      border:1.5px solid transparent;
+      background:var(--card);
+      animation:glowBorder 3s linear infinite;
+      color:var(--text);
+    }
+    @keyframes glowBorder{
+      0%  {box-shadow:0 0 8px 2px #4f8ef7;border-color:#4f8ef7}
+      25% {box-shadow:0 0 8px 2px #9b72f7;border-color:#9b72f7}
+      50% {box-shadow:0 0 8px 2px #f76b8a;border-color:#f76b8a}
+      75% {box-shadow:0 0 8px 2px #f7c94f;border-color:#f7c94f}
+      100%{box-shadow:0 0 8px 2px #4f8ef7;border-color:#4f8ef7}
+    }
+    .glowDot{
+      width:7px;height:7px;border-radius:50%;
+      animation:dotColor 3s linear infinite;flex-shrink:0;
+    }
+    @keyframes dotColor{
+      0%  {background:#4f8ef7}25%{background:#9b72f7}
+      50% {background:#f76b8a}75%{background:#f7c94f}
+      100%{background:#4f8ef7}
+    }
+    #statusW{margin-bottom:16px;min-height:36px}
 
     /* section labels */
-    .rSec{margin-bottom:28px}
+    .rSec{margin-bottom:24px}
     .secLbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
     .secLbl svg{width:12px;height:12px}
-    .secDiv{height:1px;background:var(--border);margin-bottom:28px}
+    .secDiv{height:1px;background:var(--border);margin-bottom:24px}
 
-    /* ANSWER CARD — richer with gradient left border */
+    /* ANSWER CARD */
     #answerBody{
       font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;
       background:var(--card);border:1px solid var(--border);border-radius:14px;
-      padding:20px 22px;
+      padding:20px 22px;position:relative;
       border-left:3px solid transparent;
-      background-clip:padding-box;
-      position:relative;
     }
     #answerBody::before{
-      content:'';position:absolute;inset:0;left:-1px;
-      border-radius:14px;padding-left:3px;
+      content:'';position:absolute;inset:0;left:-1px;border-radius:14px;
       background:linear-gradient(180deg,#4f8ef7,#9b72f7) border-box;
       -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
       mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
-      -webkit-mask-composite:destination-out;mask-composite:exclude;
-      pointer-events:none;
+      -webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none;
     }
 
     /* SOURCE CHIPS */
@@ -353,62 +385,44 @@
     .srcChip img{width:12px;height:12px;border-radius:3px}
 
     /* HERO (single) IMAGE */
-    #heroImgWrap{display:none;margin-bottom:28px;border-radius:18px;overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+    #heroImgWrap{display:none;margin-bottom:24px;border-radius:18px;overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
     #heroImgWrap:hover #heroImg{transform:scale(1.025)}
-    #heroImg{width:100%;max-height:460px;object-fit:cover;display:block;transition:transform 0.4s ease}
-    #heroImgSrc{
-      position:absolute;bottom:0;left:0;right:0;padding:12px 14px;
-      background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);
-      display:flex;align-items:center;gap:6px;
-    }
+    #heroImg{width:100%;max-height:420px;object-fit:cover;display:block;transition:transform 0.4s ease}
+    #heroImgSrc{position:absolute;bottom:0;left:0;right:0;padding:12px 14px;background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);display:flex;align-items:center;gap:6px}
     #heroImgSrc img{width:14px;height:14px;border-radius:3px;flex-shrink:0}
     #heroImgSrc span{font-size:11px;color:#fff;opacity:0.9}
 
     /* MASONRY GRID */
     #imgGrid{columns:2;column-gap:8px}
     @media(min-width:480px){#imgGrid{columns:3}}
-    @media(min-width:740px){#imgGrid{columns:4}}
-    .imgTile{
-      cursor:pointer;border-radius:12px;overflow:hidden;
-      border:1px solid var(--border);background:var(--surface);
-      break-inside:avoid;margin-bottom:8px;
-      display:inline-block;width:100%;
-      transition:transform 0.2s,box-shadow 0.2s;position:relative;
-    }
+    /* on desktop right panel, keep 2 cols */
+    @media(min-width:860px){#rRight #imgGrid{columns:2}}
+    .imgTile{cursor:pointer;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface);break-inside:avoid;margin-bottom:8px;display:inline-block;width:100%;transition:transform 0.2s,box-shadow 0.2s;position:relative}
     .imgTile:hover{transform:scale(1.02);box-shadow:0 8px 28px rgba(0,0,0,0.18)}
     .imgTile img{width:100%;display:block;object-fit:cover;min-height:80px;background:var(--surface)}
-    .imgTileSrc{
-      position:absolute;bottom:0;left:0;right:0;padding:6px 8px;
-      background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);
-      display:flex;align-items:center;gap:4px;opacity:0;transition:opacity 0.2s;
-    }
+    .imgTileSrc{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);display:flex;align-items:center;gap:4px;opacity:0;transition:opacity 0.2s}
     .imgTile:hover .imgTileSrc{opacity:1}
     .imgTileSrc img{width:11px;height:11px;border-radius:2px;flex-shrink:0}
     .imgTileSrc span{font-size:10px;color:#fff}
 
-    /* WEB RESULT CARDS — richer layout */
-    .lCard{
-      display:flex;gap:14px;padding:16px;margin-bottom:10px;
-      border-radius:14px;border:1px solid var(--border);
-      text-decoration:none;color:inherit;align-items:flex-start;
-      background:var(--card);
-      transition:transform 0.15s,box-shadow 0.15s,background 0.12s;cursor:pointer;
-    }
-    .lCard:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,0.09);background:var(--surface)}
+    /* WEB RESULT CARDS */
+    .lCard{display:flex;gap:13px;padding:14px;margin-bottom:8px;border-radius:14px;border:1px solid var(--border);text-decoration:none;color:inherit;align-items:flex-start;background:var(--card);transition:transform 0.15s,box-shadow 0.15s,background 0.12s;cursor:pointer}
+    .lCard:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.08);background:var(--surface)}
     .lCard:active{transform:translateY(0);box-shadow:none;opacity:0.85}
-    .lFavWrap{
-      width:38px;height:38px;border-radius:10px;overflow:hidden;
-      background:var(--surface);flex-shrink:0;display:flex;align-items:center;justify-content:center;
-      border:1px solid var(--border);
-    }
-    .lFav{width:22px;height:22px;object-fit:contain}
+    .lFavWrap{width:36px;height:36px;border-radius:10px;overflow:hidden;background:var(--surface);flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+    .lFav{width:20px;height:20px;object-fit:contain}
     .lBody{flex:1;min-width:0}
-    .lSiteRow{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+    .lSiteRow{display:flex;align-items:center;gap:6px;margin-bottom:3px}
     .lSite{font-size:11px;color:var(--muted);font-weight:600}
-    .lUrlTxt{font-size:10.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
-    .lTitle{font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .lTitle{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .lDesc{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .lThumb{width:88px;height:72px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);align-self:center}
+    .lThumb{width:80px;height:64px;border-radius:9px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);align-self:center}
+
+    /* RIGHT PANEL RELATED SEARCHES (when no images) */
+    .relCard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:background 0.12s,transform 0.12s;display:flex;align-items:center;gap:10px}
+    .relCard:hover{background:var(--surface);transform:translateX(2px)}
+    .relCard svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
+    .relCard span{font-size:13px;color:var(--text)}
   </style>
 </head>
 <body>
@@ -532,23 +546,123 @@
       <span class="prHT">Profile</span>
     </div>
     <div class="prBody">
-      <div class="prAv" id="prAv">?</div>
-      <div class="prN" id="prName">Guest</div>
-      <div class="prS" id="prSub">Not signed in</div>
+
+      <!-- banner + avatar -->
+      <div class="prBanner">
+        <div class="prAvWrap">
+          <div class="prAv" id="prAv">?</div>
+        </div>
+      </div>
+      <div class="prInfo">
+        <div class="prN" id="prName">Guest</div>
+        <div class="prS" id="prSub">Not signed in · nmedea AI</div>
+      </div>
+
+      <!-- stats row (shown when signed in) -->
+      <div class="prStats" id="prStats" style="display:none">
+        <div class="prStat">
+          <div class="prStatN" id="statSearches">0</div>
+          <div class="prStatL">Searches</div>
+        </div>
+        <div class="prStat">
+          <div class="prStatN" id="statDays">0</div>
+          <div class="prStatL">Days active</div>
+        </div>
+        <div class="prStat">
+          <div class="prStatN" id="statSaved">0</div>
+          <div class="prStatL">Saved</div>
+        </div>
+      </div>
+
+      <!-- SIGNED OUT: auth form -->
       <div id="aSec">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.7;text-align:center">Sign in to save your history and personalize your experience.</p>
-        <input class="aFld" id="aUser" type="text" placeholder="Username"/>
-        <input class="aFld" id="aPass" type="password" placeholder="Password"/>
-        <div class="aErr" id="aErr"></div>
-        <button class="bigBtn bBlk" id="aSubmit">Sign in</button>
-        <div class="aTog">No account? <span id="aTog">Create one</span></div>
+        <div class="prSection" style="margin-top:16px">
+          <div class="prCard" style="padding:20px">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.7;text-align:center">Sign in to save history and personalise your experience.</p>
+            <input class="aFld" id="aUser" type="text" placeholder="Username"/>
+            <input class="aFld" id="aPass" type="password" placeholder="Password"/>
+            <div class="aErr" id="aErr"></div>
+            <button class="bigBtn bBlk" id="aSubmit">Sign in</button>
+            <div class="aTog">No account? <span id="aTog">Create one</span></div>
+          </div>
+        </div>
       </div>
+
+      <!-- SIGNED IN: settings -->
       <div id="uSec">
-        <div class="prL" style="margin-bottom:8px">Add Email (optional)</div>
-        <input class="prIn" id="prEmail" type="email" placeholder="your@email.com"/>
-        <button class="bigBtn bBlu" id="prSave">Save Changes</button>
-        <button class="bigBtn bRed" id="prLogout">Log Out</button>
+        <!-- account settings -->
+        <div class="prSection">
+          <div class="prSecL">Account</div>
+          <div class="prCard">
+            <div class="prRow">
+              <div class="prRowIcon" style="background:rgba(26,106,240,0.1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1a6af0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="prRowBody">
+                <div class="prRowTitle" id="accName">Username</div>
+                <div class="prRowSub">Display name</div>
+              </div>
+            </div>
+            <div class="prRow" id="emailRow" style="cursor:pointer" onclick="document.getElementById('emailEdit').style.display=document.getElementById('emailEdit').style.display==='none'?'block':'none'">
+              <div class="prRowIcon" style="background:rgba(155,114,247,0.1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#9b72f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="prRowBody">
+                <div class="prRowTitle">Email</div>
+                <div class="prRowSub" id="accEmail">Not set</div>
+              </div>
+              <div class="prRowChev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+            <div id="emailEdit" style="display:none;padding:12px 16px;border-top:1px solid var(--border)">
+              <input class="prIn" id="prEmail" type="email" placeholder="your@email.com" style="margin-bottom:8px"/>
+              <button class="bigBtn bBlu" id="prSave" style="margin-bottom:0">Save Email</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- app settings -->
+        <div class="prSection">
+          <div class="prSecL">App</div>
+          <div class="prCard">
+            <div class="prRow" style="cursor:pointer" onclick="document.getElementById('dmPref').click();closeProf();">
+              <div class="prRowIcon" style="background:rgba(247,107,138,0.1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#f76b8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </div>
+              <div class="prRowBody">
+                <div class="prRowTitle">Appearance</div>
+                <div class="prRowSub">Theme, display settings</div>
+              </div>
+              <div class="prRowChev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+            <div class="prRow" style="cursor:pointer" onclick="openHist();closeProf()">
+              <div class="prRowIcon" style="background:rgba(247,201,79,0.12)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#f7c94f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="prRowBody">
+                <div class="prRowTitle">Search History</div>
+                <div class="prRowSub">View and manage history</div>
+              </div>
+              <div class="prRowChev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- danger zone -->
+        <div class="prSection">
+          <div class="prCard">
+            <div class="prRow" style="cursor:pointer" onclick="closeProf();confM.classList.add('open')">
+              <div class="prRowIcon" style="background:rgba(217,64,64,0.1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#d94040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              </div>
+              <div class="prRowBody">
+                <div class="prRowTitle" style="color:var(--red)">Log Out</div>
+                <div class="prRowSub">Sign out of your account</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 
@@ -597,7 +711,7 @@
     </div>
   </div>
 
-  <!-- ══ RESULT PAGE — single scroll, no tabs ══ -->
+  <!-- ══ RESULT PAGE — single scroll mobile, two-col desktop ══ -->
   <div id="resultPage">
     <div id="rScroll">
       <div class="rInner">
@@ -613,44 +727,65 @@
           <div class="shimLine" style="width:85%"></div>
         </div>
 
-        <!-- single hero image -->
-        <div id="heroImgWrap">
-          <img id="heroImg" src="" alt="" loading="lazy"/>
-          <div id="heroImgSrc"></div>
-        </div>
+        <!-- two-column wrapper -->
+        <div id="rCols">
 
-        <!-- answer -->
-        <div id="answerSection" class="rSec" style="display:none">
-          <div class="secLbl">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            Answer
-          </div>
-          <div id="answerBody"></div>
-          <div id="srcChips"></div>
-        </div>
+          <!-- LEFT: answer + web results -->
+          <div id="rLeft">
 
-        <div id="imgDivider" class="secDiv" style="display:none"></div>
+            <!-- answer -->
+            <div id="answerSection" class="rSec" style="display:none">
+              <div class="secLbl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Answer
+              </div>
+              <div id="answerBody"></div>
+              <div id="srcChips"></div>
+            </div>
 
-        <!-- multiple images -->
-        <div id="imagesSection" class="rSec" style="display:none">
-          <div class="secLbl">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            Images
-          </div>
-          <div id="imgGrid"></div>
-        </div>
+            <div id="lnkDivider" class="secDiv" style="display:none"></div>
 
-        <div id="lnkDivider" class="secDiv" style="display:none"></div>
+            <!-- web results -->
+            <div id="linksSection" class="rSec" style="display:none">
+              <div class="secLbl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Web Results
+              </div>
+              <div id="linksOut"></div>
+            </div>
 
-        <!-- links -->
-        <div id="linksSection" class="rSec" style="display:none">
-          <div class="secLbl">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            Web Results
-          </div>
-          <div id="linksOut"></div>
-        </div>
+          </div><!-- /rLeft -->
 
+          <!-- RIGHT: images or related searches -->
+          <div id="rRight">
+
+            <!-- hero single image -->
+            <div id="heroImgWrap">
+              <img id="heroImg" src="" alt="" loading="lazy"/>
+              <div id="heroImgSrc"></div>
+            </div>
+
+            <!-- multiple images -->
+            <div id="imagesSection" class="rSec" style="display:none">
+              <div class="secLbl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Images
+              </div>
+              <div id="imgGrid"></div>
+            </div>
+
+            <!-- related searches (shown when no images) -->
+            <div id="relSection" class="rSec" style="display:none">
+              <div class="secLbl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Related Searches
+              </div>
+              <div id="relOut"></div>
+            </div>
+
+          </div><!-- /rRight -->
+
+        </div><!-- /rCols -->
       </div>
     </div>
   </div>
@@ -662,43 +797,25 @@ const fbCfg={apiKey:"AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ",authDomain:"global
 firebase.initializeApp(fbCfg);
 const auth=firebase.auth(),db=firebase.database();
 
-let cu=null,busy=false,lastQ='',hist=[],theme=localStorage.getItem('nmt')||'light',sT=null,isUp=false;
+let cu=null,busy=false,lastQ='',hist=[],theme=localStorage.getItem('nmt')||'light',sT=null,isUp=false,autoT=null;
 
 // ── Elements ──
-const SI=document.getElementById('searchInput');
-const HS=document.getElementById('homeSearch');
-const SB=document.getElementById('sendBtn');
-const HG=document.getElementById('homeGo');
-const home=document.getElementById('homePage');
-const rp=document.getElementById('resultPage');
-const qe=document.getElementById('qEcho');
-const ab=document.getElementById('answerBody');
-const sc=document.getElementById('srcChips');
-const ig=document.getElementById('imgGrid');
-const lo=document.getElementById('linksOut');
-const sw=document.getElementById('statusW');
-const menuBtn=document.getElementById('menuBtn');
-const dotMenu=document.getElementById('dotMenu');
-const autoBox=document.getElementById('autoBox');
-const homeAutoBox=document.getElementById('homeAutoBox');
-const profPage=document.getElementById('profPage');
-const confM=document.getElementById('confM');
-const prefPanel=document.getElementById('prefPanel');
-const prefOv=document.getElementById('prefOv');
-const histPanel=document.getElementById('histPanel');
-const histOverlay=document.getElementById('histOverlay');
-const clearBtn=document.getElementById('clearBtn');
-const homeClearBtn=document.getElementById('homeClearBtn');
-const heroImgWrap=document.getElementById('heroImgWrap');
-const heroImg=document.getElementById('heroImg');
-const heroImgSrc=document.getElementById('heroImgSrc');
-const answerSection=document.getElementById('answerSection');
-const imagesSection=document.getElementById('imagesSection');
-const linksSection=document.getElementById('linksSection');
-const skelWrap=document.getElementById('skelWrap');
-const prog=document.getElementById('progBar');
-const splash=document.getElementById('splash');
+const SI=document.getElementById('searchInput'),HS=document.getElementById('homeSearch');
+const SB=document.getElementById('sendBtn'),HG=document.getElementById('homeGo');
+const home=document.getElementById('homePage'),rp=document.getElementById('resultPage');
+const qe=document.getElementById('qEcho'),ab=document.getElementById('answerBody'),sc=document.getElementById('srcChips');
+const ig=document.getElementById('imgGrid'),lo=document.getElementById('linksOut'),sw=document.getElementById('statusW');
+const menuBtn=document.getElementById('menuBtn'),dotMenu=document.getElementById('dotMenu');
+const autoBox=document.getElementById('autoBox'),homeAutoBox=document.getElementById('homeAutoBox');
+const profPage=document.getElementById('profPage'),confM=document.getElementById('confM');
+const prefPanel=document.getElementById('prefPanel'),prefOv=document.getElementById('prefOv');
+const histPanel=document.getElementById('histPanel'),histOverlay=document.getElementById('histOverlay');
+const clearBtn=document.getElementById('clearBtn'),homeClearBtn=document.getElementById('homeClearBtn');
+const heroImgWrap=document.getElementById('heroImgWrap'),heroImg=document.getElementById('heroImg'),heroImgSrc=document.getElementById('heroImgSrc');
+const answerSection=document.getElementById('answerSection'),imagesSection=document.getElementById('imagesSection'),linksSection=document.getElementById('linksSection');
+const skelWrap=document.getElementById('skelWrap'),prog=document.getElementById('progBar'),splash=document.getElementById('splash');
 const trendStrip=document.getElementById('trendStrip');
+const relSection=document.getElementById('relSection');
 
 // ── THEME ──
 function applyTheme(t){
@@ -708,13 +825,10 @@ function applyTheme(t){
 function setTheme(t){theme=t;localStorage.setItem('nmt',t);applyTheme(t);}
 applyTheme(theme);
 
-// ── SPLASH: shown until Firebase auth resolves ──
+// ── SPLASH ──
 auth.onAuthStateChanged(u=>{
   cu=u;
-  setTimeout(()=>{
-    splash.classList.add('hide');
-    setTimeout(()=>splash.style.display='none',600);
-  },1500);
+  setTimeout(()=>{splash.classList.add('hide');setTimeout(()=>splash.style.display='none',650);},1600);
   home.style.display='flex';
   if(u){upUI(u);loadHist(u.uid);}
   else upUI(null);
@@ -722,41 +836,45 @@ auth.onAuthStateChanged(u=>{
   loadQuickCards();
 });
 
+// ── UI UPDATE (profile) ──
 function upUI(u){
-  const i=u?(u.displayName||'U')[0].toUpperCase():'?';
-  document.getElementById('profileBtn').textContent=i;
-  document.getElementById('prAv').textContent=i;
+  const initial=u?(u.displayName||'U')[0].toUpperCase():'?';
+  document.getElementById('profileBtn').textContent=initial;
+  document.getElementById('prAv').textContent=initial;
   document.getElementById('prName').textContent=u?(u.displayName||'User'):'Guest';
-  document.getElementById('prSub').textContent=u?(u.email||'nmedea AI Browser'):'Sign in to save history';
+  document.getElementById('prSub').textContent=u?'nmedea AI · Member':'Not signed in · nmedea AI';
+  // account name row
+  const an=document.getElementById('accName');
+  if(an)an.textContent=u?(u.displayName||'User'):'—';
+  const ae=document.getElementById('accEmail');
+  if(ae)ae.textContent=u&&u.email?u.email:'Not set';
+  // stats
+  const ps=document.getElementById('prStats');
+  if(ps)ps.style.display=u?'flex':'none';
+  if(u){
+    // search count from history length
+    document.getElementById('statSearches').textContent=hist.length||0;
+    // days since first use (stored in firebase)
+    db.ref('meta/'+u.uid+'/joined').once('value',snap=>{
+      if(!snap.val()){db.ref('meta/'+u.uid+'/joined').set(Date.now());}
+      const joined=snap.val()||Date.now();
+      const days=Math.max(1,Math.round((Date.now()-joined)/(1000*60*60*24)));
+      document.getElementById('statDays').textContent=days;
+    });
+    document.getElementById('statSaved').textContent=0;
+  }
   const as=document.getElementById('aSec'),us=document.getElementById('uSec');
-  if(u){as.classList.remove('show');us.classList.add('show');document.getElementById('prEmail').value=u.email||'';}
+  if(u){as.classList.remove('show');us.classList.add('show');const pe=document.getElementById('prEmail');if(pe)pe.value=u.email||'';}
   else{as.classList.add('show');us.classList.remove('show');}
 }
 
 // ── PROGRESS BAR ──
 let progVal=0,progTimer=null;
-function startProg(){
-  progVal=0;prog.style.width='0%';
-  prog.style.transition='none';
-  clearInterval(progTimer);
-  progTimer=setInterval(()=>{
-    progVal=Math.min(progVal+(Math.random()*8+2),88);
-    prog.style.transition='width 0.4s ease';
-    prog.style.width=progVal+'%';
-  },400);
-}
-function endProg(){
-  clearInterval(progTimer);
-  prog.style.transition='width 0.3s ease';
-  prog.style.width='100%';
-  setTimeout(()=>{prog.style.transition='none';prog.style.width='0%';},500);
-}
+function startProg(){progVal=0;prog.style.width='0%';prog.style.transition='none';clearInterval(progTimer);progTimer=setInterval(()=>{progVal=Math.min(progVal+(Math.random()*8+2),88);prog.style.transition='width 0.4s ease';prog.style.width=progVal+'%';},400);}
+function endProg(){clearInterval(progTimer);prog.style.transition='width 0.3s ease';prog.style.width='100%';setTimeout(()=>{prog.style.transition='none';prog.style.width='0%';},500);}
 
 // ── CLEAR BUTTONS ──
-function updateClearBtns(){
-  clearBtn.style.display=SI.value?'flex':'none';
-  homeClearBtn.style.display=HS.value?'flex':'none';
-}
+function updateClearBtns(){clearBtn.style.display=SI.value?'flex':'none';homeClearBtn.style.display=HS.value?'flex':'none';}
 clearBtn.addEventListener('click',()=>{SI.value='';lastQ='';updateClearBtns();SI.focus();autoBox.style.display='none';});
 homeClearBtn.addEventListener('click',()=>{HS.value='';updateClearBtns();HS.focus();homeAutoBox.style.display='none';});
 
@@ -766,12 +884,35 @@ function closeHist(){histPanel.classList.remove('open');histOverlay.classList.re
 document.getElementById('histBtn').addEventListener('click',openHist);
 document.getElementById('histClose').addEventListener('click',closeHist);
 histOverlay.addEventListener('click',closeHist);
+
 function renderHist(){
   const b=document.getElementById('hPB');
-  if(!hist.length){b.innerHTML='<div class="hPE">No history yet.<br><span style="font-size:11px">Your searches will appear here.</span></div>';return;}
-  b.innerHTML=hist.map(q=>'<div class="hPI" onclick="closeHist();go('+JSON.stringify(q)+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>'+q+'</span><div class="hPA"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></div>').join('');
+  if(!hist.length){
+    b.innerHTML='<div class="hPE">No history yet.<br><span style="font-size:11px">Your searches will appear here.</span></div>';
+    return;
+  }
+  b.innerHTML='';
+  hist.forEach(q=>{
+    const d=document.createElement('div');
+    d.className='hPI';
+    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+      +'<span>'+q+'</span>'
+      +'<div class="hPA"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
+    // direct addEventListener — no inline onclick that breaks on special chars
+    d.addEventListener('click',()=>{closeHist();go(q);});
+    b.appendChild(d);
+  });
 }
-function loadHist(uid){db.ref('history/'+uid).limitToLast(50).on('value',snap=>{const d=snap.val();hist=d?Object.values(d).sort((a,b)=>b.time-a.time).map(x=>x.query):[];renderHist();});}
+function loadHist(uid){
+  db.ref('history/'+uid).limitToLast(50).on('value',snap=>{
+    const d=snap.val();
+    hist=d?Object.values(d).sort((a,b)=>b.time-a.time).map(x=>x.query):[];
+    renderHist();
+    // update stat
+    const ss=document.getElementById('statSearches');
+    if(ss)ss.textContent=hist.length;
+  });
+}
 function saveHist(q){if(!cu)return;db.ref('history/'+cu.uid).push({query:q,time:Date.now()});}
 
 // ── PROFILE ──
@@ -800,12 +941,11 @@ document.getElementById('aSubmit').addEventListener('click',async()=>{
     else e.textContent=err.message;
   }
 });
-document.getElementById('prSave').addEventListener('click',async()=>{
+const prSaveBtn=document.getElementById('prSave');
+if(prSaveBtn)prSaveBtn.addEventListener('click',async()=>{
   const em=document.getElementById('prEmail').value.trim();
-  if(em&&cu){try{await cu.updateEmail(em);}catch(e){}}
-  closeProf();
+  if(em&&cu){try{await cu.updateEmail(em);upUI(cu);}catch(err){alert(err.message);}}
 });
-document.getElementById('prLogout').addEventListener('click',()=>{closeProf();confM.classList.add('open');});
 document.getElementById('confNo').addEventListener('click',()=>confM.classList.remove('open'));
 document.getElementById('confYes').addEventListener('click',()=>{auth.signOut();confM.classList.remove('open');hist=[];renderHist();});
 
@@ -830,156 +970,148 @@ document.addEventListener('click',e=>{
 
 // ── NAVIGATION ──
 function showHome(){
-  rp.classList.remove('vis');
-  home.style.display='flex';
-  HS.value='';SI.value='';
-  updateClearBtns();
-  lastQ='';
-  clearResults();
-  qe.textContent='';sw.innerHTML='';
+  rp.classList.remove('vis');home.style.display='flex';
+  HS.value='';SI.value='';updateClearBtns();lastQ='';clearResults();qe.textContent='';sw.innerHTML='';
 }
 function clearResults(){
   ab.innerHTML='';sc.innerHTML='';ig.innerHTML='';lo.innerHTML='';
+  document.getElementById('relOut').innerHTML='';
   heroImgWrap.style.display='none';
-  answerSection.style.display='none';
-  imagesSection.style.display='none';
-  linksSection.style.display='none';
-  document.getElementById('imgDivider').style.display='none';
+  answerSection.style.display='none';imagesSection.style.display='none';
+  linksSection.style.display='none';relSection.style.display='none';
   document.getElementById('lnkDivider').style.display='none';
   skelWrap.style.display='none';
 }
 function go(q){
+  if(!q||!q.trim())return;
   autoBox.style.display='none';homeAutoBox.style.display='none';
-  SI.value=q;HS.value=q;
-  updateClearBtns();
+  SI.value=q;HS.value=q;updateClearBtns();
   doSearch(q);
 }
 
 // ── SEARCH ──
-const STATUSMSGS=['Understanding your request…','Searching the web…','Finding the best results…','Composing your answer…','Almost ready…'];
+const STATUSMSGS=['Understanding your request…','Searching the web…','Finding the best answers…','Composing your results…','Almost ready…'];
+function glowStatus(msg){
+  return '<span class="glowMsg"><span class="glowDot"></span>'+msg+'</span>';
+}
 async function doSearch(qOv){
   const q=(qOv||SI.value||HS.value).trim();
   if(!q||busy)return;
   busy=true;lastQ=q;
   autoBox.style.display='none';homeAutoBox.style.display='none';
   saveHist(q);
-  home.style.display='none';
-  rp.classList.add('vis');
-  qe.textContent=q;
-  SI.value=q;updateClearBtns();
-  clearResults();
-  skelWrap.style.display='block';
-  startProg();
-  // cycling status
-  let mi=0;sw.innerHTML='<span class="shine">'+STATUSMSGS[0]+'</span>';
-  const mt=setInterval(()=>{mi=Math.min(mi+1,STATUSMSGS.length-1);sw.innerHTML='<span class="shine">'+STATUSMSGS[mi]+'</span>';},900);
+  home.style.display='none';rp.classList.add('vis');
+  qe.textContent=q;SI.value=q;updateClearBtns();
+  clearResults();skelWrap.style.display='block';startProg();
+  let mi=0;sw.innerHTML=glowStatus(STATUSMSGS[0]);
+  const mt=setInterval(()=>{mi=Math.min(mi+1,STATUSMSGS.length-1);sw.innerHTML=glowStatus(STATUSMSGS[mi]);},900);
   document.getElementById('rScroll').scrollTop=0;
   try{
     const res=await fetch('/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
     const data=await res.json();
-    clearInterval(mt);endProg();
-    skelWrap.style.display='none';sw.innerHTML='';
-
+    clearInterval(mt);endProg();skelWrap.style.display='none';sw.innerHTML='';
     if(data.action==='open_website'&&data.url){window.location.href=data.url;busy=false;return;}
-
-    let hasContent=false;
-
-    // ── IMAGES ──
-    if(data.images&&data.images.length){
-      const imgs=data.images.filter(i=>{
-        const u=typeof i==='string'?i:(i&&i.url?i.url:'');
-        return u.startsWith('http');
-      });
-      if(imgs.length===1){
-        // single large hero
-        const imgObj=imgs[0];
-        const src=typeof imgObj==='string'?imgObj:imgObj.url;
-        const domain=typeof imgObj==='object'&&imgObj.source?imgObj.source:'';
-        heroImg.src=src;
-        heroImg.onclick=()=>window.open(src,'_blank');
-        if(domain){
-          heroImgSrc.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>';
-        } else {
-          heroImgSrc.innerHTML='';
-        }
-        heroImgWrap.style.display='block';
-        hasContent=true;
-      } else if(imgs.length>1){
-        ig.innerHTML='';
-        imgs.forEach(imgObj=>{
-          const src=typeof imgObj==='string'?imgObj:imgObj.url;
-          const domain=typeof imgObj==='object'&&imgObj.source?imgObj.source:'';
-          if(!src)return;
-          const tile=document.createElement('div');
-          tile.className='imgTile';
-          tile.innerHTML='<img src="'+src+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'">'
-            +(domain?'<div class="imgTileSrc"><img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span></div>':'');
-          tile.addEventListener('click',function(){window.open(src,'_blank');});
-          ig.appendChild(tile);
-        });
-        imagesSection.style.display='block';
-        hasContent=true;
-      }
-    }
-
-    // ── ANSWER ──
-    if(data.answer){
-      ab.textContent=data.answer;
-      sc.innerHTML='';
-      if(data.sources&&data.sources.length){
-        data.sources.forEach(s=>{
-          const a=document.createElement('a');
-          a.className='srcChip';a.href=s.url;a.target='_blank';
-          a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+s.domain+'</span>';
-          sc.appendChild(a);
-        });
-      }
-      if(hasContent)document.getElementById('imgDivider').style.display='block';
-      answerSection.style.display='block';
-      hasContent=true;
-    }
-
-    // ── LINKS ──
-    if(data.results&&data.results.length){
-      lo.innerHTML='';
-      data.results.forEach(r=>{
-        let dom='';
-        try{dom=new URL(r.url).hostname.replace('www.','');}catch(e){}
-        const a=document.createElement('a');
-        a.className='lCard';a.href=r.url;a.target='_blank';
-        a.innerHTML='<img class="lFav" src="https://www.google.com/s2/favicons?domain='+dom+'&sz=64" onerror="this.style.background=\'var(--surface)\'">'
-          +'<div class="lBody"><div class="lSite">'+dom+'</div>'
-          +'<div class="lUrl">'+r.url.substring(0,64)+'</div>'
-          +'<div class="lTitle">'+r.title+'</div>'
-          +'<div class="lDesc">'+r.description+'</div></div>'
-          +(r.image?'<img class="lThumb" src="'+r.image+'" onerror="this.style.display=\'none\'" loading="lazy">':'');
-        lo.appendChild(a);
-      });
-      if(hasContent)document.getElementById('lnkDivider').style.display='block';
-      linksSection.style.display='block';
-      hasContent=true;
-    }
-
-    if(!hasContent){
-      ab.textContent='No results found. Please try a different query.';
-      answerSection.style.display='block';
-    }
+    renderResults(data,q);
   }catch(err){
-    clearInterval(mt);endProg();
-    skelWrap.style.display='none';sw.innerHTML='';
-    ab.textContent='Something went wrong. Please try again.';
+    clearInterval(mt);endProg();skelWrap.style.display='none';sw.innerHTML='';
+    ab.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 0;gap:12px">'
+      +'<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+      +'<div style="font-size:15px;font-weight:600;color:var(--text)">We\'re doing some maintenance</div>'
+      +'<div style="font-size:13px;color:var(--muted);line-height:1.7;max-width:320px">Our systems are being fine-tuned. Please try again in a moment — things should be back shortly.</div>'
+      +'<button onclick="doSearch(lastQ)" style="margin-top:4px;padding:10px 22px;border-radius:10px;border:none;background:var(--text);color:var(--bg);font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Try again</button>'
+      +'</div>';
     answerSection.style.display='block';
   }
   busy=false;
 }
 
-// ── KEYBOARD / CLICK EVENTS ──
-SI.addEventListener('input',()=>{updateClearBtns();clearTimeout(sT);lastSuggVal='';sT=setTimeout(()=>fetchAuto(SI.value.trim(),autoBox),280);});
-HS.addEventListener('input',()=>{updateClearBtns();clearTimeout(sT);lastSuggVal='';sT=setTimeout(()=>fetchAuto(HS.value.trim(),homeAutoBox),280);});
+function renderResults(data, q){
+  let hasImages=false;
+
+  // ── RIGHT: IMAGES ──
+  if(data.images&&data.images.length){
+    const imgs=data.images.filter(i=>{const u=typeof i==='string'?i:(i&&i.url?i.url:'');return u.startsWith('http');});
+    if(imgs.length===1){
+      const src=typeof imgs[0]==='string'?imgs[0]:imgs[0].url;
+      const domain=typeof imgs[0]==='object'&&imgs[0].source?imgs[0].source:'';
+      heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
+      heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>':'';
+      heroImgWrap.style.display='block';hasImages=true;
+    } else if(imgs.length>1){
+      ig.innerHTML='';
+      imgs.forEach(imgObj=>{
+        const src=typeof imgObj==='string'?imgObj:imgObj.url;
+        const domain=typeof imgObj==='object'&&imgObj.source?imgObj.source:'';
+        if(!src)return;
+        const tile=document.createElement('div');tile.className='imgTile';
+        tile.innerHTML='<img src="'+src+'" loading="lazy" onerror="this.parentElement.style.display=\'none\'">'
+          +(domain?'<div class="imgTileSrc"><img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span></div>':'');
+        tile.addEventListener('click',()=>window.open(src,'_blank'));
+        ig.appendChild(tile);
+      });
+      imagesSection.style.display='block';hasImages=true;
+    }
+  }
+
+  // ── RIGHT: RELATED SEARCHES (if no images) ──
+  if(!hasImages){
+    const related=[
+      q+' explained',
+      q+' latest news',
+      q+' how it works',
+      q+' best examples',
+    ];
+    const ro=document.getElementById('relOut');ro.innerHTML='';
+    related.forEach(r=>{
+      const d=document.createElement('div');d.className='relCard';
+      d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>'+r+'</span>';
+      d.addEventListener('click',()=>go(r));
+      ro.appendChild(d);
+    });
+    relSection.style.display='block';
+  }
+
+  // ── LEFT: ANSWER ──
+  if(data.answer){
+    ab.textContent=data.answer;
+    sc.innerHTML='';
+    (data.sources||[]).forEach(s=>{
+      const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';
+      a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+s.domain+'</span>';
+      sc.appendChild(a);
+    });
+    answerSection.style.display='block';
+  }
+
+  // ── LEFT: WEB RESULTS ──
+  if(data.results&&data.results.length){
+    lo.innerHTML='';
+    data.results.forEach(r=>{
+      let dom='';try{dom=new URL(r.url).hostname.replace('www.','');}catch(e){}
+      const a=document.createElement('a');a.className='lCard';a.href=r.url;a.target='_blank';a.rel='noopener';
+      const thumb=r.image?'<img class="lThumb" src="'+r.image+'" loading="lazy" onerror="this.style.display=\'none\'">':'';
+      a.innerHTML='<div class="lFavWrap"><img class="lFav" src="https://www.google.com/s2/favicons?domain='+dom+'&sz=64" onerror="this.style.opacity=\'0\'"></div>'
+        +'<div class="lBody"><div class="lSiteRow"><span class="lSite">'+dom+'</span></div>'
+        +'<div class="lTitle">'+r.title+'</div><div class="lDesc">'+r.description+'</div></div>'+thumb;
+      lo.appendChild(a);
+    });
+    if(data.answer)document.getElementById('lnkDivider').style.display='block';
+    linksSection.style.display='block';
+  }
+
+  // fallback if truly nothing
+  if(!data.answer&&!data.results?.length&&!hasImages){
+    ab.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--muted)">No results found. Try rephrasing your search.</div>';
+    answerSection.style.display='block';
+  }
+}
+
+// ── KEYBOARD / BUTTON EVENTS ──
+SI.addEventListener('input',()=>{updateClearBtns();clearTimeout(sT);lastSuggVal='';sT=setTimeout(()=>fetchAuto(SI.value.trim(),autoBox),300);});
+HS.addEventListener('input',()=>{updateClearBtns();clearTimeout(sT);lastSuggVal='';sT=setTimeout(()=>fetchAuto(HS.value.trim(),homeAutoBox),300);});
 SI.addEventListener('keydown',e=>{if(e.key==='Enter'){autoBox.style.display='none';doSearch();}if(e.key==='Escape'){autoBox.style.display='none';SI.blur();}});
-HS.addEventListener('keydown',e=>{if(e.key==='Enter'){homeAutoBox.style.display='none';doSearch();}});
-SB.addEventListener('click',()=>doSearch());
-HG.addEventListener('click',()=>doSearch());
+HS.addEventListener('keydown',e=>{if(e.key==='Enter'){homeAutoBox.style.display='none';doSearch();}if(e.key==='Escape'){homeAutoBox.style.display='none';HS.blur();}});
+SB.addEventListener('click',()=>doSearch());HG.addEventListener('click',()=>doSearch());
 document.getElementById('backBtn').addEventListener('click',showHome);
 document.getElementById('newBtn').addEventListener('click',showHome);
 document.getElementById('refreshBtn').addEventListener('click',()=>{if(lastQ)doSearch(lastQ);});
@@ -987,100 +1119,101 @@ document.getElementById('dmNew').addEventListener('click',()=>{dotMenu.classList
 document.getElementById('dmBack').addEventListener('click',()=>{dotMenu.classList.remove('open');showHome();});
 document.getElementById('dmRefresh').addEventListener('click',()=>{dotMenu.classList.remove('open');if(lastQ)doSearch(lastQ);});
 
-// ── TRENDING STRIP ──
-const TRENDICONS=[
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'
-];
-const CARDICONS=[
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>',
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>'
-];
+// ── TRENDING STRIP ICONS ──
+const TRENDICONS=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'];
+const CARDICONS=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'];
 
+// ── TRENDING: load from AI, then auto-scroll on desktop ──
 async function loadRecs(){
   try{
-    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'give me exactly 8 unique diverse trending topics popular right now — news, sports, tech, entertainment, science, health, finance, gaming, music, fashion — make them short, specific, current, different every time'})});
+    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'give me exactly 8 unique diverse trending topics right now — news, sports, tech, entertainment, science, health, finance, gaming — short and specific, max 5 words each'})});
     const d=await r.json();
-    const items=d.suggestions||[];
+    const items=(d.suggestions||[]).slice(0,8);
     if(!items.length)return;
     trendStrip.innerHTML='<span class="trendLabel">Trending</span>';
-    items.slice(0,8).forEach((x,i)=>{
-      const c=document.createElement('div');
-      c.className='trendChip';
+    items.forEach((x,i)=>{
+      const c=document.createElement('div');c.className='trendChip';
       c.innerHTML=TRENDICONS[i%TRENDICONS.length]+x;
       c.addEventListener('click',()=>go(x));
       trendStrip.appendChild(c);
     });
-  }catch(e){/* leave skeleton */}
+    // Auto-scroll loop on desktop (width > 640px)
+    startTrendScroll();
+  }catch(e){/* leave skeletons */}
 }
 
+function startTrendScroll(){
+  if(window.innerWidth<=640)return; // mobile handles it manually
+  clearInterval(autoT);
+  let dir=1;
+  autoT=setInterval(()=>{
+    const max=trendStrip.scrollWidth-trendStrip.clientWidth;
+    if(max<=0)return;
+    trendStrip.scrollLeft+=dir*1.2;
+    if(trendStrip.scrollLeft>=max-2){dir=-1;}
+    else if(trendStrip.scrollLeft<=2){dir=1;}
+  },30);
+}
+// restart scroll when window resizes
+window.addEventListener('resize',()=>{clearInterval(autoT);startTrendScroll();});
+
+// ── QUICK CARDS: AI generated ──
 async function loadQuickCards(){
   const grid=document.getElementById('quickGrid');
   try{
-    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'suggest exactly 4 interesting explore topics for a homepage. Each must have: a short title (2-3 words) and a one-line subtitle (max 7 words). Topics should be diverse — e.g. news, science, entertainment, sports. Reply ONLY as JSON array: [{"title":"...","subtitle":"...","query":"full search query"},...]'})});
+    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'suggest 4 interesting homepage explore topics. Reply ONLY as a JSON array, no markdown: [{"title":"2-3 word title","subtitle":"max 7 word subtitle","query":"full search query string"}]. Topics: one news, one science/tech, one entertainment, one lifestyle/health.'})});
     const d=await r.json();
-    // suggestions may be plain strings or our JSON; try parse
     let cards=[];
     try{
-      const raw=d.suggestions||[];
-      // try joining as JSON array string
-      const joined='['+raw.map(s=>s.trim().replace(/^[,\s]+/,'')).join(',')+']';
-      const parsed=JSON.parse(joined.startsWith('[[')? joined.slice(1,-1) : joined);
-      cards=Array.isArray(parsed)?parsed:[];
-    }catch(e2){/* fallback below */}
-    if(cards.length<4) throw new Error('bad');
+      // /suggest returns array of strings — they might BE the JSON items or a wrapped array
+      const raw=(d.suggestions||[]).join(' ');
+      const match=raw.match(/\[[\s\S]*\]/);
+      if(match)cards=JSON.parse(match[0]);
+    }catch(e2){}
+    if(!cards||cards.length<4)throw new Error('parse fail');
     grid.innerHTML='';
     cards.slice(0,4).forEach((c,i)=>{
-      const el=document.createElement('div');
-      el.className='qCard';
+      const el=document.createElement('div');el.className='qCard';
       el.innerHTML='<div class="qCardIcon">'+CARDICONS[i%CARDICONS.length]+'</div>'
-        +'<div class="qCardTitle">'+c.title+'</div>'
-        +'<div class="qCardSub">'+c.subtitle+'</div>';
+        +'<div class="qCardTitle">'+c.title+'</div><div class="qCardSub">'+c.subtitle+'</div>';
       el.addEventListener('click',()=>go(c.query||c.title));
       grid.appendChild(el);
     });
   }catch(e){
-    // fallback static cards
-    const fallbacks=[
-      {icon:0,title:'World News',sub:'Latest global headlines',q:'Latest world news today'},
-      {icon:1,title:'AI & Tech',sub:'What\'s new in technology',q:'top AI and tech news 2026'},
-      {icon:2,title:'Entertainment',sub:'Movies, shows & music',q:'trending movies and shows 2026'},
-      {icon:3,title:'Science',sub:'Discoveries & breakthroughs',q:'latest science discoveries 2026'},
-    ];
-    grid.innerHTML='';
-    fallbacks.forEach(f=>{
-      const el=document.createElement('div');
-      el.className='qCard';
-      el.innerHTML='<div class="qCardIcon">'+CARDICONS[f.icon]+'</div>'
-        +'<div class="qCardTitle">'+f.title+'</div>'
-        +'<div class="qCardSub">'+f.sub+'</div>';
+    // static fallback
+    [
+      {i:0,t:'World News',s:'Latest global headlines',q:'Latest world news today'},
+      {i:1,t:'AI & Tech',s:"What's new in technology",q:'top AI and tech news 2026'},
+      {i:2,t:'Entertainment',s:'Movies, shows & music',q:'trending movies and shows 2026'},
+      {i:3,t:'Science',s:'Discoveries & breakthroughs',q:'latest science discoveries 2026'},
+    ].forEach(f=>{
+      const el=document.createElement('div');el.className='qCard';
+      el.innerHTML='<div class="qCardIcon">'+CARDICONS[f.i]+'</div>'
+        +'<div class="qCardTitle">'+f.t+'</div><div class="qCardSub">'+f.s+'</div>';
       el.addEventListener('click',()=>go(f.q));
-      grid.appendChild(el);
+      document.getElementById('quickGrid').appendChild(el);
     });
   }
 }
 
-// ── AUTOCOMPLETE ──
-let lastSuggVal='';
+// ── AUTOCOMPLETE (fixed — no stale val skip on same box) ──
+let lastSuggVal='',lastSuggBox=null;
 async function fetchAuto(val,box){
   if(!val||val.length<2){box.style.display='none';return;}
-  if(val===lastSuggVal)return;
-  lastSuggVal=val;
+  if(val===lastSuggVal&&box===lastSuggBox)return;
+  lastSuggVal=val;lastSuggBox=box;
   try{
     const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:val})});
     const d=await r.json();
-    if(!d.suggestions||!d.suggestions.length){box.style.display='none';return;}
-    box.innerHTML=d.suggestions.slice(0,6).map(s=>'<div class="ai-row" onclick="go('+JSON.stringify(s)+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'+s+'</div>').join('');
+    const suggs=d.suggestions||[];
+    if(!suggs.length){box.style.display='none';return;}
+    box.innerHTML='';
+    suggs.slice(0,6).forEach(s=>{
+      const row=document.createElement('div');row.className='ai-row';
+      row.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'+s;
+      row.addEventListener('click',()=>go(s));
+      box.appendChild(row);
+    });
     box.style.display='block';
   }catch(e){box.style.display='none';}
 }

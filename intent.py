@@ -3,9 +3,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GROQ_TOKEN = os.getenv("GROQ_TOKEN")
-TAVILY_KEY = os.getenv("TAVILY_KEY")
+TAVILY_KEY = os.getenv("TAVILY_KEY")   # kept for images only
+EXA_KEY    = os.getenv("EXA_KEY")      # bc1b9f49-fa7f-477a-84ce-817576206011
 
 
+# ─────────────────────────────────────────
+#  GROQ
+# ─────────────────────────────────────────
 def ask_groq(prompt, max_tokens=3000):
     r = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
@@ -13,49 +17,143 @@ def ask_groq(prompt, max_tokens=3000):
         json={
             "model": "llama-3.3-70b-versatile",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens
+            "max_tokens": max_tokens,
         },
-        timeout=30
+        timeout=30,
     )
     return r.json()["choices"][0]["message"]["content"].strip()
 
 
-def extract_quantity_from_query(query: str) -> int | None:
-    """
-    Scan the raw query for explicit number mentions so we honour
-    things like 'show me 1 image', 'give me 10 pictures', 'list 7 results'.
-    Returns None if no number found (caller uses default).
-    """
-    # written numbers → digits
+# ─────────────────────────────────────────
+#  QUANTITY EXTRACTOR
+# ─────────────────────────────────────────
+def extract_quantity(query: str):
     word_map = {
-        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
-        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
-        "eleven": 11, "twelve": 12, "fifteen": 15, "twenty": 20,
+        "one":1,"two":2,"three":3,"four":4,"five":5,
+        "six":6,"seven":7,"eight":8,"nine":9,"ten":10,
+        "eleven":11,"twelve":12,"fifteen":15,"twenty":20,
     }
     q = query.lower()
     for word, num in word_map.items():
         if re.search(r'\b' + word + r'\b', q):
             return num
-
-    # digit patterns: "3 images", "show 5", "give me 8 photos", etc.
     m = re.search(
-        r'\b(\d{1,2})\s*(?:image|photo|picture|pic|result|link|item|thing|show|news|article)s?\b',
-        q
-    )
+        r'\b(\d{1,2})\s*(?:image|photo|picture|pic|result|link|item|news|article)s?\b', q)
     if m:
         return int(m.group(1))
-
-    # bare digit anywhere in short queries like "show me 4"
     m2 = re.search(r'\bgive\s+me\s+(\d{1,2})\b', q)
     if m2:
         return int(m2.group(1))
-
     return None
 
 
-def understand(query):
-    # ── 1. Extract explicit quantity before sending to Groq ──
-    explicit_qty = extract_quantity_from_query(query)
+# ─────────────────────────────────────────
+#  EXA  — web search + neural search
+# ─────────────────────────────────────────
+def exa_search(query: str, num: int = 5, include_text: bool = True):
+    """
+    Returns list of {title, url, description, image, domain}
+    Uses EXA neural search for best semantic results.
+    """
+    try:
+        payload = {
+            "query": query,
+            "numResults": num,
+            "type": "neural",
+            "useAutoprompt": True,
+            "contents": {
+                "text": {"maxCharacters": 400} if include_text else False,
+                "highlights": {"numSentences": 2, "highlightsPerUrl": 1} if include_text else False,
+            },
+        }
+        r = requests.post(
+            "https://api.exa.ai/search",
+            headers={
+                "x-api-key": EXA_KEY,
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=30,
+        )
+        data = r.json()
+        results = []
+        for item in data.get("results", []):
+            url = item.get("url", "")
+            try:
+                domain = url.split("/")[2].replace("www.", "")
+            except Exception:
+                domain = ""
+            # best description: highlights first, then text snippet, then summary
+            desc = ""
+            highlights = item.get("highlights", [])
+            if highlights:
+                desc = " ".join(highlights)[:350]
+            if not desc:
+                txt = item.get("text", "") or ""
+                desc = txt[:350]
+            results.append({
+                "title":       item.get("title", ""),
+                "url":         url,
+                "description": desc,
+                "image":       item.get("image", "") or "",
+                "domain":      domain,
+            })
+        return results
+    except Exception as e:
+        print(f"[exa error] {e}")
+        return []
+
+
+# ─────────────────────────────────────────
+#  TAVILY  — images only
+# ─────────────────────────────────────────
+def tavily_images(query: str, qty: int):
+    try:
+        tv = requests.post(
+            "https://api.tavily.com/search",
+            json={
+                "api_key": TAVILY_KEY,
+                "query": query,
+                "search_depth": "advanced",
+                "include_images": True,
+                "include_image_descriptions": True,
+                "max_results": qty + 10,
+            },
+            timeout=30,
+        ).json()
+
+        # build domain map from web results
+        src_map = {}
+        for item in tv.get("results", []):
+            try:
+                dom = item["url"].split("/")[2].replace("www.", "")
+                src_map[dom] = item["url"]
+            except Exception:
+                pass
+
+        images = []
+        for img in tv.get("images", []):
+            url = img if isinstance(img, str) else img.get("url", "")
+            if not url.startswith("http"):
+                continue
+            dom = next((d for d in src_map if d.lower() in url.lower()), "")
+            if not dom and src_map:
+                keys = list(src_map.keys())
+                dom = keys[min(len(images), len(keys) - 1)]
+            images.append({"url": url, "source": dom})
+            if len(images) >= qty:
+                break
+        return images
+    except Exception as e:
+        print(f"[tavily image error] {e}")
+        return []
+
+
+# ─────────────────────────────────────────
+#  MAIN UNDERSTAND
+# ─────────────────────────────────────────
+def understand(query: str):
+    explicit_qty = extract_quantity(query)
 
     prompt = f"""You are the world's most powerful AI search engine. User said: "{query}"
 
@@ -63,129 +161,70 @@ Reply ONLY this JSON, nothing else:
 {{
   "action": "answer OR open_website OR show_images OR show_results OR answer_with_images",
   "understood": "what user wants in one clear sentence",
-  "search_query": "perfect, highly specific search query that matches EXACTLY what the user asked for",
-  "image_search_query": "very specific image search query if images needed — be precise about the subject, gender, age, style e.g. 'male basketball players dunking 4k', NOT just the topic",
+  "search_query": "perfect specific search query matching EXACTLY what user asked",
+  "image_search_query": "very specific image query — include gender/age/style/quality e.g. 'male teen basketball players 4k', never swap gender/subject",
   "direct_url": "full URL if user wants to open a site, else empty string",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
-  "answer": "if action is answer or answer_with_images: write COMPLETE DETAILED response with no word limit. else empty string"
+  "answer": "if action is answer or answer_with_images: COMPLETE detailed response, no word limit. else empty string"
 }}
 
 Rules:
 - open/go to/visit → action=open_website, direct_url=full URL
-- wants images/photos/pictures → action=show_images, answer must be empty string
+- wants images/photos/pictures only → action=show_images, answer=""
 - wants images AND information → action=answer_with_images
-- asks a question → action=answer with FULL unlimited answer
-- wants list/results/recommendations → action=show_results
-- quantity = EXACTLY {explicit_qty if explicit_qty is not None else "use 5 as default"}
-- For image_search_query: be VERY specific — include gender, age, style, quality descriptors so the right images are returned. If user says "boys" use "boys", never substitute."""
+- asks a question or general query → action=answer with FULL answer
+- wants list/results/links → action=show_results
+- quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5}
+- image_search_query MUST be extremely specific and faithful to subject"""
 
     text = ask_groq(prompt)
-    start = text.find('{')
-    end = text.rfind('}') + 1
+    start, end = text.find('{'), text.rfind('}') + 1
     data = json.loads(text[start:end])
 
     action = data.get("action", "answer")
-    # Honour explicit quantity; Groq may still override to something wrong
-    qty = explicit_qty if explicit_qty is not None else int(data.get("quantity", 5))
-    # Clamp to sane range
-    qty = max(1, min(qty, 20))
+    qty = max(1, min(explicit_qty or int(data.get("quantity", 5)), 20))
 
     if action == "open_website":
         return {
             "action": "open_website",
             "url": data.get("direct_url", ""),
             "understood": data.get("understood", ""),
-            "answer": "", "images": [], "results": [], "sources": []
+            "answer": "", "images": [], "results": [], "sources": [],
         }
 
     images, results, sources = [], [], []
     answer = data.get("answer", "")
 
-    # ── 2. FETCH IMAGES ──
+    # ── IMAGES via Tavily ──
     if action in ["show_images", "answer_with_images"]:
-        img_q = data.get("image_search_query") or data.get("search_query", query) + " high quality photos"
-        # Request more than needed so we can filter bad ones
-        fetch_count = qty + 10
-        try:
-            tv = requests.post(
-                "https://api.tavily.com/search",
-                json={
-                    "api_key": TAVILY_KEY,
-                    "query": img_q,
-                    "search_depth": "advanced",
-                    "include_images": True,
-                    "include_image_descriptions": True,
-                    "max_results": fetch_count
-                },
-                timeout=30
-            ).json()
+        img_q = data.get("image_search_query") or data.get("search_query", query)
+        images = tavily_images(img_q, qty)
 
-            src_map = {}
-            for r in tv.get("results", []):
-                try:
-                    dom = r.get("url", "").split("/")[2].replace("www.", "")
-                    src_map[dom] = r.get("url", "")
-                    if not any(s["domain"] == dom for s in sources):
-                        sources.append({"domain": dom, "url": r.get("url", "")})
-                except Exception:
-                    pass
+    # ── WEB RESULTS via EXA ──
+    # Always fetch results for context/sources, regardless of action
+    exa_n = qty if action == "show_results" else 5
+    exa_results = exa_search(data.get("search_query", query), num=exa_n)
 
-            raw_imgs = tv.get("images", [])
-            for img in raw_imgs:
-                url = img if isinstance(img, str) else img.get("url", "")
-                if not url.startswith("http"):
-                    continue
-                # derive source domain
-                dom = ""
-                for d in src_map:
-                    if d.lower() in url.lower():
-                        dom = d
-                        break
-                if not dom and sources:
-                    idx = min(len(images), len(sources) - 1)
-                    dom = sources[idx]["domain"]
-                images.append({"url": url, "source": dom})
-                if len(images) >= qty:
-                    break
+    if action == "show_results":
+        results = exa_results[:qty]
+    elif action in ["answer", "answer_with_images"]:
+        # Always attach at least 4 supporting links alongside the answer
+        results = exa_results[:4]
 
-        except Exception as e:
-            print(f"[image fetch error] {e}")
+    # build sources from exa results
+    for item in exa_results[:6]:
+        dom = item.get("domain", "")
+        if dom and not any(s["domain"] == dom for s in sources):
+            sources.append({"domain": dom, "url": item["url"]})
 
-    # ── 3. FETCH WEB RESULTS / CONTEXT ──
-    if action in ["show_results", "answer", "answer_with_images"]:
-        fetch_n = qty if action == "show_results" else 3
-        try:
-            tv = requests.post(
-                "https://api.tavily.com/search",
-                json={
-                    "api_key": TAVILY_KEY,
-                    "query": data.get("search_query", query),
-                    "search_depth": "advanced",
-                    "include_answer": True,
-                    "max_results": fetch_n
-                },
-                timeout=30
-            ).json()
-
-            if action == "show_results":
-                for r in tv.get("results", [])[:qty]:
-                    results.append({
-                        "title": r.get("title", ""),
-                        "url": r.get("url", ""),
-                        "description": r.get("content", "")[:300],
-                        "image": r.get("image", "")
-                    })
-
-            for r in tv.get("results", [])[:5]:
-                try:
-                    dom = r.get("url", "").split("/")[2].replace("www.", "")
-                    if not any(s["domain"] == dom for s in sources):
-                        sources.append({"domain": dom, "url": r.get("url", "")})
-                except Exception:
-                    pass
-
-        except Exception as e:
-            print(f"[results fetch error] {e}")
+    # If action was show_images with no answer, still attach web results as context
+    if action == "show_images" and not results:
+        ctx = exa_search(data.get("search_query", query), num=4)
+        results = ctx[:4]
+        for item in ctx:
+            dom = item.get("domain", "")
+            if dom and not any(s["domain"] == dom for s in sources):
+                sources.append({"domain": dom, "url": item["url"]})
 
     return {
         "action": action,
@@ -194,5 +233,5 @@ Rules:
         "answer": answer,
         "images": images,
         "results": results,
-        "sources": sources
+        "sources": sources,
     }
