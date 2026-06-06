@@ -140,29 +140,34 @@
     .confOk{flex:1;height:44px;border-radius:11px;border:none;background:var(--red);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 
     /* ══ PAYWALL MODAL ══ */
-    #paywallModal{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+    #paywallModal{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
     #paywallModal.open{display:flex}
     @media(min-width:600px){#paywallModal{align-items:center}}
-    .pwBox{background:var(--card);border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:440px;position:relative;animation:slideUp 0.3s cubic-bezier(.4,0,.2,1)}
-    @media(min-width:600px){.pwBox{border-radius:24px;animation:fadeUp 0.25s ease}}
+    .pwBox{background:var(--card);border-radius:24px 24px 0 0;padding:28px 26px 44px;width:100%;max-width:440px;position:relative;animation:slideUp 0.32s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--border)}
+    @media(min-width:600px){.pwBox{border-radius:20px;border:1px solid var(--border);animation:fadeUp 0.22s ease}}
     @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .pwHandle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;display:block}
+    .pwHandle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 24px;display:block}
     @media(min-width:600px){.pwHandle{display:none}}
-    .pwClose{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;border:none;background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .pwClose svg{width:14px;height:14px}
-    .pwBadge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:16px;letter-spacing:0.04em}
-    .pwTitle{font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;font-family:'DM Serif Display',serif}
-    .pwSub{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:22px}
-    .pwPrice{font-size:32px;font-weight:800;color:var(--text);margin-bottom:4px}
-    .pwPrice span{font-size:14px;font-weight:500;color:var(--muted)}
-    .pwLocal{font-size:12px;color:var(--muted);margin-bottom:22px}
-    .pwFeatures{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
+    .pwClose{position:absolute;top:18px;right:18px;width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+    .pwClose:hover{background:var(--border)}
+    .pwClose svg{width:13px;height:13px}
+    .pwBadge{display:inline-flex;align-items:center;gap:6px;background:var(--text);color:var(--bg);padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:14px;letter-spacing:0.04em}
+    .pwBadge svg{width:10px;height:10px}
+    .pwTitle{font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'DM Serif Display',serif;line-height:1.2;letter-spacing:-0.3px}
+    .pwSub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+    .pwPriceRow{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+    .pwPrice{font-size:36px;font-weight:800;color:var(--text);letter-spacing:-1px}
+    .pwPriceSuffix{font-size:13px;color:var(--muted);font-weight:500}
+    .pwLocal{font-size:12px;color:var(--muted);margin-bottom:22px;display:flex;align-items:center;gap:5px}
+    .pwLocal svg{width:12px;height:12px;color:var(--muted)}
+    .pwFeatures{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;background:var(--surface);border-radius:12px;padding:14px 16px}
     .pwFeat{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
-    .pwFeat svg{width:16px;height:16px;color:#2ecc71;flex-shrink:0}
-    .pwCTA{width:100%;height:54px;border-radius:14px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.2s,transform 0.15s;margin-bottom:10px}
-    .pwCTA:hover{opacity:0.93;transform:scale(1.01)}
-    .pwCTA:active{transform:scale(0.98)}
-    .pwNote{font-size:11px;color:var(--muted);text-align:center}
+    .pwFeat svg{width:15px;height:15px;color:var(--text);flex-shrink:0;opacity:0.7}
+    .pwCTA{width:100%;height:52px;border-radius:13px;border:none;background:var(--text);color:var(--bg);font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.2s,transform 0.15s;margin-bottom:10px;letter-spacing:0.01em}
+    .pwCTA:hover{opacity:0.85}
+    .pwCTA:active{transform:scale(0.98);opacity:0.8}
+    .pwCTA:disabled{opacity:0.5;cursor:wait}
+    .pwNote{font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
 
     /* ══ PREF PANEL ══ */
     #prefPanel{position:fixed;top:0;right:-420px;width:380px;height:100%;background:var(--card);border-left:1px solid var(--border);z-index:500;transition:right 0.3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
@@ -204,57 +209,58 @@
     /* ══ PROFILE PAGE ══ */
     #profPage{position:fixed;inset:0;background:var(--bg);z-index:900;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.4,0,.2,1)}
     #profPage.open{transform:translateY(0)}
-    .prH{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);background:var(--toolbar)}
+    .prH{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--toolbar)}
     .prBk{width:34px;height:34px;border-radius:10px;border:none;background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center}
     .prBk svg{width:16px;height:16px}
     .prHT{font-size:16px;font-weight:700;color:var(--text)}
     .prBody{flex:1;overflow-y:auto;padding:0 0 60px}
-    .prBanner{height:100px;background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f76b8a 100%);position:relative;flex-shrink:0}
-    .prAvWrap{position:absolute;bottom:-36px;left:50%;transform:translateX(-50%)}
-    .prAv{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;border:3px solid var(--bg);box-shadow:0 4px 18px rgba(0,0,0,0.18)}
-    .prInfo{padding:48px 24px 16px;text-align:center}
-    .prN{font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px}
+    /* centered max-width on desktop */
+    .prBodyInner{max-width:560px;margin:0 auto;width:100%}
+    .prBanner{height:110px;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 50%,#111 100%);position:relative;flex-shrink:0}
+    [data-theme="dark"] .prBanner,[data-theme="midnight"] .prBanner{background:linear-gradient(135deg,#000 0%,#111 50%,#0a0a0a 100%)}
+    .prAvWrap{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%)}
+    .prAv{width:76px;height:76px;border-radius:50%;background:#1a1a1a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;border:3px solid var(--bg);box-shadow:0 4px 20px rgba(0,0,0,0.25)}
+    .prInfo{padding:52px 24px 16px;text-align:center}
+    .prN{font-size:21px;font-weight:700;color:var(--text);margin-bottom:3px;letter-spacing:-0.3px}
     .prS{font-size:13px;color:var(--muted)}
-    /* sub status pill */
-    .subPill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-top:8px}
-    .subPill.free{background:var(--surface);color:var(--muted)}
-    .subPill.pro{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+    .subPill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;margin-top:10px;letter-spacing:0.03em}
+    .subPill.free{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+    .subPill.pro{background:#1a1a1a;color:#fff}
+    [data-theme="dark"] .subPill.pro,[data-theme="midnight"] .subPill.pro{background:#fff;color:#000}
     .subPill svg{width:11px;height:11px}
-    .prStats{display:flex;justify-content:center;gap:32px;padding:16px 24px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);margin-bottom:16px}
-    .prStat{display:flex;flex-direction:column;align-items:center;gap:3px}
-    .prStatN{font-size:22px;font-weight:700;color:var(--text)}
-    .prStatL{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
-    .prSection{padding:0 16px;margin-bottom:16px}
-    .prSecL{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:8px;padding:0 4px}
+    .prStats{display:flex;justify-content:center;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);margin-bottom:20px}
+    .prStat{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:16px 8px;border-right:1px solid var(--border)}
+    .prStat:last-child{border-right:none}
+    .prStatN{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
+    .prStatL{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+    .prSection{padding:0 20px;margin-bottom:14px}
+    .prSecL{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:8px;padding:0 2px}
     .prCard{background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden}
     .prRow{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border)}
     .prRow:last-child{border-bottom:none}
-    .prRowIcon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .prRowIcon svg{width:15px;height:15px}
+    .prRowIcon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .prRowIcon svg{width:16px;height:16px}
     .prRowBody{flex:1;min-width:0}
     .prRowTitle{font-size:13.5px;font-weight:600;color:var(--text)}
     .prRowSub{font-size:11.5px;color:var(--muted);margin-top:1px}
     .prRowChev{color:var(--muted);display:flex}
     .prRowChev svg{width:14px;height:14px}
-    .prIn{width:100%;height:50px;border:1.5px solid var(--border);border-radius:12px;padding:0 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--input);outline:none;margin-bottom:12px}
-    .prIn:focus{border-color:var(--blue)}
+    .prIn{width:100%;height:48px;border:1.5px solid var(--border);border-radius:11px;padding:0 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--input);outline:none;margin-bottom:10px}
+    .prIn:focus{border-color:var(--text)}
     .prIn::placeholder{color:var(--muted)}
-    .bigBtn{width:100%;height:50px;border-radius:13px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px;transition:opacity 0.15s,transform 0.15s}
+    .bigBtn{width:100%;height:50px;border-radius:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px;transition:opacity 0.15s,transform 0.15s}
     .bigBtn:active{opacity:0.8;transform:scale(0.99)}
-    .bBlk{background:#111;color:#fff}
-    .bBlu{background:#1a6af0;color:#fff}
+    .bBlk{background:var(--text);color:var(--bg)}
+    .bBlu{background:var(--text);color:var(--bg)}
     .bRed{background:transparent;border:1.5px solid var(--red)!important;color:var(--red)}
-    .bGrad{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+    .bGrad{background:var(--text);color:var(--bg)}
     .aErr{font-size:12px;color:var(--red);min-height:18px;margin-bottom:8px;text-align:center}
     .aTog{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px}
-    .aTog span{color:var(--blue);cursor:pointer;font-weight:600}
+    .aTog span{color:var(--text);cursor:pointer;font-weight:700;text-decoration:underline;text-underline-offset:2px}
     .aFld{width:100%;height:50px;border:none;border-bottom:1.5px solid var(--border);padding:0 4px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:transparent;outline:none;margin-bottom:12px}
-    .aFld:focus{border-bottom-color:var(--blue)}
+    .aFld:focus{border-bottom-color:var(--text)}
     .aFld::placeholder{color:var(--muted)}
-    #aSec{display:none}
-    #aSec.show{display:block}
-    #uSec{display:none}
-    #uSec.show{display:block}
+    #aSec{display:none}#aSec.show{display:block}#uSec{display:none}#uSec.show{display:block}
 
     /* ══ HOME PAGE ══ */
     #homePage{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:20px 16px 40px}
@@ -473,20 +479,20 @@
     <div class="pwBox">
       <span class="pwHandle"></span>
       <button class="pwClose" onclick="closePaywall()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      <div class="pwBadge"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>nmedea Pro</div>
-      <div class="pwTitle">Unlock unlimited AI search</div>
-      <div class="pwSub">Get unlimited searches, deep research mode, and priority results — all powered by AI.</div>
-      <div class="pwPrice" id="pwPriceDisplay">$4 <span>/ month</span></div>
-      <div class="pwLocal" id="pwLocalPrice">Loading your local price…</div>
+      <div class="pwBadge"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>nmedea Pro</div>
+      <div class="pwTitle">Unlock the full AI experience</div>
+      <div class="pwSub">Deep research, audio search, unlimited results and more — powered entirely by AI.</div>
+      <div class="pwPriceRow"><span class="pwPrice" id="pwPriceDisplay">$4</span><span class="pwPriceSuffix">/ month</span></div>
+      <div class="pwLocal" id="pwLocalPrice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>Detecting your region…</div>
       <div class="pwFeatures">
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited searches</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Deep Research mode</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Image catalog (up to 100)</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Social media previews</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Priority AI responses</div>
+        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited searches — no daily cap</div>
+        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Deep Research — AI analyses multiple sources &amp; writes a report</div>
+        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Audio search — search by voice or find audio content</div>
+        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Image catalog — up to 100 images per search</div>
+        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Social media previews with rich metadata</div>
       </div>
       <button class="pwCTA" id="pwCTA" onclick="startPayment()">Subscribe Now</button>
-      <div class="pwNote">Cancel anytime · Secure payment via Yoco</div>
+      <div class="pwNote">Cancel anytime · Secure payment via Yoco · No hidden fees</div>
     </div>
   </div>
 
@@ -536,6 +542,7 @@
   <div id="profPage">
     <div class="prH"><button class="prBk" id="profBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><span class="prHT">Profile</span></div>
     <div class="prBody">
+      <div class="prBodyInner">
       <div class="prBanner"><div class="prAvWrap"><div class="prAv" id="prAv">?</div></div></div>
       <div class="prInfo">
         <div class="prN" id="prName">Guest</div>
@@ -594,10 +601,9 @@
           </div>
         </div></div>
       </div>
-    </div>
-  </div>
-
-  <!-- HOME PAGE -->
+      </div><!-- /prBodyInner -->
+    </div><!-- /prBody -->
+  </div><!-- /profPage -->
   <div id="homePage">
     <div class="homeInner">
       <div class="homeLogo"><div class="homeLogoIcon">N</div><span class="homeLogoText">nmedea</span><span class="homeLogoAi">AI</span></div>
@@ -712,10 +718,11 @@ function canSearch(){if(isSubscribed)return true;const u=getUsage();return u.cou
 function consumeSearch(){if(isSubscribed)return;const u=getUsage();u.count=(u.count||0)+1;if(!u.reset)u.reset=Date.now()+RESET_HOURS*3600000;saveUsage(u);updateBanner();}
 function updateBanner(){
   if(isSubscribed){upgradeBanner.classList.remove('show');return;}
-  const u=getUsage();const left=Math.max(0,FREE_LIMIT-u.count);
+  const u=getUsage();const left=Math.max(0,FREE_LIMIT-(u.count||0));
   const sl=document.getElementById('statSearchesLeft');if(sl)sl.textContent=left;
-  document.getElementById('ubSearches').textContent=left+' left';
-  if(left<=2){upgradeBanner.classList.add('show');}else{upgradeBanner.classList.remove('show');}
+  document.getElementById('ubSearches').textContent=left+' search'+(left===1?'':'es')+' left';
+  // show banner once any search has been used
+  if((u.count||0)>0){upgradeBanner.classList.add('show');}else{upgradeBanner.classList.remove('show');}
 }
 
 // ── SUBSCRIPTION CHECK ──
@@ -741,20 +748,28 @@ function updateSubUI(){
 }
 
 // ── PAYWALL ──
-const RATES={ZA:4*18.5,NG:4*1550,KE:4*130,GH:4*14,US:4,GB:4*0.79,EU:4*0.92,AU:4*1.55,CA:4*1.36,IN:4*83,DEFAULT:4};
+const RATES={ZA:18.5,NG:1550,KE:130,GH:14,US:1,GB:0.79,EU:0.92,AU:1.55,CA:1.36,IN:83,DEFAULT:1};
 const SYMBOLS={ZA:'R',NG:'₦',KE:'KSh',GH:'GH₵',US:'$',GB:'£',EU:'€',AU:'A$',CA:'C$',IN:'₹',DEFAULT:'$'};
+const BASE_USD=4;
 async function localisePrice(){
   try{
     const r=await fetch('https://ipapi.co/json/');
     const d=await r.json();
     const cc=d.country_code||'DEFAULT';
-    const amt=RATES[cc]||RATES.DEFAULT;
+    const rate=RATES[cc]||RATES.DEFAULT;
     const sym=SYMBOLS[cc]||SYMBOLS.DEFAULT;
-    const amtCents=Math.round(amt*100);
-    document.getElementById('pwPriceDisplay').innerHTML=sym+Math.round(amt)+' <span>/ month</span>';
-    document.getElementById('pwLocalPrice').textContent='Billed monthly · '+d.country_name||'';
+    const localAmt=Math.round(BASE_USD*rate);
+    const amtCents=Math.round(BASE_USD*100); // always charge in USD cents via Yoco
+    document.getElementById('pwPriceDisplay').textContent=sym+localAmt;
+    const pl=document.getElementById('pwLocalPrice');
+    if(pl)pl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10"/></svg>Billed monthly in '+(d.country_name||cc)+' · Cancel anytime';
     window._payAmt=amtCents;
-  }catch(e){document.getElementById('pwLocalPrice').textContent='Billed monthly';window._payAmt=400;}
+    window._paySymbol=sym;window._payLocalAmt=localAmt;
+  }catch(e){
+    const pl=document.getElementById('pwLocalPrice');
+    if(pl)pl.textContent='Billed monthly';
+    window._payAmt=400;
+  }
 }
 function openPaywall(){paywallModal.classList.add('open');localisePrice();}
 function closePaywall(){paywallModal.classList.remove('open');}
@@ -790,7 +805,12 @@ async function startPayment(){
 }
 
 // ── DEEP RESEARCH ──
-deepBtn.addEventListener('click',()=>{deepMode=!deepMode;deepBtn.classList.toggle('on',deepMode);deepBtn.title=deepMode?'Deep Research ON — AI analyses multiple sources':'Deep Research';});
+deepBtn.addEventListener('click',()=>{
+  if(!isSubscribed){openPaywall();return;}
+  deepMode=!deepMode;
+  deepBtn.classList.toggle('on',deepMode);
+  deepBtn.title=deepMode?'Deep Research ON':'Deep Research';
+});
 
 // ── AUTH ──
 auth.onAuthStateChanged(u=>{
@@ -804,15 +824,19 @@ auth.onAuthStateChanged(u=>{
 
 function upUI(u){
   const i=u?(u.displayName||'U')[0].toUpperCase():'?';
-  document.getElementById('profileBtn').textContent=i;
-  if(document.getElementById('profileBtn').querySelector('.subBadge'))document.getElementById('profileBtn').insertAdjacentHTML('beforeend','<div class="subBadge"></div>');
+  const pb=document.getElementById('profileBtn');
+  pb.innerHTML=i+'<div class="subBadge"></div>';
   document.getElementById('prAv').textContent=i;
   document.getElementById('prName').textContent=u?(u.displayName||'User'):'Guest';
   document.getElementById('prSub').textContent=u?'nmedea AI · Member':'Not signed in · nmedea AI';
   const an=document.getElementById('accName');if(an)an.textContent=u?(u.displayName||'User'):'—';
   const ae=document.getElementById('accEmail');if(ae)ae.textContent=u&&u.email?u.email:'Not set';
   const ps=document.getElementById('prStats');if(ps)ps.style.display=u?'flex':'none';
-  if(u){db.ref('meta/'+u.uid+'/joined').once('value',snap=>{if(!snap.val())db.ref('meta/'+u.uid+'/joined').set(Date.now());const days=Math.max(1,Math.round((Date.now()-(snap.val()||Date.now()))/(86400000)));const sd=document.getElementById('statDays');if(sd)sd.textContent=days;});}
+  if(u){db.ref('meta/'+u.uid+'/joined').once('value',snap=>{
+    if(!snap.val())db.ref('meta/'+u.uid+'/joined').set(Date.now());
+    const days=Math.max(1,Math.round((Date.now()-(snap.val()||Date.now()))/(86400000)));
+    const sd=document.getElementById('statDays');if(sd)sd.textContent=days;
+  });}
   const as=document.getElementById('aSec'),us=document.getElementById('uSec');
   if(u){as.classList.remove('show');us.classList.add('show');const pe=document.getElementById('prEmail');if(pe)pe.value=u.email||'';}
   else{as.classList.add('show');us.classList.remove('show');}
@@ -897,7 +921,6 @@ function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.
 
 // ── SEARCH ──
 const STATUSMSGS=['Understanding your request…','Searching the web…','Finding the best answers…','Composing your results…','Almost ready…'];
-const DEEPMSGS=['Starting deep research…','Analysing multiple sources…','Cross-referencing data…','Building comprehensive answer…','Finalising deep research…'];
 function glowStatus(msg){return '<span class="glowMsg"><span class="glowDot"></span>'+msg+'</span>';}
 
 async function doSearch(qOv){
@@ -914,9 +937,11 @@ async function doSearch(qOv){
   qe.textContent=q;SI.value=q;updateClearBtns();
   clearResults();skelWrap.style.display='block';startProg();startSearchGlow();
 
+  const DEEPMSGS=['Starting deep research…','Reading primary sources…','Analysing multiple perspectives…','Cross-referencing data…','Synthesising findings…','Writing research report…'];
   const msgs=deepMode?DEEPMSGS:STATUSMSGS;
+  const msgInterval=deepMode?1800:900;
   let mi=0;sw.innerHTML=glowStatus(msgs[0]);
-  const mt=setInterval(()=>{mi=Math.min(mi+1,msgs.length-1);sw.innerHTML=glowStatus(msgs[mi]);},900);
+  const mt=setInterval(()=>{mi=Math.min(mi+1,msgs.length-1);sw.innerHTML=glowStatus(msgs[mi]);},msgInterval);
   document.getElementById('rScroll').scrollTop=0;
 
   // build query with deep mode flag
@@ -1001,7 +1026,26 @@ function renderResults(data,q){
 
   // ANSWER
   if(data.answer){
-    ab.textContent=data.answer;sc.innerHTML='';
+    if(deepMode){
+      // render as structured research report
+      const sections=data.answer.split(/\n{2,}/);
+      let html='<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">'
+        +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
+        +'<span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted)">Deep Research Report</span></div>';
+      sections.forEach(s=>{
+        const trimmed=s.trim();if(!trimmed)return;
+        // detect heading lines
+        if(trimmed.length<80&&!trimmed.includes('.')){
+          html+='<div style="font-size:13px;font-weight:700;color:var(--text);margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6">'+trimmed+'</div>';
+        }else{
+          html+='<p style="font-size:14.5px;line-height:1.9;color:var(--text);margin-bottom:10px">'+trimmed+'</p>';
+        }
+      });
+      ab.innerHTML=html;
+    }else{
+      ab.textContent=data.answer;
+    }
+    sc.innerHTML='';
     (data.sources||[]).forEach(s=>{const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+s.domain+'</span>';sc.appendChild(a);});
     answerSection.style.display='block';
   }
