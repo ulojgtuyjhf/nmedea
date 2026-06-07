@@ -317,9 +317,25 @@ STRICT Rules - follow exactly:
 7. If user says one image or 1 image quantity MUST be 1
 8. NEVER swap the search subject - if user says boys return boys not girls"""
 
-    text = ask_groq(prompt)
-    start, end = text.find('{'), text.rfind('}')+1
-    data = json.loads(text[start:end])
+    try:
+        text = ask_groq(prompt)
+        start, end = text.find('{'), text.rfind('}')+1
+        data = json.loads(text[start:end])
+    except Exception as groq_err:
+        print(f"[groq fallback] {groq_err}")
+        # Groq is down — use EXA directly without AI routing
+        exa_results = exa_search(query, num=5)
+        sources = [{"domain": r["domain"], "url": r["url"]} for r in exa_results if r.get("domain")]
+        return {
+            "action": "show_results",
+            "url": "",
+            "understood": query,
+            "answer": "",
+            "images": [],
+            "results": exa_results[:5],
+            "sources": sources[:5],
+            "social": None,
+        }
 
     action = data.get("action","answer")
     # Override with pre-detected intent if Groq got it wrong
