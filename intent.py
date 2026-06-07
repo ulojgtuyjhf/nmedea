@@ -280,38 +280,76 @@ def understand(query: str):
             "social": social_meta,
         }
 
-    prompt = f"""You are the world's most powerful AI search engine. User said: "{query}"
+    # ── Pre-detect: user clearly wants to open a website ──
+    open_match = re.search(
+        r'\b(?:open|go\s+to|visit|take\s+me\s+to|navigate\s+to|launch)\b.{0,40}(?:\.com|\.org|\.net|\.co|\.io|youtube|google|facebook|twitter|instagram|tiktok|reddit|netflix|amazon|whatsapp)',
+        query, re.IGNORECASE
+    )
+    # ── Pre-detect: user clearly wants image(s) ──
+    image_match = re.search(
+        r'\b(?:image|photo|picture|pic|show\s+me|give\s+me|fetch|find)\b.{0,30}\b(?:image|photo|picture|pic)s?\b',
+        query, re.IGNORECASE
+    ) or re.search(
+        r'\b(?:image|photo|picture|pic)s?\s+of\b',
+        query, re.IGNORECASE
+    ) or (explicit_qty and re.search(r'\b(?:image|photo|picture|pic)s?\b', query, re.IGNORECASE))
+
+
 
 Reply ONLY this JSON, nothing else:
 {{
   "action": "answer OR open_website OR show_images OR show_results OR answer_with_images",
   "understood": "what user wants in one clear sentence",
   "search_query": "perfect specific search query matching EXACTLY what user asked — do not change subject, gender, topic",
-  "image_search_query": "very specific image query — preserve EXACT subject, gender, age, style — e.g. if user says boys, write boys NOT girls",
-  "direct_url": "full URL if user wants to open a site, else empty string",
+  "image_search_query": "very specific image query — EXACT subject, gender, age, style. If user says boys write boys. If user says red car write red car. Never swap the subject.",
+  "direct_url": "full URL if user wants to open a specific website e.g. https://youtube.com or https://google.com, else empty string",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
   "answer": "if action is answer or answer_with_images: COMPLETE detailed response. else empty string"
 }}
 
-Rules:
-- open/go to/visit → action=open_website
-- wants images/photos/pictures only → action=show_images, answer=""
-- wants images AND info → action=answer_with_images
-- general question → action=answer, full answer
-- wants list/results/links → action=show_results
-- quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5}
-- NEVER change the subject matter of what the user asked"""
+STRICT Rules — follow exactly:
+1. User says 'open', 'go to', 'visit', 'take me to' + any site/app name → action=open_website, put full URL in direct_url
+2. User mentions 'image', 'photo', 'picture', 'pic', 'show me' + noun → action=show_images, answer=""
+3. User wants image AND explanation → action=answer_with_images
+4. User asks a question or wants information → action=answer with full answer
+5. User wants 'results', 'links', 'websites', 'list' → action=show_results
+6. quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5} — DO NOT change this number
+7. If user says 'one image' or '1 image' quantity MUST be 1
+8. NEVER swap the search subject — if user says boys return boys not girls"""
 
     text = ask_groq(prompt)
     start, end = text.find('{'), text.rfind('}')+1
     data = json.loads(text[start:end])
 
     action = data.get("action","answer")
+    # Override with pre-detected intent if Groq got it wrong
+    if open_match and action != "open_website":
+        action = "open_website"
+    if image_match and action not in ["show_images","answer_with_images"]:
+        action = "show_images"
     qty = max(1, min(explicit_qty or int(data.get("quantity",5)), 100))
 
     if action == "open_website":
+        url = data.get("direct_url","")
+        if not url:
+            # Try to extract a URL or site name from the query
+            url_m = re.search(r'https?://\S+', query)
+            if url_m:
+                url = url_m.group(0)
+            else:
+                # Extract site name and build URL
+                site_m = re.search(
+                    r'\b(youtube|google|facebook|twitter|instagram|tiktok|reddit|netflix|amazon|whatsapp|github|linkedin|pinterest)\b',
+                    query, re.IGNORECASE)
+                if site_m:
+                    url = 'https://www.' + site_m.group(1).lower() + '.com'
+                else:
+                    # Last resort: find domain-like word
+                    dom_m = re.search(r'\b([\w-]+\.(?:com|org|net|co|io|app))\b', query, re.IGNORECASE)
+                    if dom_m:
+                        url = 'https://' + dom_m.group(1)
         return {
-            "action":"open_website","url":data.get("direct_url",""),
+            "action":"open_website","url":url,
             "understood":data.get("understood",""),
             "answer":"","images":[],"results":[],"sources":[],"social":None,
         }
