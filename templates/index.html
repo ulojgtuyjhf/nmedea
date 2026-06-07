@@ -30,24 +30,23 @@
     /* ══ SPLASH ══ */
     #splash{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.6s ease,transform 0.6s ease}
     #splash.hide{opacity:0;transform:scale(1.05);pointer-events:none}
-    .splash-shield-wrap{width:180px;height:204px;display:flex;align-items:center;justify-content:center}
-    .splash-shield-wrap svg{width:180px;height:204px;display:block;overflow:visible}
+    .splash-shield-wrap{width:220px;height:250px;display:flex;align-items:center;justify-content:center}
+    .splash-shield-wrap svg{width:220px;height:250px;display:block;overflow:visible}
     /* faint full-shape outline always visible */
     .s-base{fill:none;stroke:var(--text);stroke-width:1.5;opacity:0.13;stroke-linejoin:round;stroke-linecap:round}
-    /* the moving colour line — perimeter of this path ≈ 500
-       dash=80, gap=420 → one short segment races continuously
-       offset goes from 500→0 so it moves clockwise */
+    /* perimeter = 555. dash=100 gap=455 → segment races around full path.
+       offset 555→0 = clockwise. speed 2s = smooth, not too fast */
     .s-dash{
       fill:none;
-      stroke-width:4;
+      stroke-width:4.5;
       stroke-linecap:round;
       stroke-linejoin:round;
-      stroke-dasharray:80 420;
-      stroke-dashoffset:500;
-      animation:shieldRace 1.8s linear infinite, shieldColor 4s linear infinite;
+      stroke-dasharray:100 455;
+      stroke-dashoffset:555;
+      animation:shieldRace 2s linear infinite, shieldColor 5s linear infinite;
     }
     @keyframes shieldRace{
-      from{stroke-dashoffset:500}
+      from{stroke-dashoffset:555}
       to{stroke-dashoffset:0}
     }
     @keyframes shieldColor{
@@ -386,10 +385,11 @@
     @keyframes dotColor{0%{background:#4f8ef7}25%{background:#9b72f7}50%{background:#f76b8a}75%{background:#f7c94f}100%{background:#4f8ef7}}
     #statusW{margin-bottom:16px;min-height:36px}
     .rSec{margin-bottom:22px}
-    /* section label — small text + icon, properly sized */
-    .secLbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    .secLbl svg{width:11px;height:11px;flex-shrink:0}
-    .rSecDivider{display:flex;align-items:center;gap:12px;margin:4px 0 22px}
+    /* section label — tiny uppercase with icon locked to 11px */
+    .secLbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;line-height:1}
+    .secLbl svg{width:11px!important;height:11px!important;flex-shrink:0;display:block}
+    .imgCount{font-size:11px;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:5px}
+    .imgCount svg{width:11px!important;height:11px!important;flex-shrink:0;display:block}
     .rSecDivider::before,.rSecDivider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
     .rSecDivider span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);white-space:nowrap}
 
@@ -683,7 +683,7 @@
         <div id="rCols">
           <div id="rLeft">
             <div id="answerSection" class="rSec" style="display:none">
-              <div class="secLbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Answer</div>
+              <div class="secLbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Answer</div>
               <div id="answerBody"></div>
               <div id="srcChips"></div>
             </div>
@@ -695,11 +695,11 @@
           <div id="rRight">
             <div id="heroImgWrap"><img id="heroImg" src="" alt="" loading="lazy"/><div id="heroImgSrc"></div></div>
             <div id="imagesSection" class="rSec" style="display:none">
-              <div class="secLbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
+              <div class="secLbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
               <div id="imgGrid"></div>
             </div>
             <div id="relSection" class="rSec" style="display:none">
-              <div class="secLbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Related</div>
+              <div class="secLbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Related</div>
               <div id="relOut"></div>
             </div>
           </div>
@@ -801,27 +801,35 @@ function updateSubUI(){
 }
 
 // ── PAYWALL ──
-const RATES={ZA:18.5,NG:1550,KE:130,GH:14,US:1,GB:0.79,EU:0.92,AU:1.55,CA:1.36,IN:83,DEFAULT:1};
-const SYMBOLS={ZA:'R',NG:'₦',KE:'KSh',GH:'GH₵',US:'$',GB:'£',EU:'€',AU:'A$',CA:'C$',IN:'₹',DEFAULT:'$'};
-const BASE_USD=4;
+// Pricing calibrated so ~R20-22 lands in bank after Yoco 2.9%+R2 fee
+// ZAR charge R25 → net ~R22 | Other countries equivalent
+const PRICES={
+  ZA:{sym:'R',  amt:25,   cents:2500},
+  US:{sym:'$',  amt:2,    cents:200 },
+  GB:{sym:'£',  amt:1.50, cents:150 },
+  EU:{sym:'€',  amt:1.80, cents:180 },
+  AU:{sym:'A$', amt:3,    cents:300 },
+  CA:{sym:'C$', amt:2.50, cents:250 },
+  NG:{sym:'₦',  amt:1900, cents:190000},
+  KE:{sym:'KSh',amt:150,  cents:15000},
+  GH:{sym:'GH₵',amt:15,   cents:1500},
+  IN:{sym:'₹',  amt:100,  cents:10000},
+};
 async function localisePrice(){
   try{
     const r=await fetch('https://ipapi.co/json/');
     const d=await r.json();
-    const cc=d.country_code||'DEFAULT';
-    const rate=RATES[cc]||RATES.DEFAULT;
-    const sym=SYMBOLS[cc]||SYMBOLS.DEFAULT;
-    const localAmt=Math.round(BASE_USD*rate);
-    const amtCents=Math.round(BASE_USD*100); // always charge in USD cents via Yoco
-    document.getElementById('pwPriceDisplay').textContent=sym+localAmt;
+    const cc=d.country_code||'US';
+    const p=PRICES[cc]||PRICES.US;
+    const disp=Number.isInteger(p.amt)?p.amt:p.amt.toFixed(2).replace(/\.?0+$/,'');
+    document.getElementById('pwPriceDisplay').textContent=p.sym+disp;
     const pl=document.getElementById('pwLocalPrice');
-    if(pl)pl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10"/></svg>Billed monthly in '+(d.country_name||cc)+' · Cancel anytime';
-    window._payAmt=amtCents;
-    window._paySymbol=sym;window._payLocalAmt=localAmt;
+    if(pl)pl.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Billed monthly in '+(d.country_name||cc)+' · Powered by Yoco';
+    window._payAmt=p.cents;
   }catch(e){
     const pl=document.getElementById('pwLocalPrice');
-    if(pl)pl.textContent='Billed monthly';
-    window._payAmt=400;
+    if(pl)pl.textContent='Billed monthly · Powered by Yoco';
+    window._payAmt=2500;
   }
 }
 function openPaywall(){paywallModal.classList.add('open');localisePrice();}
