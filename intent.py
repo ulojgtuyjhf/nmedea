@@ -294,28 +294,28 @@ def understand(query: str):
         query, re.IGNORECASE
     ) or (explicit_qty and re.search(r'\b(?:image|photo|picture|pic)s?\b', query, re.IGNORECASE))
 
-
+    prompt = f"""You are the world's most powerful AI search engine. User said: "{query}"
 
 Reply ONLY this JSON, nothing else:
 {{
   "action": "answer OR open_website OR show_images OR show_results OR answer_with_images",
   "understood": "what user wants in one clear sentence",
-  "search_query": "perfect specific search query matching EXACTLY what user asked — do not change subject, gender, topic",
-  "image_search_query": "very specific image query — EXACT subject, gender, age, style. If user says boys write boys. If user says red car write red car. Never swap the subject.",
-  "direct_url": "full URL if user wants to open a specific website e.g. https://youtube.com or https://google.com, else empty string",
+  "search_query": "perfect specific search query matching EXACTLY what user asked - do not change subject, gender, topic",
+  "image_search_query": "very specific image query - EXACT subject, gender, age, style. If user says boys write boys. Never swap the subject.",
+  "direct_url": "full URL if user wants to open a specific website e.g. https://youtube.com, else empty string",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
   "answer": "if action is answer or answer_with_images: COMPLETE detailed response. else empty string"
 }}
 
-STRICT Rules — follow exactly:
-1. User says 'open', 'go to', 'visit', 'take me to' + any site/app name → action=open_website, put full URL in direct_url
-2. User mentions 'image', 'photo', 'picture', 'pic', 'show me' + noun → action=show_images, answer=""
-3. User wants image AND explanation → action=answer_with_images
-4. User asks a question or wants information → action=answer with full answer
-5. User wants 'results', 'links', 'websites', 'list' → action=show_results
-6. quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5} — DO NOT change this number
-7. If user says 'one image' or '1 image' quantity MUST be 1
-8. NEVER swap the search subject — if user says boys return boys not girls"""
+STRICT Rules - follow exactly:
+1. User says open/go to/visit + any site -> action=open_website, full URL in direct_url
+2. User mentions image/photo/picture/pic -> action=show_images, answer must be empty string
+3. User wants image AND explanation -> action=answer_with_images
+4. User asks a question -> action=answer with full answer
+5. User wants results/links/websites/list -> action=show_results
+6. quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5} - DO NOT change this number
+7. If user says one image or 1 image quantity MUST be 1
+8. NEVER swap the search subject - if user says boys return boys not girls"""
 
     text = ask_groq(prompt)
     start, end = text.find('{'), text.rfind('}')+1
