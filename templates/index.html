@@ -159,19 +159,6 @@
     }
 
     /* ══ UPGRADE BANNER ══ */
-    #upgradeBanner{
-      background:linear-gradient(135deg,#667eea,#764ba2);
-      color:#fff;padding:9px 16px;
-      display:none;align-items:center;gap:10px;
-      flex-shrink:0;cursor:pointer;
-      transition:opacity 0.2s;
-    }
-    #upgradeBanner:hover{opacity:0.92}
-    #upgradeBanner.show{display:flex}
-    .ub-icon{width:18px;height:18px;flex-shrink:0}
-    .ub-text{flex:1;font-size:12.5px;font-weight:600}
-    .ub-searches{font-size:11px;opacity:0.85;flex-shrink:0}
-    .ub-btn{background:rgba(255,255,255,0.22);border:none;color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0}
 
     /* ══ TOOLBAR ══ */
     #bar{height:52px;background:var(--toolbar);display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0;border-bottom:1px solid var(--border);z-index:50;position:relative;width:100%}
@@ -220,8 +207,7 @@
     #sendBtn svg{width:11px;height:11px}
     #profileBtn{width:30px;height:30px;border-radius:50%;border:none;background:#1a1a1a;color:#fff;cursor:pointer;font-size:12px;font-weight:700;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative}
     [data-theme="dark"] #profileBtn,[data-theme="midnight"] #profileBtn{background:#fff;color:#000}
-    .subBadge{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:#2ecc71;border:1.5px solid var(--toolbar);display:none}
-    #profileBtn.subbed .subBadge{display:block}
+
     #menuBtn{width:30px;height:30px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text)}
     #menuBtn svg{width:16px;height:16px}
 
@@ -285,35 +271,7 @@
     .confC{flex:1;height:44px;border-radius:11px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
     .confOk{flex:1;height:44px;border-radius:11px;border:none;background:var(--red);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 
-    /* ══ PAYWALL MODAL ══ */
-    #paywallModal{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
-    #paywallModal.open{display:flex}
-    @media(min-width:600px){#paywallModal{align-items:center}}
-    .pwBox{background:var(--card);border-radius:24px 24px 0 0;padding:28px 26px 44px;width:100%;max-width:440px;position:relative;animation:slideUp 0.32s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--border)}
-    @media(min-width:600px){.pwBox{border-radius:20px;border:1px solid var(--border);animation:fadeUp 0.22s ease}}
-    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .pwHandle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 24px;display:block}
-    @media(min-width:600px){.pwHandle{display:none}}
-    .pwClose{position:absolute;top:18px;right:18px;width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
-    .pwClose:hover{background:var(--border)}
-    .pwClose svg{width:13px;height:13px}
-    .pwBadge{display:inline-flex;align-items:center;gap:6px;background:var(--text);color:var(--bg);padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:14px;letter-spacing:0.04em}
-    .pwBadge svg{width:10px;height:10px}
-    .pwTitle{font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;font-family:'DM Serif Display',serif;line-height:1.2;letter-spacing:-0.3px}
-    .pwSub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px}
-    .pwPriceRow{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
-    .pwPrice{font-size:36px;font-weight:800;color:var(--text);letter-spacing:-1px}
-    .pwPriceSuffix{font-size:13px;color:var(--muted);font-weight:500}
-    .pwLocal{font-size:12px;color:var(--muted);margin-bottom:22px;display:flex;align-items:center;gap:5px}
-    .pwLocal svg{width:12px;height:12px;color:var(--muted)}
-    .pwFeatures{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;background:var(--surface);border-radius:12px;padding:14px 16px}
-    .pwFeat{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
-    .pwFeat svg{width:15px;height:15px;color:var(--text);flex-shrink:0;opacity:0.7}
-    .pwCTA{width:100%;height:52px;border-radius:13px;border:none;background:var(--text);color:var(--bg);font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.2s,transform 0.15s;margin-bottom:10px;letter-spacing:0.01em}
-    .pwCTA:hover{opacity:0.85}
-    .pwCTA:active{transform:scale(0.98);opacity:0.8}
-    .pwCTA:disabled{opacity:0.5;cursor:wait}
-    .pwNote{font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
+
 
     /* ══ PREF PANEL ══ */
     #prefPanel{position:fixed;top:0;right:-420px;width:380px;height:100%;background:var(--card);border-left:1px solid var(--border);z-index:500;transition:right 0.3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
@@ -369,11 +327,7 @@
     .prInfo{padding:52px 24px 16px;text-align:center}
     .prN{font-size:21px;font-weight:700;color:var(--text);margin-bottom:3px;letter-spacing:-0.3px}
     .prS{font-size:13px;color:var(--muted)}
-    .subPill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;margin-top:10px;letter-spacing:0.03em}
-    .subPill.free{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
-    .subPill.pro{background:#1a1a1a;color:#fff}
-    [data-theme="dark"] .subPill.pro,[data-theme="midnight"] .subPill.pro{background:#fff;color:#000}
-    .subPill svg{width:11px;height:11px}
+
     .prStats{display:flex;justify-content:center;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);margin-bottom:20px}
     .prStat{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:16px 8px;border-right:1px solid var(--border)}
     .prStat:last-child{border-right:none}
@@ -415,14 +369,7 @@
     .homeLogoIcon{width:44px;height:44px;border-radius:13px;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;font-family:'DM Serif Display',serif}
     .homeLogoText{font-size:30px;font-weight:400;letter-spacing:-0.5px;color:var(--text);font-family:'DM Serif Display',serif}
     .homeLogoAi{font-size:10px;font-weight:700;color:var(--blue);background:rgba(26,106,240,0.09);padding:3px 7px;border-radius:5px;margin-left:4px;align-self:flex-start;margin-top:8px}
-    #trendStrip{width:100%;margin-bottom:14px;display:flex;align-items:center;gap:7px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;padding:0 2px}
-    #trendStrip::-webkit-scrollbar{display:none}
-    .trendLabel{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;flex-shrink:0}
-    .trendChip{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;background:var(--pill);border:1px solid var(--border);font-size:12.5px;color:var(--pill-text);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.12s,transform 0.12s;user-select:none}
-    .trendChip:hover{background:var(--surface);transform:translateY(-1px)}
-    .trendChip:active{transform:translateY(0);opacity:0.8}
-    .trendChip svg{width:10px;height:10px;color:var(--muted);flex-shrink:0}
-    .trendSkel{display:inline-block;width:90px;height:30px;border-radius:15px;flex-shrink:0;background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%);background-size:200% 100%;animation:sm 1.2s infinite}
+
     #homeSW{position:relative;width:100%;margin-bottom:0;z-index:200}
     /* padding: left=20, right=20(go)+32(deep)+14(clear)+gaps = ~76 */
     #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 106px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
@@ -531,14 +478,6 @@
     </div>
   </div>
 
-  <!-- UPGRADE BANNER -->
-  <div id="upgradeBanner">
-    <svg class="ub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-    <span class="ub-text">Upgrade to nmedea Pro — unlimited searches</span>
-    <span class="ub-searches" id="ubSearches"></span>
-    <button class="ub-btn" onclick="openPaywall()">Upgrade</button>
-  </div>
-
   <!-- TOOLBAR -->
   <div id="bar">
     <button class="nbtn" id="histBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
@@ -558,7 +497,7 @@
       <button id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
       <div id="autoBox"></div>
     </div>
-    <button id="profileBtn"><div class="subBadge"></div>?</button>
+    <button id="profileBtn">?</button>
     <button id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
   </div>
 
@@ -579,29 +518,6 @@
     <div class="dmi" id="dmRefresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh</div>
     <div class="dmDiv"></div>
     <div class="dmi" id="dmPref"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Preferences</div>
-    <div class="dmi" id="dmUpgrade"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Upgrade to Pro</div>
-  </div>
-
-  <!-- PAYWALL MODAL -->
-  <div id="paywallModal">
-    <div class="pwBox">
-      <span class="pwHandle"></span>
-      <button class="pwClose" onclick="closePaywall()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      <div class="pwBadge"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>nmedea Pro</div>
-      <div class="pwTitle">Unlock the full AI experience</div>
-      <div class="pwSub">Deep research, audio search, unlimited results and more — powered entirely by AI.</div>
-      <div class="pwPriceRow"><span class="pwPrice" id="pwPriceDisplay">$4</span><span class="pwPriceSuffix">/ month</span></div>
-      <div class="pwLocal" id="pwLocalPrice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>Detecting your region…</div>
-      <div class="pwFeatures">
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited searches — no daily cap</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Deep Research — AI analyses multiple sources &amp; writes a report</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Audio search — search by voice or find audio content</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Image catalog — up to 100 images per search</div>
-        <div class="pwFeat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Social media previews with rich metadata</div>
-      </div>
-      <button class="pwCTA" id="pwCTA" onclick="startPayment()">Subscribe Now</button>
-      <div class="pwNote">Cancel anytime · Secure payment via Yoco · No hidden fees</div>
-    </div>
   </div>
 
   <!-- CONFIRM -->
@@ -640,8 +556,7 @@
       </div></div>
       <div class="pfSec"><div class="pfL">Settings</div><div style="background:var(--surface);border-radius:13px;padding:0 14px">
         <div class="pfRow"><div class="pfRowL"><div class="pfRowTitle">Colour loading animation</div><div class="pfRowSub">Glow on search bar</div></div><label class="tog"><input type="checkbox" id="togGlow" checked onchange="savePref('glowAnim',this.checked)"><span class="togSlide"></span></label></div>
-        <div class="pfRow"><div class="pfRowL"><div class="pfRowTitle">Trending strip</div><div class="pfRowSub">Show on home page</div></div><label class="tog"><input type="checkbox" id="togTrend" checked onchange="savePref('showTrend',this.checked);document.getElementById('trendStrip').style.display=this.checked?'':'none'"><span class="togSlide"></span></label></div>
-        <div class="pfRow" style="border-bottom:none"><div class="pfRowL"><div class="pfRowTitle">Auto-scroll trending</div><div class="pfRowSub">Desktop only</div></div><label class="tog"><input type="checkbox" id="togScroll" checked onchange="savePref('autoScroll',this.checked);this.checked?startTrendScroll():clearInterval(autoT)"><span class="togSlide"></span></label></div>
+
       </div></div>
     </div>
   </div>
@@ -655,12 +570,10 @@
       <div class="prInfo">
         <div class="prN" id="prName">Guest</div>
         <div class="prS" id="prSub">Not signed in · nmedea AI</div>
-        <div id="subPillWrap"></div>
       </div>
       <div class="prStats" id="prStats" style="display:none">
         <div class="prStat"><div class="prStatN" id="statSearches">0</div><div class="prStatL">Searches</div></div>
         <div class="prStat"><div class="prStatN" id="statDays">1</div><div class="prStatL">Days active</div></div>
-        <div class="prStat"><div class="prStatN" id="statSearchesLeft">5</div><div class="prStatL">Left today</div></div>
       </div>
       <!-- SIGNED OUT -->
       <div id="aSec">
@@ -675,16 +588,6 @@
       </div>
       <!-- SIGNED IN -->
       <div id="uSec">
-        <div class="prSection">
-          <div class="prSecL">Subscription</div>
-          <div class="prCard">
-            <div class="prRow" id="subRow">
-              <div class="prRowIcon" style="background:linear-gradient(135deg,rgba(102,126,234,0.15),rgba(118,75,162,0.15))"><svg viewBox="0 0 24 24" fill="none" stroke="#764ba2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-              <div class="prRowBody"><div class="prRowTitle" id="subRowTitle">Free Plan</div><div class="prRowSub" id="subRowSub">5 searches per 8 hours</div></div>
-              <div class="prRowChev" id="upgradeRowBtn" onclick="openPaywall();closeProf()" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
-            </div>
-          </div>
-        </div>
         <div class="prSection"><div class="prSecL">Account</div><div class="prCard">
           <div class="prRow"><div class="prRowIcon" style="background:rgba(26,106,240,0.1)"><svg viewBox="0 0 24 24" fill="none" stroke="#1a6af0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="prRowBody"><div class="prRowTitle" id="accName">Username</div><div class="prRowSub">Display name</div></div></div>
           <div class="prRow" style="cursor:pointer" onclick="document.getElementById('emailEdit').style.display=document.getElementById('emailEdit').style.display==='none'?'block':'none'">
@@ -715,7 +618,7 @@
   <div id="homePage">
     <div class="homeInner">
       <div class="homeLogo"><div class="homeLogoIcon">N</div><span class="homeLogoText">nmedea</span><span class="homeLogoAi">AI</span></div>
-      <div id="trendStrip"><span class="trendLabel">Trending</span><div class="trendSkel"></div><div class="trendSkel" style="width:110px"></div><div class="trendSkel" style="width:75px"></div><div class="trendSkel" style="width:120px"></div><div class="trendSkel" style="width:95px"></div><div class="trendSkel" style="width:85px"></div></div>
+
       <div id="homeSW">
         <input id="homeSearch" type="text" placeholder="Ask me anything…" autocomplete="off" spellcheck="false"/>
         <button id="homeClearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -770,14 +673,12 @@
 </div><!-- #app -->
 
 <script>
-const YOCO_ENDPOINT='https://katlegomashilwane--bb3e77ba3ce511f1a3b042b51c65c3df.web.val.run';
-const FREE_LIMIT=5,RESET_HOURS=8;
 
 const fbCfg={apiKey:"AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ",authDomain:"globalchat-2d669.firebaseapp.com",projectId:"globalchat-2d669",messagingSenderId:"178714711978",appId:"1:178714711978:web:fb831188be23e62a4bbdd3",databaseURL:"https://globalchat-2d669-default-rtdb.firebaseio.com/"};
 firebase.initializeApp(fbCfg);
 const auth=firebase.auth(),db=firebase.database();
 
-let cu=null,busy=false,lastQ='',hist=[],theme=localStorage.getItem('nmt')||'light',sT=null,isUp=false,autoT=null,deepMode=false,isSubscribed=false;
+let cu=null,busy=false,lastQ='',hist=[],theme=localStorage.getItem('nmt')||'light',sT=null,isUp=false,deepMode=false;
 
 // Elements
 const SI=document.getElementById('searchInput'),HS=document.getElementById('homeSearch');
@@ -794,9 +695,8 @@ const clearBtn=document.getElementById('clearBtn'),homeClearBtn=document.getElem
 const heroImgWrap=document.getElementById('heroImgWrap'),heroImg=document.getElementById('heroImg'),heroImgSrc=document.getElementById('heroImgSrc');
 const answerSection=document.getElementById('answerSection'),imagesSection=document.getElementById('imagesSection'),linksSection=document.getElementById('linksSection');
 const skelWrap=document.getElementById('skelWrap'),prog=document.getElementById('progBar'),splash=document.getElementById('splash');
-const trendStrip=document.getElementById('trendStrip'),relSection=document.getElementById('relSection');
-const deepBtn=document.getElementById('deepBtn'),upgradeBanner=document.getElementById('upgradeBanner');
-const paywallModal=document.getElementById('paywallModal');
+const relSection=document.getElementById('relSection');
+const deepBtn=document.getElementById('deepBtn');
 
 // ── THEME ──
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t==='light'?'':t);document.querySelectorAll('.topt').forEach(el=>el.classList.toggle('active',el.dataset.theme===t));}
@@ -815,115 +715,16 @@ setDensity(localStorage.getItem('nmd')||'default');setFont(localStorage.getItem(
 // ── PREFS ──
 function savePref(k,v){localStorage.setItem('pref_'+k,v?'1':'0');}
 function loadPrefs(){
-  const gg=document.getElementById('togGlow'),gt=document.getElementById('togTrend'),gs=document.getElementById('togScroll');
+  const gg=document.getElementById('togGlow');
   if(gg)gg.checked=localStorage.getItem('pref_glowAnim')!=='0';
-  if(gt){gt.checked=localStorage.getItem('pref_showTrend')!=='0';trendStrip.style.display=gt.checked?'':'none';}
-  if(gs)gs.checked=localStorage.getItem('pref_autoScroll')!=='0';
+
+
   document.querySelectorAll('.densOpt[data-density]').forEach(o=>o.classList.toggle('active',o.dataset.density===(localStorage.getItem('nmd')||'default')));
   document.querySelectorAll('.densOpt[data-font]').forEach(o=>o.classList.toggle('active',o.dataset.font===(localStorage.getItem('nmf')||'medium')));
   if(sA)document.querySelectorAll('.accentDot').forEach(d=>d.classList.toggle('active',d.dataset.accent===sA));
 }
 
-// ── SEARCH LIMIT ──
-function getUsage(){try{const d=JSON.parse(localStorage.getItem('nm_usage')||'{}');const now=Date.now();if(d.reset&&now>d.reset){return{count:0,reset:now+RESET_HOURS*3600000};}return d;}catch(e){return{count:0,reset:Date.now()+RESET_HOURS*3600000};}}
-function saveUsage(u){localStorage.setItem('nm_usage',JSON.stringify(u));}
-function canSearch(){if(isSubscribed)return true;const u=getUsage();return u.count<FREE_LIMIT;}
-function consumeSearch(){if(isSubscribed)return;const u=getUsage();u.count=(u.count||0)+1;if(!u.reset)u.reset=Date.now()+RESET_HOURS*3600000;saveUsage(u);updateBanner();}
-function updateBanner(){
-  if(isSubscribed){upgradeBanner.classList.remove('show');return;}
-  const u=getUsage();const left=Math.max(0,FREE_LIMIT-(u.count||0));
-  const sl=document.getElementById('statSearchesLeft');if(sl)sl.textContent=left;
-  document.getElementById('ubSearches').textContent=left+' search'+(left===1?'':'es')+' left';
-  // show banner once any search has been used
-  if((u.count||0)>0){upgradeBanner.classList.add('show');}else{upgradeBanner.classList.remove('show');}
-}
 
-// ── SUBSCRIPTION CHECK ──
-async function checkSubscription(uid){
-  try{
-    const snap=await db.ref('subscriptions/'+uid).once('value');
-    const data=snap.val();
-    isSubscribed=!!(data&&data.active);
-  }catch(e){isSubscribed=false;}
-  updateSubUI();updateBanner();
-}
-function updateSubUI(){
-  const pb=document.getElementById('profileBtn');
-  if(isSubscribed){pb.classList.add('subbed');}else{pb.classList.remove('subbed');}
-  const sp=document.getElementById('subPillWrap');
-  if(sp){sp.innerHTML=isSubscribed
-    ?'<div class="subPill pro"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Pro Member</div>'
-    :'<div class="subPill free">Free Plan · 5 searches / 8h</div>';}
-  const srt=document.getElementById('subRowTitle'),srs=document.getElementById('subRowSub'),urb=document.getElementById('upgradeRowBtn');
-  if(isSubscribed){if(srt)srt.textContent='Pro Member';if(srs)srs.textContent='Unlimited searches';if(urb)urb.style.display='none';}
-  else{if(srt)srt.textContent='Free Plan';if(srs)srs.textContent='5 searches per 8 hours';}
-  const mdu=document.getElementById('dmUpgrade');if(mdu)mdu.style.display=isSubscribed?'none':'flex';
-}
-
-// ── PAYWALL ──
-// Pricing calibrated so ~R20-22 lands in bank after Yoco 2.9%+R2 fee
-// ZAR charge R25 → net ~R22 | Other countries equivalent
-const PRICES={
-  ZA:{sym:'R',  amt:25,   cents:2500},
-  US:{sym:'$',  amt:2,    cents:200 },
-  GB:{sym:'£',  amt:1.50, cents:150 },
-  EU:{sym:'€',  amt:1.80, cents:180 },
-  AU:{sym:'A$', amt:3,    cents:300 },
-  CA:{sym:'C$', amt:2.50, cents:250 },
-  NG:{sym:'₦',  amt:1900, cents:190000},
-  KE:{sym:'KSh',amt:150,  cents:15000},
-  GH:{sym:'GH₵',amt:15,   cents:1500},
-  IN:{sym:'₹',  amt:100,  cents:10000},
-};
-async function localisePrice(){
-  try{
-    const r=await fetch('https://ipapi.co/json/');
-    const d=await r.json();
-    const cc=d.country_code||'US';
-    const p=PRICES[cc]||PRICES.US;
-    const disp=Number.isInteger(p.amt)?p.amt:p.amt.toFixed(2).replace(/\.?0+$/,'');
-    document.getElementById('pwPriceDisplay').textContent=p.sym+disp;
-    const pl=document.getElementById('pwLocalPrice');
-    if(pl)pl.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Billed monthly in '+(d.country_name||cc)+' · Powered by Yoco';
-    window._payAmt=p.cents;
-  }catch(e){
-    const pl=document.getElementById('pwLocalPrice');
-    if(pl)pl.textContent='Billed monthly · Powered by Yoco';
-    window._payAmt=2500;
-  }
-}
-function openPaywall(){paywallModal.classList.add('open');localisePrice();}
-function closePaywall(){paywallModal.classList.remove('open');}
-paywallModal.addEventListener('click',e=>{if(e.target===paywallModal)closePaywall();});
-
-async function startPayment(){
-  if(!cu){closePaywall();openProf();return;}
-  const btn=document.getElementById('pwCTA');
-  btn.textContent='Opening payment…';btn.disabled=true;
-  try{
-    const r=await fetch(YOCO_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create',amount:window._payAmt||400,uid:cu.uid})});
-    const d=await r.json();
-    if(d.redirectUrl){
-      window._pendingCheckout=d.checkoutId;
-      window.open(d.redirectUrl,'_blank');
-      btn.textContent='Verifying payment…';
-      // poll every 4s for up to 3 min
-      let tries=0;
-      const poll=setInterval(async()=>{
-        tries++;if(tries>45){clearInterval(poll);btn.textContent='Subscribe Now';btn.disabled=false;return;}
-        const vr=await fetch(YOCO_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'verify',checkoutId:d.checkoutId,uid:cu.uid})});
-        const vd=await vr.json();
-        if(vd.paid){
-          clearInterval(poll);
-          await db.ref('subscriptions/'+cu.uid).set({active:true,since:Date.now(),plan:'pro'});
-          isSubscribed=true;updateSubUI();updateBanner();closePaywall();
-          btn.textContent='Subscribe Now';btn.disabled=false;
-          alert('🎉 Welcome to nmedea Pro! Enjoy unlimited searches.');
-        }else if(vd.cancelled){clearInterval(poll);btn.textContent='Subscribe Now';btn.disabled=false;}
-      },4000);
-    }else{btn.textContent='Subscribe Now';btn.disabled=false;alert(d.error||'Payment failed');}
-  }catch(e){btn.textContent='Subscribe Now';btn.disabled=false;alert('Something went wrong. Please try again.');}
-}
 
 // ── DEEP RESEARCH ──
 function syncDeepBtns(){
@@ -939,30 +740,24 @@ function syncDeepBtns(){
     hdb.title=deepMode?'Deep Research: ON':'Deep Research: OFF';
   }
 }
-deepBtn.addEventListener('click',()=>{
-  if(!isSubscribed){openPaywall();return;}
-  deepMode=!deepMode;syncDeepBtns();
-});
+deepBtn.addEventListener('click',()=>{deepMode=!deepMode;syncDeepBtns();});
 const hdb=document.getElementById('homeDeepBtn');
-if(hdb)hdb.addEventListener('click',()=>{
-  if(!isSubscribed){openPaywall();return;}
-  deepMode=!deepMode;syncDeepBtns();
-});
+if(hdb)hdb.addEventListener('click',()=>{deepMode=!deepMode;syncDeepBtns();});
 
 // ── AUTH ──
 auth.onAuthStateChanged(u=>{
   cu=u;
   setTimeout(()=>{splash.classList.add('hide');setTimeout(()=>splash.style.display='none',650);},1600);
   home.style.display='flex';
-  if(u){upUI(u);loadHist(u.uid);checkSubscription(u.uid);}
-  else{upUI(null);updateBanner();}
-  loadPrefs();loadRecs();loadQuickCards();
+  if(u){upUI(u);loadHist(u.uid);}
+  else{upUI(null);}
+  loadPrefs();
 });
 
 function upUI(u){
   const i=u?(u.displayName||'U')[0].toUpperCase():'?';
   const pb=document.getElementById('profileBtn');
-  pb.innerHTML=i+'<div class="subBadge"></div>';
+  pb.textContent=i;
   document.getElementById('prAv').textContent=i;
   document.getElementById('prName').textContent=u?(u.displayName||'User'):'Guest';
   document.getElementById('prSub').textContent=u?'nmedea AI · Member':'Not signed in · nmedea AI';
@@ -1027,14 +822,13 @@ document.getElementById('aSubmit').addEventListener('click',async()=>{
 });
 const prSaveBtn=document.getElementById('prSave');if(prSaveBtn)prSaveBtn.addEventListener('click',async()=>{const em=document.getElementById('prEmail').value.trim();if(em&&cu){try{await cu.updateEmail(em);upUI(cu);}catch(e){alert(e.message);}}});
 document.getElementById('confNo').addEventListener('click',()=>confM.classList.remove('open'));
-document.getElementById('confYes').addEventListener('click',()=>{auth.signOut();confM.classList.remove('open');hist=[];renderHist();isSubscribed=false;updateSubUI();updateBanner();});
+document.getElementById('confYes').addEventListener('click',()=>{auth.signOut();confM.classList.remove('open');hist=[];renderHist();});
 
 // ── PREFS ──
 document.getElementById('dmPref').addEventListener('click',()=>{dotMenu.classList.remove('open');prefPanel.classList.add('open');prefOv.classList.add('open');});
 document.getElementById('prefClose').addEventListener('click',()=>{prefPanel.classList.remove('open');prefOv.classList.remove('open');});
 prefOv.addEventListener('click',()=>{prefPanel.classList.remove('open');prefOv.classList.remove('open');});
-document.getElementById('dmUpgrade').addEventListener('click',()=>{dotMenu.classList.remove('open');openPaywall();});
-upgradeBanner.addEventListener('click',openPaywall);
+
 
 // ── DOTS MENU ──
 menuBtn.addEventListener('click',e=>{e.stopPropagation();const r=menuBtn.getBoundingClientRect();dotMenu.style.top=(r.bottom+8)+'px';dotMenu.style.right=(window.innerWidth-r.right)+'px';dotMenu.classList.toggle('open');});
@@ -1064,12 +858,9 @@ async function doSearch(qOv){
   const q=(qOv||SI.value||HS.value).trim();
   if(!q||busy)return;
 
-  // ── LIMIT CHECK ──
-  if(!canSearch()){openPaywall();return;}
-
   busy=true;lastQ=q;
   autoBox.style.display='none';homeAutoBox.style.display='none';
-  saveHist(q);consumeSearch();updateBanner();
+  saveHist(q);
   home.style.display='none';rp.classList.add('vis');
   qe.textContent=q;SI.value=q;updateClearBtns();
   clearResults();skelWrap.style.display='block';startProg();startSearchGlow();
@@ -1230,35 +1021,10 @@ document.getElementById('dmNew').addEventListener('click',()=>{dotMenu.classList
 document.getElementById('dmBack').addEventListener('click',()=>{dotMenu.classList.remove('open');showHome();});
 document.getElementById('dmRefresh').addEventListener('click',()=>{dotMenu.classList.remove('open');if(lastQ)doSearch(lastQ);});
 
-// ── TRENDING ──
-const TICONS=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'];
+
+
 const CICONS=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'];
 
-async function loadRecs(){
-  try{
-    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'give me exactly 8 unique diverse trending topics right now — news, sports, tech, entertainment, science, health, finance, gaming — short and specific, max 5 words each'})});
-    const d=await r.json();const items=(d.suggestions||[]).slice(0,8);if(!items.length)return;
-    trendStrip.innerHTML='<span class="trendLabel">Trending</span>';
-    items.forEach((x,i)=>{const c=document.createElement('div');c.className='trendChip';c.innerHTML=TICONS[i%TICONS.length]+x;c.addEventListener('click',()=>go(x));trendStrip.appendChild(c);});
-    startTrendScroll();
-  }catch(e){}
-}
-function startTrendScroll(){if(window.innerWidth<=640)return;clearInterval(autoT);let dir=1;autoT=setInterval(()=>{const max=trendStrip.scrollWidth-trendStrip.clientWidth;if(max<=0)return;trendStrip.scrollLeft+=dir*1.2;if(trendStrip.scrollLeft>=max-2)dir=-1;else if(trendStrip.scrollLeft<=2)dir=1;},30);}
-window.addEventListener('resize',()=>{clearInterval(autoT);startTrendScroll();});
-
-async function loadQuickCards(){
-  const grid=document.getElementById('quickGrid');
-  try{
-    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'suggest 4 interesting homepage explore topics. Reply ONLY as JSON array, no markdown: [{"title":"2-3 word title","subtitle":"max 7 word subtitle","query":"full search query string"}]. Topics: news, science/tech, entertainment, lifestyle.'})});
-    const d=await r.json();let cards=[];
-    try{const raw=(d.suggestions||[]).join(' ');const m=raw.match(/\[[\s\S]*\]/);if(m)cards=JSON.parse(m[0]);}catch(e2){}
-    if(!cards||cards.length<4)throw new Error('fail');
-    grid.innerHTML='';
-    cards.slice(0,4).forEach((c,i)=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[i%CICONS.length]+'</div><div class="qCardTitle">'+c.title+'</div><div class="qCardSub">'+c.subtitle+'</div>';el.addEventListener('click',()=>go(c.query||c.title));grid.appendChild(el);});
-  }catch(e){
-    [{i:0,t:'World News',s:'Latest global headlines',q:'Latest world news today'},{i:1,t:'AI & Tech',s:"What's new in technology",q:'top AI and tech news 2026'},{i:2,t:'Entertainment',s:'Movies, shows & music',q:'trending movies and shows 2026'},{i:3,t:'Science',s:'Discoveries & breakthroughs',q:'latest science discoveries 2026'}].forEach(f=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[f.i]+'</div><div class="qCardTitle">'+f.t+'</div><div class="qCardSub">'+f.s+'</div>';el.addEventListener('click',()=>go(f.q));grid.appendChild(el);});
-  }
-}
 
 // ── AUTOCOMPLETE ──
 let lastSuggVal='',lastSuggBox=null;
