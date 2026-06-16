@@ -45,12 +45,20 @@
       #rCols{flex-direction:row;gap:0;align-items:flex-start}
       #rLeft{flex:1;min-width:0;padding-right:32px}
       #rRight{
-        width:300px;flex-shrink:0;
+        width:280px;flex-shrink:0;
         padding-left:32px;
         border-left:1px solid var(--border);
         position:sticky;top:0;
         min-height:200px;
       }
+      #qEcho{font-size:17px;margin-bottom:14px}
+      #answerBody{font-size:13.5px;padding:14px 16px}
+      #answerBody p{font-size:13.5px;line-height:1.75;margin-bottom:8px}
+      .lTitle{font-size:13px}
+      .lDesc{font-size:11.5px}
+      .lSite{font-size:10.5px}
+      .lCard{padding:11px 0}
+      .secLbl{font-size:10px}
     }
     #qEcho{font-size:22px;font-weight:400;color:var(--text);margin-bottom:20px;font-family:'DM Serif Display',serif;line-height:1.3}
     #rCols{display:flex;flex-direction:column;gap:0;width:100%}
@@ -954,7 +962,6 @@ function renderResults(data,q){
         tile.addEventListener('click',()=>window.open(src,'_blank'));
         ig.appendChild(tile);
       });
-      if(imgs.length>6)document.getElementById('rLeft').prepend(imagesSection);
       imagesSection.style.display='block';hasImages=true;
     }
   }
