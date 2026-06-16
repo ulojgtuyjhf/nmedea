@@ -426,8 +426,12 @@
     .rSecDivider span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);white-space:nowrap}
 
     /* ANSWER CARD */
-    #answerBody{font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;border-left:3px solid transparent}
+    #answerBody{font-size:15px;line-height:1.8;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;position:relative;border-left:3px solid transparent}
     #answerBody::before{content:'';position:absolute;inset:0;left:-1px;border-radius:14px;background:linear-gradient(180deg,#4f8ef7,#9b72f7) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none}
+    #answerBody p{margin:0 0 12px;font-size:15px;line-height:1.8;color:var(--text)}
+    #answerBody p:last-child{margin-bottom:0}
+    #answerBody strong{font-weight:700;color:var(--text)}
+    #answerBody em{font-style:italic;color:var(--muted)}
     #srcChips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
     .srcChip{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted);text-decoration:none;background:var(--card);transition:background 0.12s,color 0.12s}
     .srcChip:hover{background:var(--surface);color:var(--text)}
@@ -970,14 +974,12 @@ function renderResults(data,q){
   // ANSWER
   if(data.answer){
     if(deepMode){
-      // render as structured research report
       const sections=data.answer.split(/\n{2,}/);
       let html='<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">'
         +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'
         +'<span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted)">Deep Research Report</span></div>';
       sections.forEach(s=>{
         const trimmed=s.trim();if(!trimmed)return;
-        // detect heading lines
         if(trimmed.length<80&&!trimmed.includes('.')){
           html+='<div style="font-size:13px;font-weight:700;color:var(--text);margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6">'+trimmed+'</div>';
         }else{
@@ -986,7 +988,17 @@ function renderResults(data,q){
       });
       ab.innerHTML=html;
     }else{
-      ab.textContent=data.answer;
+      // Format answer: split on newlines, render each paragraph, bold **text**
+      function formatAnswer(text){
+        return text.split(/\n+/).map(para=>{
+          const p=para.trim();if(!p)return '';
+          const formatted=p
+            .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g,'<em>$1</em>');
+          return '<p>'+formatted+'</p>';
+        }).join('');
+      }
+      ab.innerHTML=formatAnswer(data.answer);
     }
     sc.innerHTML='';
     (data.sources||[]).forEach(s=>{const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+s.domain+'</span>';sc.appendChild(a);});
