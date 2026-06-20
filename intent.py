@@ -14,12 +14,16 @@ def ask_groq(prompt, max_tokens=3000):
     r = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
-        json={"model":"llama-3.3-70b-versatile",
+        json={"model":"openai/gpt-oss-120b",
               "messages":[{"role":"user","content":prompt}],
               "max_tokens":max_tokens},
         timeout=30,
     )
-    return r.json()["choices"][0]["message"]["content"].strip()
+    data = r.json()
+    if "choices" not in data:
+        print(f"[groq error] status={r.status_code} body={data}")
+        raise RuntimeError(f"Groq API error: {data.get('error', data)}")
+    return data["choices"][0]["message"]["content"].strip()
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -302,9 +306,21 @@ Rules:
 - quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5}
 - NEVER change the subject matter of what the user asked"""
 
-    text = ask_groq(prompt)
-    start, end = text.find('{'), text.rfind('}')+1
-    data = json.loads(text[start:end])
+    try:
+        text = ask_groq(prompt)
+        start, end = text.find('{'), text.rfind('}')+1
+        data = json.loads(text[start:end])
+    except Exception as e:
+        print(f"[understand fallback] groq/parse failed: {e}")
+        data = {
+            "action": "show_results",
+            "understood": query,
+            "search_query": query,
+            "image_search_query": query,
+            "direct_url": "",
+            "quantity": explicit_qty or 5,
+            "answer": "",
+        }
 
     action = data.get("action","answer")
     qty = max(1, min(explicit_qty or int(data.get("quantity",5)), 100))
