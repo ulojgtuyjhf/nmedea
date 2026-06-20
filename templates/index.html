@@ -562,6 +562,12 @@
 </div><!-- #app -->
 
 <script>
+// ── SAFETY: escape any text pulled from search results / scraped pages before injecting via innerHTML ──
+function esc(s){
+  if(s==null)return '';
+  return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 const fbCfg={apiKey:"AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ",authDomain:"globalchat-2d669.firebaseapp.com",projectId:"globalchat-2d669",messagingSenderId:"178714711978",appId:"1:178714711978:web:fb831188be23e62a4bbdd3",databaseURL:"https://globalchat-2d669-default-rtdb.firebaseio.com/"};
 firebase.initializeApp(fbCfg);
 const auth=firebase.auth(),db=firebase.database();
@@ -676,7 +682,7 @@ function renderHist(){
   b.innerHTML='';
   hist.forEach(q=>{
     const d=document.createElement('div');d.className='hPI';
-    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>'+q+'</span><div class="hPA"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
+    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>'+esc(q)+'</span><div class="hPA"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
     d.addEventListener('click',()=>{closeHist();go(q);});
     b.appendChild(d);
   });
@@ -778,7 +784,7 @@ function renderResults(data,q){
     const s=data.social;const col=s.color||{bg:'#333',text:'#fff',label:s.platform||''};
     const card=document.createElement('a');card.className='socialCard';card.href=s.url;card.target='_blank';card.rel='noopener';
     const thumb=s.thumbnail?'<div class="socialThumbWrap"><img class="socialThumb" src="'+s.thumbnail+'" onerror="this.parentElement.style.display=\'none\'"/><div class="socialPlay"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="rgba(0,0,0,0.45)"/><polygon points="10,8 17,12 10,16" fill="white"/></svg></div></div>':'';
-    card.innerHTML=thumb+'<div class="socialMeta"><div class="socialPlatBadge" style="background:'+col.bg+';color:'+col.text+'">'+col.label+'</div><div class="socialTitle">'+(s.title||s.url)+'</div>'+(s.description?'<div class="socialDesc">'+s.description+'</div>':'')+(s.author?'<div class="socialAuthor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'+s.author+'</div>':'')+'</div>';
+    card.innerHTML=thumb+'<div class="socialMeta"><div class="socialPlatBadge" style="background:'+col.bg+';color:'+col.text+'">'+esc(col.label)+'</div><div class="socialTitle">'+esc(s.title||s.url)+'</div>'+(s.description?'<div class="socialDesc">'+esc(s.description)+'</div>':'')+(s.author?'<div class="socialAuthor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'+esc(s.author)+'</div>':'')+'</div>';
     document.getElementById('rLeft').prepend(card);
   }
 
@@ -791,7 +797,7 @@ function renderResults(data,q){
       heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
       heroImg.onload=()=>{heroImg.style.opacity='1';};heroImg.style.opacity='0';
       heroImg.onerror=()=>{heroImgWrap.style.display='none';};
-      heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>':'';
+      heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>':'';
       heroImgWrap.style.display='block';hasImages=true;
     }else if(imgs.length>1){
       ig.innerHTML='';
@@ -807,7 +813,7 @@ function renderResults(data,q){
         const imgEl=document.createElement('img');imgEl.loading='lazy';imgEl.alt='';
         imgEl.onerror=()=>tile.style.display='none';imgEl.onload=()=>imgEl.classList.add('loaded');imgEl.src=src;
         tile.appendChild(imgEl);
-        if(domain){const sd=document.createElement('div');sd.className='imgTileSrc';sd.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>';tile.appendChild(sd);}
+        if(domain){const sd=document.createElement('div');sd.className='imgTileSrc';sd.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>';tile.appendChild(sd);}
         tile.addEventListener('click',()=>window.open(src,'_blank'));
         ig.appendChild(tile);
       });
@@ -822,7 +828,7 @@ function renderResults(data,q){
     const ro=document.getElementById('relOut');ro.innerHTML='';
     related.forEach(r=>{
       const d=document.createElement('div');d.className='relCard';
-      d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>'+r+'</span><div class="relArrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
+      d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>'+esc(r)+'</span><div class="relArrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>';
       d.addEventListener('click',()=>go(r));ro.appendChild(d);
     });
     relSection.style.display='block';
@@ -840,9 +846,9 @@ function renderResults(data,q){
         const trimmed=s.trim();if(!trimmed)return;
         // detect heading lines
         if(trimmed.length<80&&!trimmed.includes('.')){
-          html+='<div style="font-size:13px;font-weight:700;color:var(--text);margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6">'+trimmed+'</div>';
+          html+='<div style="font-size:13px;font-weight:700;color:var(--text);margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6">'+esc(trimmed)+'</div>';
         }else{
-          html+='<p style="font-size:14.5px;line-height:1.9;color:var(--text);margin-bottom:10px">'+trimmed+'</p>';
+          html+='<p style="font-size:14.5px;line-height:1.9;color:var(--text);margin-bottom:10px">'+esc(trimmed)+'</p>';
         }
       });
       ab.innerHTML=html;
@@ -850,7 +856,7 @@ function renderResults(data,q){
       ab.textContent=data.answer;
     }
     sc.innerHTML='';
-    (data.sources||[]).forEach(s=>{const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+s.domain+'</span>';sc.appendChild(a);});
+    (data.sources||[]).forEach(s=>{const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(s.domain)+'</span>';sc.appendChild(a);});
     answerSection.style.display='block';
   }
 
@@ -862,7 +868,7 @@ function renderResults(data,q){
       const a=document.createElement('a');a.className='lCard';a.href=r.url;a.target='_blank';a.rel='noopener';
       const thumb=r.image?'<img class="lThumb" src="'+r.image+'" loading="lazy" onerror="this.style.display=\'none\'">':'';
       a.innerHTML='<div class="lFavWrap"><img class="lFav" src="https://www.google.com/s2/favicons?domain='+dom+'&sz=64" onerror="this.style.opacity=\'0\'"></div>'
-        +'<div class="lBody"><div class="lSiteRow"><span class="lSite">'+dom+'</span></div><div class="lTitle">'+r.title+'</div><div class="lDesc">'+r.description+'</div></div>'+thumb;
+        +'<div class="lBody"><div class="lSiteRow"><span class="lSite">'+esc(dom)+'</span></div><div class="lTitle">'+esc(r.title)+'</div><div class="lDesc">'+esc(r.description)+'</div></div>'+thumb;
       lo.appendChild(a);
     });
     if(data.answer)document.getElementById('lnkDivider').style.display='block';
@@ -898,7 +904,7 @@ async function loadQuickCards(){
     try{const raw=(d.suggestions||[]).join(' ');const m=raw.match(/\[[\s\S]*\]/);if(m)cards=JSON.parse(m[0]);}catch(e2){}
     if(!cards||cards.length<4)throw new Error('fail');
     grid.innerHTML='';
-    cards.slice(0,4).forEach((c,i)=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[i%CICONS.length]+'</div><div class="qCardTitle">'+c.title+'</div><div class="qCardSub">'+c.subtitle+'</div>';el.addEventListener('click',()=>go(c.query||c.title));grid.appendChild(el);});
+    cards.slice(0,4).forEach((c,i)=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[i%CICONS.length]+'</div><div class="qCardTitle">'+esc(c.title)+'</div><div class="qCardSub">'+esc(c.subtitle)+'</div>';el.addEventListener('click',()=>go(c.query||c.title));grid.appendChild(el);});
   }catch(e){
     [{i:0,t:'World News',s:'Latest global headlines',q:'Latest world news today'},{i:1,t:'AI & Tech',s:"What's new in technology",q:'top AI and tech news 2026'},{i:2,t:'Entertainment',s:'Movies, shows & music',q:'trending movies and shows 2026'},{i:3,t:'Science',s:'Discoveries & breakthroughs',q:'latest science discoveries 2026'}].forEach(f=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[f.i]+'</div><div class="qCardTitle">'+f.t+'</div><div class="qCardSub">'+f.s+'</div>';el.addEventListener('click',()=>go(f.q));grid.appendChild(el);});
   }
@@ -915,7 +921,7 @@ async function fetchAuto(val,box){
     const d=await r.json();const suggs=d.suggestions||[];
     if(!suggs.length){box.style.display='none';return;}
     box.innerHTML='';
-    suggs.slice(0,6).forEach(s=>{const row=document.createElement('div');row.className='ai-row';row.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'+s;row.addEventListener('click',()=>go(s));box.appendChild(row);});
+    suggs.slice(0,6).forEach(s=>{const row=document.createElement('div');row.className='ai-row';row.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'+esc(s);row.addEventListener('click',()=>go(s));box.appendChild(row);});
     box.style.display='block';
   }catch(e){box.style.display='none';}
 }
