@@ -302,6 +302,10 @@
 
     /* WEB RESULTS — Google-style divider rows */
     #linksOut{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;width:100%}
+    @media(max-width:859px){
+      #linksOut{margin-left:-16px;margin-right:-16px;width:calc(100% + 32px);border-left:none;border-right:none;border-radius:0}
+      .lCard{padding-left:16px;padding-right:16px}
+    }
     .lCard{display:flex;gap:12px;padding:14px 16px;text-decoration:none;color:inherit;align-items:flex-start;background:transparent;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.12s;width:100%}
     .lCard:last-child{border-bottom:none}
     .lCard:hover{background:var(--surface)}
