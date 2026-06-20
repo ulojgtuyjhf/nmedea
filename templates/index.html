@@ -279,7 +279,8 @@
     /* HERO IMAGE */
     #heroImgWrap{display:none;margin-bottom:24px;border-radius:18px;overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.1);background:var(--surface)}
     #heroImgWrap:hover #heroImg{transform:scale(1.025)}
-    #heroImg{width:100%;aspect-ratio:16/9;max-height:420px;object-fit:cover;display:block;transition:transform 0.4s ease;opacity:0;transition:opacity 0.4s,transform 0.4s;background:var(--surface)}
+    #heroImg{width:100%;aspect-ratio:16/9;max-height:420px;object-fit:cover;display:block;transition:transform 0.4s ease;opacity:0;transition:opacity 0.4s,transform 0.4s;background:var(--surface);color:transparent;font-size:0}
+    #heroImg:not(.loaded){visibility:hidden}
     #heroImgSrc{position:absolute;bottom:0;left:0;right:0;padding:12px 14px;background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);display:flex;align-items:center;gap:6px}
     #heroImgSrc img{width:14px;height:14px;border-radius:3px;flex-shrink:0}
     #heroImgSrc span{font-size:11px;color:#fff;opacity:0.9}
@@ -291,7 +292,8 @@
     .imgCount{font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:5px}
     .imgTile{cursor:pointer;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface);break-inside:avoid;margin-bottom:8px;display:inline-block;width:100%;transition:transform 0.2s,box-shadow 0.2s;position:relative}
     .imgTile:hover{transform:scale(1.02);box-shadow:0 8px 28px rgba(0,0,0,0.18)}
-    .imgTile img{width:100%;aspect-ratio:1/1;display:block;object-fit:cover;background:var(--surface);opacity:0;transition:opacity 0.3s ease}
+    .imgTile img{width:100%;aspect-ratio:1/1;display:block;object-fit:cover;background:var(--surface);opacity:0;transition:opacity 0.3s ease;color:transparent;font-size:0}
+    .imgTile img:not(.loaded){visibility:hidden}
     .imgTile img.loaded{opacity:1}
     .imgTileSrc{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);display:flex;align-items:center;gap:4px;opacity:0;transition:opacity 0.2s}
     .imgTile:hover .imgTileSrc{opacity:1}
@@ -796,7 +798,7 @@ function renderResults(data,q){
       const src=typeof imgs[0]==='string'?imgs[0]:imgs[0].url;
       const domain=typeof imgs[0]==='object'&&imgs[0].source?imgs[0].source:'';
       heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
-      heroImg.onload=()=>{heroImg.style.opacity='1';};heroImg.style.opacity='0';
+      heroImg.onload=()=>{heroImg.style.opacity='1';heroImg.classList.add('loaded');};heroImg.style.opacity='0';heroImg.classList.remove('loaded');
       heroImg.onerror=()=>{heroImgWrap.style.display='none';};
       heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>':'';
       heroImgWrap.style.display='block';hasImages=true;
