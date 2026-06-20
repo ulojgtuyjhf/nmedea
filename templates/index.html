@@ -277,9 +277,9 @@
     .srcChip img{width:12px;height:12px;border-radius:3px}
 
     /* HERO IMAGE */
-    #heroImgWrap{display:none;margin-bottom:24px;border-radius:18px;overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+    #heroImgWrap{display:none;margin-bottom:24px;border-radius:18px;overflow:hidden;border:1px solid var(--border);cursor:pointer;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.1);background:var(--surface)}
     #heroImgWrap:hover #heroImg{transform:scale(1.025)}
-    #heroImg{width:100%;max-height:420px;object-fit:cover;display:block;transition:transform 0.4s ease;opacity:0;transition:opacity 0.4s,transform 0.4s}
+    #heroImg{width:100%;aspect-ratio:16/9;max-height:420px;object-fit:cover;display:block;transition:transform 0.4s ease;opacity:0;transition:opacity 0.4s,transform 0.4s;background:var(--surface)}
     #heroImgSrc{position:absolute;bottom:0;left:0;right:0;padding:12px 14px;background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);display:flex;align-items:center;gap:6px}
     #heroImgSrc img{width:14px;height:14px;border-radius:3px;flex-shrink:0}
     #heroImgSrc span{font-size:11px;color:#fff;opacity:0.9}
@@ -790,6 +790,7 @@ function renderResults(data,q){
       const domain=typeof imgs[0]==='object'&&imgs[0].source?imgs[0].source:'';
       heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
       heroImg.onload=()=>{heroImg.style.opacity='1';};heroImg.style.opacity='0';
+      heroImg.onerror=()=>{heroImgWrap.style.display='none';};
       heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+domain+'</span>':'';
       heroImgWrap.style.display='block';hasImages=true;
     }else if(imgs.length>1){
