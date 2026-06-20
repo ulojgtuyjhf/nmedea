@@ -801,9 +801,10 @@ function renderResults(data,q){
     if(imgs.length===1){
       const src=typeof imgs[0]==='string'?imgs[0]:imgs[0].url;
       const domain=typeof imgs[0]==='object'&&imgs[0].source?imgs[0].source:'';
+      const heroKill=setTimeout(()=>{if(!heroImg.classList.contains('loaded'))heroImgWrap.style.display='none';},8000);
       heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
-      heroImg.onload=()=>{heroImg.style.opacity='1';heroImg.classList.add('loaded');};heroImg.style.opacity='0';heroImg.classList.remove('loaded');
-      heroImg.onerror=()=>{heroImgWrap.style.display='none';};
+      heroImg.onload=()=>{clearTimeout(heroKill);heroImg.style.opacity='1';heroImg.classList.add('loaded');};heroImg.style.opacity='0';heroImg.classList.remove('loaded');
+      heroImg.onerror=()=>{clearTimeout(heroKill);heroImgWrap.style.display='none';};
       heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>':'';
       heroImgWrap.style.display='block';hasImages=true;
     }else if(imgs.length>1){
@@ -818,7 +819,10 @@ function renderResults(data,q){
         if(!src)return;
         const tile=document.createElement('div');tile.className='imgTile';
         const imgEl=document.createElement('img');imgEl.loading='lazy';imgEl.alt='';
-        imgEl.onerror=()=>tile.style.display='none';imgEl.onload=()=>imgEl.classList.add('loaded');imgEl.src=src;
+        const killTimer=setTimeout(()=>{if(!imgEl.classList.contains('loaded'))tile.style.display='none';},8000);
+        imgEl.onerror=()=>{clearTimeout(killTimer);tile.style.display='none';};
+        imgEl.onload=()=>{clearTimeout(killTimer);imgEl.classList.add('loaded');};
+        imgEl.src=src;
         tile.appendChild(imgEl);
         if(domain){const sd=document.createElement('div');sd.className='imgTileSrc';sd.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>';tile.appendChild(sd);}
         tile.addEventListener('click',()=>window.open(src,'_blank'));
