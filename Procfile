@@ -1,1 +1,1 @@
-web: gunicorn app:app
+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
