@@ -291,7 +291,7 @@
     .imgCount{font-size:11px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:5px}
     .imgTile{cursor:pointer;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface);break-inside:avoid;margin-bottom:8px;display:inline-block;width:100%;transition:transform 0.2s,box-shadow 0.2s;position:relative}
     .imgTile:hover{transform:scale(1.02);box-shadow:0 8px 28px rgba(0,0,0,0.18)}
-    .imgTile img{width:100%;display:block;object-fit:cover;min-height:60px;background:var(--surface);opacity:0;transition:opacity 0.3s ease}
+    .imgTile img{width:100%;aspect-ratio:1/1;display:block;object-fit:cover;background:var(--surface);opacity:0;transition:opacity 0.3s ease}
     .imgTile img.loaded{opacity:1}
     .imgTileSrc{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);display:flex;align-items:center;gap:4px;opacity:0;transition:opacity 0.2s}
     .imgTile:hover .imgTileSrc{opacity:1}
@@ -546,8 +546,8 @@
           </div>
           <div id="rRight">
             <div id="heroImgWrap"><img id="heroImg" src="" alt="" loading="lazy"/><div id="heroImgSrc"></div></div>
+            <div id="imgDivider" style="display:none"><div class="rSecDivider"><span>Images</span></div></div>
             <div id="imagesSection" class="rSec" style="display:none">
-              <div class="secLbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
               <div id="imgGrid"></div>
             </div>
             <div id="relSection" class="rSec" style="display:none">
@@ -727,6 +727,7 @@ function clearResults(){
   heroImgWrap.style.display='none';
   answerSection.style.display='none';imagesSection.style.display='none';linksSection.style.display='none';relSection.style.display='none';
   document.getElementById('lnkDivider').style.display='none';
+  document.getElementById('imgDivider').style.display='none';
   skelWrap.style.display='none';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
@@ -804,7 +805,7 @@ function renderResults(data,q){
       const existC=imagesSection.querySelector('.imgCount');if(existC)existC.remove();
       const cEl=document.createElement('div');cEl.className='imgCount';
       cEl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+imgs.length+' images';
-      imagesSection.querySelector('.secLbl').after(cEl);
+      imagesSection.prepend(cEl);
       imgs.forEach(imgObj=>{
         const src=typeof imgObj==='string'?imgObj:imgObj.url;
         const domain=typeof imgObj==='object'&&imgObj.source?imgObj.source:'';
@@ -818,6 +819,7 @@ function renderResults(data,q){
         ig.appendChild(tile);
       });
       if(imgs.length>6)document.getElementById('rLeft').prepend(imagesSection);
+      document.getElementById('imgDivider').style.display='block';
       imagesSection.style.display='block';hasImages=true;
     }
   }
@@ -871,7 +873,7 @@ function renderResults(data,q){
         +'<div class="lBody"><div class="lSiteRow"><span class="lSite">'+esc(dom)+'</span></div><div class="lTitle">'+esc(r.title)+'</div><div class="lDesc">'+esc(r.description)+'</div></div>'+thumb;
       lo.appendChild(a);
     });
-    if(data.answer)document.getElementById('lnkDivider').style.display='block';
+    document.getElementById('lnkDivider').style.display='block';
     linksSection.style.display='block';
   }
 
