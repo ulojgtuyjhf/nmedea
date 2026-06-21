@@ -54,6 +54,24 @@ def extract_quantity(query: str):
     return None
 
 
+CODE_LANGS = [
+    "python","javascript","js","java","c\\+\\+","cpp","c#","csharp","html","css",
+    "typescript","ts","php","ruby","go","golang","rust","swift","kotlin","sql","bash","shell",
+]
+def looks_like_code_request(query: str) -> bool:
+    """Deterministic backup signal — if this is clearly a code request,
+    we don't want to depend solely on Groq classifying it correctly."""
+    q = query.lower()
+    has_lang = any(re.search(r'\b' + lang + r'\b', q) for lang in CODE_LANGS)
+    has_code_word = re.search(r'\b(script|function|program|algorithm|code|app|webpage|website|class|api endpoint)\b', q)
+    has_verb = re.search(r'\b(write|build|code|create|make|give me|generate)\b', q)
+    if has_lang and has_verb:
+        return True
+    if has_code_word and has_verb:
+        return True
+    return False
+
+
 # ─────────────────────────────────────────────────────────────────
 #  EXA  — neural web search
 # ─────────────────────────────────────────────────────────────────
@@ -350,7 +368,8 @@ action=go_to_thing
   → this is the user wanting to land INSIDE the actual thing (its trailer, its store page, its official page) — not read about it, not get a list
 
 action=build_code
-  "write me a python script that..." / "code a to-do list app" / "build a snake game in javascript" / "give me HTML for a landing page" / "create a function that sorts an array"
+  "write me a python script that..." / "code a to-do list app" / "build a snake game in javascript" / "give me HTML for a landing page" / "create a function that sorts an array" / "reverse a string in python" / "python script to reverse a string"
+  → HARD RULE: if the query mentions a programming language (python, javascript, java, c++, html, css, etc.) OR words like "script", "function", "code", "program", "app" combined with "write/build/create/give me/make", action MUST be build_code. NEVER plain answer for these — even if the request sounds like a simple one-liner.
   → ANY request to write, build, code, or generate a program, script, function, app, website, or anything clearly asking for SOURCE CODE as the output
   → code_content must be COMPLETE and working — never truncated, never "// rest of code here"
 
@@ -396,6 +415,29 @@ Rules:
     action = data.get("action","answer")
     if force_action in ("answer","show_images","show_results","answer_with_images"):
         action = force_action
+
+    # SAFETY NET: Groq sometimes misses obvious code requests — catch it deterministically
+    if action not in ("build_code","show_images") and looks_like_code_request(query):
+        code_prompt = f"""The user asked: "{query}"
+
+This is a request for source code. Reply ONLY this JSON, nothing else:
+{{
+  "code_title": "a short 3-6 word title for what the code does",
+  "code_language": "the language as a lowercase string, e.g. python, javascript, html",
+  "code_content": "the COMPLETE, working, runnable code — no placeholders, no '...rest of code', no TODOs",
+  "code_explainer": "a short 2-3 sentence explanation of what the code does and how to use/run it"
+}}"""
+        try:
+            code_text = ask_groq(code_prompt)
+            cs, ce = code_text.find('{'), code_text.rfind('}')+1
+            code_data = json.loads(code_text[cs:ce])
+            if code_data.get("code_content","").strip():
+                action = "build_code"
+                data.update(code_data)
+        except Exception as e:
+            print(f"[code safety-net failed] {e}")
+            # leave action as whatever Groq originally said — graceful, no crash
+
     qty = max(1, min(explicit_qty or int(data.get("quantity",5)), 100))
 
     if action == "open_website":
