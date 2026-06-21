@@ -326,7 +326,7 @@ Reply ONLY this JSON, nothing else:
   "search_query": "perfect specific search query matching EXACTLY what user asked — do not change subject, gender, topic",
   "image_search_query": "very specific image query — preserve EXACT subject, gender, age, style — e.g. if user says boys, write boys NOT girls",
   "direct_url": "full URL ONLY if user named a literal known site by name/domain (e.g. youtube.com, amazon), else empty string",
-  "thing_query": "if action=go_to_thing: the BEST possible search query to find the exact real-world thing being described — turn a vague description into a concrete, specific query. e.g. 'that movie about the moving train with the heist' → 'Bullet Train 2022 movie trailer'. e.g. 'that song that goes na na na hey hey' → 'Hey Baby na na na song'. Be as specific as you can from context clues.",
+  "thing_query": "if action=go_to_thing: identify the exact real-world thing being described, then build a search query for the SPECIFIC destination the user actually wants — read their exact words for the clue. If they say 'watch'/'stream' → find where to watch it. If they say 'trailer' → find the trailer. If they just say 'open'/'show me'/'take me to' with no extra clue → find that thing's main official/primary page (e.g. its official site, its Wikipedia, its IMDB, its store page — whatever is the single best canonical destination for that exact kind of thing). NEVER default to 'trailer' unless the user's words actually suggest video/trailer/watch. e.g. 'that movie about the moving train with the heist' → 'Bullet Train 2022 movie official page'. e.g. 'watch that movie about the heist on a train' → 'Bullet Train 2022 watch online streaming'. e.g. 'that song that goes na na na hey hey' → 'Hey Baby na na na song'. e.g. 'the new iPhone' → 'iPhone 17 official Apple page'. Be as specific and literal to their actual request as possible.",
   "thing_type": "if action=go_to_thing: one of movie, show, song, product, app, game, person, place, other",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
   "answer": "if action is answer or answer_with_images: a clear, concise answer — 2-4 short sentences for simple facts, max 2 short paragraphs for anything more complex. Get straight to the point, no filler intro, no restating the question. else empty string"
@@ -398,17 +398,7 @@ Rules:
 
     if action == "go_to_thing":
         thing_q = data.get("thing_query") or data.get("search_query", query)
-        thing_type = data.get("thing_type", "other")
-        # bias the search toward the right kind of destination page
-        type_hint = {
-            "movie": "trailer OR official site",
-            "show": "trailer OR official site",
-            "song": "official music video",
-            "product": "official product page",
-            "app": "official site OR app store",
-            "game": "official site OR store page",
-        }.get(thing_type, "")
-        hits = exa_search(f"{thing_q} {type_hint}".strip(), num=3, include_text=False)
+        hits = exa_search(thing_q, num=3, include_text=False)
         if hits:
             return {
                 "action":"open_website","url":hits[0]["url"],
