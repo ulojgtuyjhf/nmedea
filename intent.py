@@ -264,7 +264,7 @@ def find_social_video(query, platform):
 # ─────────────────────────────────────────────────────────────────
 #  MAIN  understand()
 # ─────────────────────────────────────────────────────────────────
-def understand(query: str):
+def understand(query: str, force_action: str = None):
     explicit_qty = extract_quantity(query)
 
     # ── Social URL pasted directly? ──
@@ -341,6 +341,8 @@ Rules:
         }
 
     action = data.get("action","answer")
+    if force_action in ("answer","show_images","show_results","answer_with_images"):
+        action = force_action
     qty = max(1, min(explicit_qty or int(data.get("quantity",5)), 100))
 
     if action == "open_website":

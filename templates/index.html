@@ -246,6 +246,11 @@
     /* full-width on mobile, constrained on desktop */
     .rInner{width:100%;padding:0 16px;max-width:1100px}
     #qEcho{font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px;font-family:inherit;line-height:1.3}
+    #intentBar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-size:12px;color:var(--muted)}
+    #intentBar .iLabel{white-space:nowrap}
+    #intentBar .iChip{border:1px solid var(--border);background:transparent;color:var(--text);font-size:12px;padding:5px 12px;border-radius:100px;cursor:pointer;white-space:nowrap;transition:background 0.15s,border-color 0.15s}
+    #intentBar .iChip:hover{background:var(--surface);border-color:var(--muted)}
+    #intentBar .iChip:active{transform:scale(0.97)}
     #rCols{display:flex;flex-direction:column;gap:0;width:100%}
     @media(min-width:860px){
       #rScroll{padding:28px 32px 80px}
@@ -538,6 +543,7 @@
     <div id="rScroll">
       <div class="rInner">
         <div id="qEcho"></div>
+        <div id="intentBar" style="display:none"></div>
         <div id="statusW"></div>
         <div id="skelWrap" style="display:none"><div class="shimLine" style="width:100%"></div><div class="shimLine" style="width:78%"></div><div class="shimLine" style="width:90%"></div><div class="shimLine" style="width:62%"></div></div>
         <div id="rCols">
@@ -737,6 +743,7 @@ function clearResults(){
   document.getElementById('lnkDivider').style.display='none';
   document.getElementById('imgDivider').style.display='none';
   skelWrap.style.display='none';
+  document.getElementById('intentBar').style.display='none';document.getElementById('intentBar').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -744,7 +751,7 @@ function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.
 const STATUSMSGS=['Understanding your request…','Searching the web…','Finding the best answers…','Composing your results…','Almost ready…'];
 function glowStatus(msg){return '<span class="glowMsg"><span class="glowDot"></span>'+msg+'</span>';}
 
-async function doSearch(qOv){
+async function doSearch(qOv,forceAction){
   const q=(qOv||SI.value||HS.value).trim();
   if(!q||busy)return;
 
@@ -760,6 +767,7 @@ async function doSearch(qOv){
   // build query with deep mode flag
   const payload={query:q};
   if(deepMode)payload.deep=true;
+  if(forceAction)payload.force_action=forceAction;
 
   try{
     const res=await fetch('/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -782,6 +790,24 @@ async function doSearch(qOv){
 
 function renderResults(data,q){
   let hasImages=false;
+
+  // INTENT BAR — show what we understood + escape-hatch chips
+  const ibar=document.getElementById('intentBar');
+  const chipDefs=[
+    {action:'answer',label:'Just answer'},
+    {action:'show_images',label:'Show images'},
+    {action:'show_results',label:'Show links'},
+  ].filter(c=>c.action!==data.action);
+  if(data.understood){
+    ibar.innerHTML='<span class="iLabel">'+esc(data.understood)+'</span>'+
+      chipDefs.map(c=>'<button class="iChip" data-act="'+c.action+'">'+c.label+'</button>').join('');
+    ibar.style.display='flex';
+    ibar.querySelectorAll('.iChip').forEach(btn=>{
+      btn.onclick=()=>doSearch(q,btn.dataset.act);
+    });
+  }else{
+    ibar.style.display='none';ibar.innerHTML='';
+  }
 
   // SOCIAL CARD
   if(data.social){
