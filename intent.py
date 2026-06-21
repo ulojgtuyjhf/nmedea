@@ -321,11 +321,13 @@ def understand(query: str, force_action: str = None):
 
 Reply ONLY this JSON, nothing else:
 {{
-  "action": "answer OR open_website OR show_images OR show_results OR answer_with_images",
+  "action": "answer OR open_website OR go_to_thing OR show_images OR show_results OR answer_with_images",
   "understood": "what user wants in one clear sentence",
   "search_query": "perfect specific search query matching EXACTLY what user asked — do not change subject, gender, topic",
   "image_search_query": "very specific image query — preserve EXACT subject, gender, age, style — e.g. if user says boys, write boys NOT girls",
-  "direct_url": "full URL if user wants to open a site, else empty string",
+  "direct_url": "full URL ONLY if user named a literal known site by name/domain (e.g. youtube.com, amazon), else empty string",
+  "thing_query": "if action=go_to_thing: the BEST possible search query to find the exact real-world thing being described — turn a vague description into a concrete, specific query. e.g. 'that movie about the moving train with the heist' → 'Bullet Train 2022 movie trailer'. e.g. 'that song that goes na na na hey hey' → 'Hey Baby na na na song'. Be as specific as you can from context clues.",
+  "thing_type": "if action=go_to_thing: one of movie, show, song, product, app, game, person, place, other",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
   "answer": "if action is answer or answer_with_images: a clear, concise answer — 2-4 short sentences for simple facts, max 2 short paragraphs for anything more complex. Get straight to the point, no filler intro, no restating the question. else empty string"
 }}
@@ -334,6 +336,14 @@ Decide the action using these grounded examples — match the closest pattern, d
 
 action=open_website
   "open youtube.com" / "go to wikipedia" / "take me to amazon"
+  → ONLY when the user names a specific, known site/domain literally. direct_url = that real domain.
+
+action=go_to_thing
+  "open that movie about the moving train" / "show me that song that goes na na na hey hey" / "take me to the new iPhone page"
+  "find that show with the dragons" / "open the trailer for the new spiderman movie" / "go to that game everyone's playing, the purple one"
+  → ANY time the user describes something (movie, show, song, product, app, game, person, place) they want to be taken DIRECTLY to, rather than asking a question about it or wanting a list of links about it
+  → trigger words: open/show me/take me to/go to/find + a vague/descriptive reference to a specific real thing, NOT a literal URL
+  → this is the user wanting to land INSIDE the actual thing (its trailer, its store page, its official page) — not read about it, not get a list
 
 action=show_images
   "give me 5 images of a BMW" / "photos of the Eiffel Tower" / "show me pictures of cats" / "image of X" / "pics of X"
@@ -385,6 +395,28 @@ Rules:
             "understood":data.get("understood",""),
             "answer":"","images":[],"results":[],"sources":[],"social":None,"wiki":None,
         }
+
+    if action == "go_to_thing":
+        thing_q = data.get("thing_query") or data.get("search_query", query)
+        thing_type = data.get("thing_type", "other")
+        # bias the search toward the right kind of destination page
+        type_hint = {
+            "movie": "trailer OR official site",
+            "show": "trailer OR official site",
+            "song": "official music video",
+            "product": "official product page",
+            "app": "official site OR app store",
+            "game": "official site OR store page",
+        }.get(thing_type, "")
+        hits = exa_search(f"{thing_q} {type_hint}".strip(), num=3, include_text=False)
+        if hits:
+            return {
+                "action":"open_website","url":hits[0]["url"],
+                "understood":data.get("understood",""),
+                "answer":"","images":[],"results":[],"sources":[],"social":None,"wiki":None,
+            }
+        # nothing found — fall back to a results list instead of a dead end
+        action = "show_results"
 
     images, results, sources = [], [], []
     answer = data.get("answer","")
