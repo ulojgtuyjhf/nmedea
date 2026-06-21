@@ -297,14 +297,32 @@ Reply ONLY this JSON, nothing else:
   "answer": "if action is answer or answer_with_images: COMPLETE detailed response. else empty string"
 }}
 
+Decide the action using these grounded examples — match the closest pattern, don't overthink it:
+
+action=open_website
+  "open youtube.com" / "go to wikipedia" / "take me to amazon"
+
+action=show_images
+  "give me 5 images of a BMW" / "photos of the Eiffel Tower" / "show me pictures of cats"
+  → answer="" always for this action
+
+action=show_results
+  "give me a list of vegan restaurants" / "links about climate change" / "show me 10 results for react tutorials"
+  "give me one result for the best pizza place" / "just the single best link for X" / "I'm feeling lucky, find me the top site for X"
+  → if user asks for ONE / a single / the best / the top result, set quantity=1 — still action=show_results, just with quantity 1
+
+action=answer
+  "what is the capital of France" / "explain quantum computing" / "why is the sky blue" / "who won the 2022 world cup"
+  → any question expecting a written explanation, no links or images needed
+
+action=answer_with_images
+  "tell me about the Eiffel Tower and show me a picture" / "explain how engines work with diagrams"
+  → only when user explicitly wants BOTH an explanation AND visuals
+
 Rules:
-- open/go to/visit → action=open_website
-- wants images/photos/pictures only → action=show_images, answer=""
-- wants images AND info → action=answer_with_images
-- general question → action=answer, full answer
-- wants list/results/links → action=show_results
-- quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5}
-- NEVER change the subject matter of what the user asked"""
+- quantity = EXACTLY {explicit_qty if explicit_qty is not None else 5}, unless the query itself implies "one/single/best/top" → then quantity=1
+- NEVER change the subject matter of what the user asked
+- when in doubt between show_results and answer, prefer answer only if the user is clearly asking a question (who/what/why/how/explain); prefer show_results if they're asking to find/give/show a thing/place/link"""
 
     try:
         text = ask_groq(prompt)
