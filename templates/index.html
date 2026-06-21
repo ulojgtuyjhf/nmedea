@@ -849,20 +849,11 @@ async function doSearch(qOv,forceAction){
 function renderResults(data,q){
   let hasImages=false;
 
-  // INTENT BAR — show what we understood + escape-hatch chips
+  // INTENT LINE — show what we understood (no action chips, they weren't reliable)
   const ibar=document.getElementById('intentBar');
-  const chipDefs=[
-    {action:'answer',label:'Just answer'},
-    {action:'show_images',label:'Show images'},
-    {action:'show_results',label:'Show links'},
-  ].filter(c=>c.action!==data.action);
   if(data.understood){
-    ibar.innerHTML='<span class="iLabel">'+esc(data.understood)+'</span>'+
-      chipDefs.map(c=>'<button class="iChip" data-act="'+c.action+'">'+c.label+'</button>').join('');
+    ibar.innerHTML='<span class="iLabel">'+esc(data.understood)+'</span>';
     ibar.style.display='flex';
-    ibar.querySelectorAll('.iChip').forEach(btn=>{
-      btn.onclick=()=>doSearch(q,btn.dataset.act);
-    });
   }else{
     ibar.style.display='none';ibar.innerHTML='';
   }
@@ -955,7 +946,7 @@ function renderResults(data,q){
   }
 
   // WEB RESULTS
-  if(data.results&&data.results.length){
+  if(data.results&&data.results.length&&data.action!=='show_images'){
     lo.innerHTML='';
     data.results.forEach(r=>{
       let dom='';try{dom=new URL(r.url).hostname.replace('www.','');}catch(e){}

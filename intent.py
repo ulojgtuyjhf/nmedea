@@ -303,8 +303,9 @@ action=open_website
   "open youtube.com" / "go to wikipedia" / "take me to amazon"
 
 action=show_images
-  "give me 5 images of a BMW" / "photos of the Eiffel Tower" / "show me pictures of cats"
-  → answer="" always for this action
+  "give me 5 images of a BMW" / "photos of the Eiffel Tower" / "show me pictures of cats" / "image of X" / "pics of X"
+  → HARD RULE: if the word "image(s)", "photo(s)", "picture(s)", or "pic(s)" appears ANYWHERE in the query, action MUST be show_images (or answer_with_images only if they also explicitly ask to explain/tell about something). NEVER show_results, NEVER plain answer.
+  → answer="" always for show_images — no exceptions, no explanation text, images ONLY
 
 action=show_results
   "give me a list of vegan restaurants" / "links about climate change" / "show me 10 results for react tutorials"
@@ -374,12 +375,12 @@ Rules:
         images = tavily_images(img_q, qty)
 
     # ── WEB via EXA ──
-    if not results:
+    if not results and action != "show_images":
         exa_n = qty if action == "show_results" else 5
         exa_results = exa_search(data.get("search_query", query), num=min(exa_n,10))
         results = exa_results[:qty] if action=="show_results" else exa_results[:4]
 
-    exa_for_sources = exa_search(data.get("search_query",query), num=5) if not results else results
+    exa_for_sources = exa_search(data.get("search_query",query), num=5) if (not results and action != "show_images") else results
     for item in exa_for_sources[:6]:
         dom = item.get("domain","")
         if dom and not any(s["domain"]==dom for s in sources):
