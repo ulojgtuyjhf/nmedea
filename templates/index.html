@@ -84,6 +84,18 @@
 
     /* ══ HISTORY PANEL ══ */
     #histOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;display:none;backdrop-filter:blur(2px)}
+    #lbOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1500;display:none;align-items:center;justify-content:center;flex-direction:column}
+    #lbOverlay.open{display:flex}
+    #lbImg{max-width:92vw;max-height:78vh;object-fit:contain;border-radius:4px}
+    #lbClose{position:absolute;top:18px;right:18px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    #lbClose svg{width:20px;height:20px}
+    .lbNav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .lbNav svg{width:22px;height:22px}
+    #lbPrev{left:14px}
+    #lbNext{right:14px}
+    #lbCounter{color:rgba(255,255,255,0.7);font-size:13px;margin-top:14px}
+    #lbOpenSrc{color:#9bbcff;font-size:13px;margin-top:6px;text-decoration:underline}
+    @media(max-width:600px){.lbNav{width:38px;height:38px}#lbImg{max-height:70vh}}
     #histOverlay.open{display:block}
     #histPanel{position:fixed;top:0;left:-310px;width:290px;height:100%;background:var(--card);z-index:700;transition:left 0.3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:12px 0 40px rgba(0,0,0,0.2)}
     #histPanel.open{left:0}
@@ -269,6 +281,7 @@
     #statusW{margin-bottom:16px;min-height:36px}
     .rSec{margin-bottom:24px}
     .secLbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+    .aiBadge{background:linear-gradient(135deg,#4f8ef7,#9b72f7);color:#fff;font-size:9px;font-weight:800;letter-spacing:0.05em;padding:3px 7px;border-radius:5px;line-height:1}
     .secLbl svg{width:12px;height:12px}
     .rSecDivider{display:flex;align-items:center;gap:12px;margin:4px 0 24px}
     .rSecDivider::before,.rSecDivider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
@@ -276,6 +289,8 @@
 
     /* ANSWER CARD */
     #answerBody{font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;border-left:3px solid transparent}
+    .ansLink{color:#4f8ef7;text-decoration:underline;text-decoration-color:rgba(79,142,247,0.35);text-underline-offset:2px;font-weight:600;word-break:break-word}
+    .ansLink:hover{text-decoration-color:#4f8ef7}
     #answerBody::before{content:'';position:absolute;inset:0;left:-1px;border-radius:14px;background:linear-gradient(180deg,#4f8ef7,#9b72f7) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none}
     #srcChips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
     .srcChip{display:flex;align-items:center;gap:5px;padding:5px 11px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted);text-decoration:none;background:var(--card);transition:background 0.12s,color 0.12s}
@@ -411,6 +426,16 @@
   <div id="progBar"></div>
 
   <!-- HISTORY PANEL -->
+  <!-- IMAGE LIGHTBOX -->
+  <div id="lbOverlay">
+    <button id="lbClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button id="lbPrev" class="lbNav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <img id="lbImg" src="" alt=""/>
+    <button id="lbNext" class="lbNav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div id="lbCounter"></div>
+    <a id="lbOpenSrc" href="" target="_blank" rel="noopener">Open original</a>
+  </div>
+
   <div id="histOverlay"></div>
   <div id="histPanel">
     <div class="hPH"><span class="hPT">History</span><button class="hPC" id="histClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -549,7 +574,7 @@
         <div id="rCols">
           <div id="rLeft">
             <div id="answerSection" class="rSec" style="display:none">
-              <div class="secLbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Answer</div>
+              <div class="secLbl aiLbl"><span class="aiBadge">AI</span>Answer</div>
               <div id="answerBody"></div>
               <div id="srcChips"></div>
             </div>
@@ -581,6 +606,39 @@ function esc(s){
   if(s==null)return '';
   return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function linkify(s){
+  const safe=esc(s);
+  return safe.replace(/(https?:\/\/[^\s<]+)/g,url=>'<a href="'+url+'" target="_blank" rel="noopener" class="ansLink">'+url+'</a>');
+}
+
+// ── IMAGE LIGHTBOX ──
+let lbList=[],lbIdx=0;
+const lbOverlay=document.getElementById('lbOverlay'),lbImg=document.getElementById('lbImg'),
+  lbCounter=document.getElementById('lbCounter'),lbOpenSrc=document.getElementById('lbOpenSrc'),
+  lbPrev=document.getElementById('lbPrev'),lbNext=document.getElementById('lbNext');
+function openLightbox(urls,idx){
+  lbList=urls;lbIdx=idx;renderLightbox();lbOverlay.classList.add('open');
+}
+function renderLightbox(){
+  if(!lbList.length)return;
+  lbImg.src=lbList[lbIdx];
+  lbOpenSrc.href=lbList[lbIdx];
+  lbCounter.textContent=(lbIdx+1)+' of '+lbList.length;
+  lbCounter.style.display=lbList.length>1?'block':'none';
+  lbPrev.style.display=lbList.length>1?'flex':'none';
+  lbNext.style.display=lbList.length>1?'flex':'none';
+}
+function closeLightbox(){lbOverlay.classList.remove('open');}
+lbPrev.onclick=()=>{lbIdx=(lbIdx-1+lbList.length)%lbList.length;renderLightbox();};
+lbNext.onclick=()=>{lbIdx=(lbIdx+1)%lbList.length;renderLightbox();};
+document.getElementById('lbClose').onclick=closeLightbox;
+lbOverlay.addEventListener('click',e=>{if(e.target===lbOverlay)closeLightbox();});
+document.addEventListener('keydown',e=>{
+  if(!lbOverlay.classList.contains('open'))return;
+  if(e.key==='Escape')closeLightbox();
+  if(e.key==='ArrowLeft')lbPrev.onclick();
+  if(e.key==='ArrowRight')lbNext.onclick();
+});
 
 const fbCfg={apiKey:"AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ",authDomain:"globalchat-2d669.firebaseapp.com",projectId:"globalchat-2d669",messagingSenderId:"178714711978",appId:"1:178714711978:web:fb831188be23e62a4bbdd3",databaseURL:"https://globalchat-2d669-default-rtdb.firebaseio.com/"};
 firebase.initializeApp(fbCfg);
@@ -825,7 +883,7 @@ function renderResults(data,q){
       const src=typeof imgs[0]==='string'?imgs[0]:imgs[0].url;
       const domain=typeof imgs[0]==='object'&&imgs[0].source?imgs[0].source:'';
       const heroKill=setTimeout(()=>{if(!heroImg.classList.contains('loaded'))heroImgWrap.style.display='none';},8000);
-      heroImg.src=src;heroImg.onclick=()=>window.open(src,'_blank');
+      heroImg.src=src;heroImg.onclick=()=>openLightbox([src],0);
       heroImg.onload=()=>{clearTimeout(heroKill);heroImg.style.opacity='1';heroImg.classList.add('loaded');};heroImg.style.opacity='0';heroImg.classList.remove('loaded');
       heroImg.onerror=()=>{clearTimeout(heroKill);heroImgWrap.style.display='none';};
       heroImgSrc.innerHTML=domain?'<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>':'';
@@ -836,7 +894,8 @@ function renderResults(data,q){
       const cEl=document.createElement('div');cEl.className='imgCount';
       cEl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+imgs.length+' images';
       imagesSection.prepend(cEl);
-      imgs.forEach(imgObj=>{
+      const lbUrls=imgs.map(o=>typeof o==='string'?o:o.url).filter(Boolean);
+      imgs.forEach((imgObj,idx)=>{
         const src=typeof imgObj==='string'?imgObj:imgObj.url;
         const domain=typeof imgObj==='object'&&imgObj.source?imgObj.source:'';
         if(!src)return;
@@ -848,7 +907,7 @@ function renderResults(data,q){
         imgEl.src=src;
         tile.appendChild(imgEl);
         if(domain){const sd=document.createElement('div');sd.className='imgTileSrc';sd.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(domain)+'</span>';tile.appendChild(sd);}
-        tile.addEventListener('click',()=>window.open(src,'_blank'));
+        tile.addEventListener('click',()=>openLightbox(lbUrls,idx));
         ig.appendChild(tile);
       });
       if(imgs.length>6)document.getElementById('rLeft').prepend(imagesSection);
@@ -888,7 +947,7 @@ function renderResults(data,q){
       });
       ab.innerHTML=html;
     }else{
-      ab.textContent=data.answer;
+      ab.innerHTML=linkify(data.answer);
     }
     sc.innerHTML='';
     (data.sources||[]).forEach(s=>{const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(s.domain)+'</span>';sc.appendChild(a);});

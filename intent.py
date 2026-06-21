@@ -294,7 +294,7 @@ Reply ONLY this JSON, nothing else:
   "image_search_query": "very specific image query — preserve EXACT subject, gender, age, style — e.g. if user says boys, write boys NOT girls",
   "direct_url": "full URL if user wants to open a site, else empty string",
   "quantity": {explicit_qty if explicit_qty is not None else 5},
-  "answer": "if action is answer or answer_with_images: COMPLETE detailed response. else empty string"
+  "answer": "if action is answer or answer_with_images: a clear, concise answer — 2-4 short sentences for simple facts, max 2 short paragraphs for anything more complex. Get straight to the point, no filler intro, no restating the question. else empty string"
 }}
 
 Decide the action using these grounded examples — match the closest pattern, don't overthink it:
