@@ -289,6 +289,13 @@
 
     /* ANSWER CARD */
     #answerBody{font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;border-left:3px solid transparent}
+    #wikiCard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-top:14px;align-items:flex-start}
+    #wikiCard img{width:64px;height:64px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--surface)}
+    #wikiCard .wikiBody{flex:1;min-width:0}
+    #wikiCard .wikiLbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    #wikiCard .wikiTitle{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+    #wikiCard .wikiText{font-size:13px;line-height:1.6;color:var(--muted)}
+    #wikiCard .wikiLink{font-size:12px;color:#4f8ef7;text-decoration:none;display:inline-block;margin-top:6px}
     .ansLink{color:#4f8ef7;text-decoration:underline;text-decoration-color:rgba(79,142,247,0.35);text-underline-offset:2px;font-weight:600;word-break:break-word}
     .ansLink:hover{text-decoration-color:#4f8ef7}
     #answerBody::before{content:'';position:absolute;inset:0;left:-1px;border-radius:14px;background:linear-gradient(180deg,#4f8ef7,#9b72f7) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude;pointer-events:none}
@@ -578,6 +585,7 @@
               <div id="answerBody"></div>
               <div id="srcChips"></div>
             </div>
+            <div id="wikiCard" class="rSec" style="display:none"></div>
             <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
             <div id="linksSection" class="rSec" style="display:none">
               <div id="linksOut"></div>
@@ -802,6 +810,7 @@ function clearResults(){
   document.getElementById('imgDivider').style.display='none';
   skelWrap.style.display='none';
   document.getElementById('intentBar').style.display='none';document.getElementById('intentBar').innerHTML='';
+  document.getElementById('wikiCard').style.display='none';document.getElementById('wikiCard').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -943,6 +952,21 @@ function renderResults(data,q){
     sc.innerHTML='';
     (data.sources||[]).forEach(s=>{const a=document.createElement('a');a.className='srcChip';a.href=s.url;a.target='_blank';a.innerHTML='<img src="https://www.google.com/s2/favicons?domain='+s.domain+'&sz=32" onerror="this.style.display=\'none\'"><span>'+esc(s.domain)+'</span>';sc.appendChild(a);});
     answerSection.style.display='block';
+  }
+
+  // WIKIPEDIA QUICK FACTS — optional enrichment, shown alongside the answer
+  const wikiCard=document.getElementById('wikiCard');
+  if(data.wiki&&data.wiki.summary){
+    const w=data.wiki;
+    const thumb=w.thumbnail?'<img src="'+w.thumbnail+'" alt="" onerror="this.style.display=\'none\'">':'';
+    wikiCard.innerHTML=thumb+'<div class="wikiBody"><div class="wikiLbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Quick Facts — Wikipedia</div>'
+      +'<div class="wikiTitle">'+esc(w.title)+'</div>'
+      +'<div class="wikiText">'+esc(w.summary)+'</div>'
+      +(w.url?'<a class="wikiLink" href="'+w.url+'" target="_blank" rel="noopener">Read more on Wikipedia →</a>':'')
+      +'</div>';
+    wikiCard.style.display='flex';
+  }else{
+    wikiCard.style.display='none';wikiCard.innerHTML='';
   }
 
   // WEB RESULTS

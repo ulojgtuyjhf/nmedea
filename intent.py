@@ -262,6 +262,39 @@ def find_social_video(query, platform):
 
 
 # ─────────────────────────────────────────────────────────────────
+#  WIKIPEDIA  — enrichment only, never replaces the main answer
+# ─────────────────────────────────────────────────────────────────
+def wikipedia_summary(topic: str):
+    """Fetch a short factual summary + thumbnail for a likely entity/topic.
+    Returns None if no matching page exists — caller should treat this as
+    optional enrichment, not a required result."""
+    try:
+        title = requests.utils.quote(topic.strip().replace(" ", "_"))
+        r = requests.get(
+            f"https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
+            headers={"User-Agent": "nmedea/1.0 (https://nmedea.onrender.com)"},
+            timeout=8,
+        )
+        if r.status_code != 200:
+            return None
+        data = r.json()
+        if data.get("type") == "disambiguation":
+            return None
+        extract = data.get("extract", "")
+        if not extract or len(extract) < 40:
+            return None
+        return {
+            "title": data.get("title", topic),
+            "summary": extract,
+            "thumbnail": (data.get("thumbnail") or {}).get("source", ""),
+            "url": (data.get("content_urls", {}).get("desktop", {}) or {}).get("page", ""),
+        }
+    except Exception as e:
+        print(f"[wikipedia error] {e}")
+        return None
+
+
+# ─────────────────────────────────────────────────────────────────
 #  MAIN  understand()
 # ─────────────────────────────────────────────────────────────────
 def understand(query: str, force_action: str = None):
@@ -281,7 +314,7 @@ def understand(query: str, force_action: str = None):
             "url": social_url,
             "understood": f"Show {social_platform} content",
             "answer": "", "images": [], "results": [], "sources": [],
-            "social": social_meta,
+            "social": social_meta, "wiki": None,
         }
 
     prompt = f"""You are the world's most powerful AI search engine. User said: "{query}"
@@ -350,7 +383,7 @@ Rules:
         return {
             "action":"open_website","url":data.get("direct_url",""),
             "understood":data.get("understood",""),
-            "answer":"","images":[],"results":[],"sources":[],"social":None,
+            "answer":"","images":[],"results":[],"sources":[],"social":None,"wiki":None,
         }
 
     images, results, sources = [], [], []
@@ -386,6 +419,11 @@ Rules:
         if dom and not any(s["domain"]==dom for s in sources):
             sources.append({"domain":dom,"url":item["url"]})
 
+    # ── WIKIPEDIA enrichment (optional, never replaces the main answer) ──
+    wiki = None
+    if action in ["answer","answer_with_images"]:
+        wiki = wikipedia_summary(data.get("search_query", query))
+
     return {
         "action": action,
         "url": "",
@@ -395,4 +433,5 @@ Rules:
         "results": results,
         "sources": sources,
         "social": social_meta,
+        "wiki": wiki,
     }
