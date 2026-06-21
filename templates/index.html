@@ -290,6 +290,23 @@
     /* ANSWER CARD */
     #answerBody{font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;border-left:3px solid transparent}
     #wikiCard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-top:14px;align-items:flex-start}
+
+    /* CODE ARTIFACT CONTAINER */
+    #codeSection{background:#1e1e1e;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .codeTopBar{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:#161616;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .codeTopLeft{display:flex;align-items:center;gap:10px;min-width:0}
+    .codeDots{display:flex;gap:6px;flex-shrink:0}
+    .codeDots span{width:10px;height:10px;border-radius:50%;display:block}
+    .codeDots span:nth-child(1){background:#ff5f56}
+    .codeDots span:nth-child(2){background:#ffbd2e}
+    .codeDots span:nth-child(3){background:#27c93f}
+    .codeTitle{font-size:12.5px;font-weight:600;color:#ddd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .codeLang{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#888;background:rgba(255,255,255,0.06);padding:3px 8px;border-radius:5px;flex-shrink:0}
+    .codeCopyBtn{background:rgba(255,255,255,0.08);color:#ddd;border:none;font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:7px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:5px}
+    .codeCopyBtn:hover{background:rgba(255,255,255,0.15)}
+    .codeCopyBtn svg{width:13px;height:13px}
+    #codeBody{margin:0;padding:18px 20px;overflow-x:auto;font-family:'SF Mono',Monaco,'Courier New',monospace;font-size:13px;line-height:1.7;color:#d4d4d4;white-space:pre}
+    .codeExplainer{padding:14px 18px;background:var(--card);border-top:1px solid var(--border);font-size:13px;line-height:1.6;color:var(--muted)}
     #wikiCard img{width:64px;height:64px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--surface)}
     #wikiCard .wikiBody{flex:1;min-width:0}
     #wikiCard .wikiLbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
@@ -586,6 +603,7 @@
               <div id="srcChips"></div>
             </div>
             <div id="wikiCard" class="rSec" style="display:none"></div>
+            <div id="codeSection" class="rSec" style="display:none"></div>
             <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
             <div id="linksSection" class="rSec" style="display:none">
               <div id="linksOut"></div>
@@ -811,6 +829,7 @@ function clearResults(){
   skelWrap.style.display='none';
   document.getElementById('intentBar').style.display='none';document.getElementById('intentBar').innerHTML='';
   document.getElementById('wikiCard').style.display='none';document.getElementById('wikiCard').innerHTML='';
+  document.getElementById('codeSection').style.display='none';document.getElementById('codeSection').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -857,6 +876,30 @@ async function doSearch(qOv,forceAction){
 
 function renderResults(data,q){
   let hasImages=false;
+
+  // CODE ARTIFACT
+  const codeSec=document.getElementById('codeSection');
+  if(data.action==='build_code'&&data.code&&data.code.content){
+    const c=data.code;
+    codeSec.innerHTML='<div class="codeTopBar">'
+      +'<div class="codeTopLeft"><div class="codeDots"><span></span><span></span><span></span></div>'
+      +'<span class="codeTitle">'+esc(c.title)+'</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'
+      +'<span class="codeLang">'+esc(c.language)+'</span>'
+      +'<button class="codeCopyBtn" id="codeCopyBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>'
+      +'</div></div>'
+      +'<pre id="codeBody">'+esc(c.content)+'</pre>'
+      +(c.explainer?'<div class="codeExplainer">'+esc(c.explainer)+'</div>':'');
+    codeSec.style.display='block';
+    document.getElementById('codeCopyBtn').onclick=function(){
+      navigator.clipboard.writeText(c.content).then(()=>{
+        this.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Copied';
+        setTimeout(()=>{this.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy';},1800);
+      });
+    };
+  }else{
+    codeSec.style.display='none';codeSec.innerHTML='';
+  }
 
   // INTENT LINE — show what we understood (no action chips, they weren't reliable)
   const ibar=document.getElementById('intentBar');
