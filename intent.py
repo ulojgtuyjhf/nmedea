@@ -354,6 +354,8 @@ Rules:
 
     images, results, sources = [], [], []
     answer = data.get("answer","")
+    if action == "show_images":
+        answer = ""
     social_meta = None
 
     # ── Social find ──
