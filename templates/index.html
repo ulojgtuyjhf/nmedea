@@ -41,16 +41,16 @@
     .nbtn svg{width:16px;height:16px}
     @media(max-width:600px){#backBtn,#refreshBtn,#newBtn{display:none}}
     #sw{flex:1;position:relative;display:flex;align-items:center;min-width:0;z-index:200}
-    #searchInput{width:100%;height:36px;background:var(--input);border:1.5px solid var(--border);border-radius:18px;padding:0 78px 0 36px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+    #searchInput{width:100%;height:36px;background:var(--input);border:1.5px solid var(--border);border-radius:18px;padding:0 106px 0 36px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
     #searchInput::placeholder{color:var(--muted)}
     #searchInput:focus{border-color:rgba(128,128,128,0.35);box-shadow:0 0 0 3px rgba(0,0,0,0.05)}
     #barIcon{position:absolute;left:12px;pointer-events:none;color:var(--muted);display:flex;align-items:center}
     #barIcon svg{width:14px;height:14px}
     /* deep research toggle, icon only */
-    .deepBtn{position:absolute;right:34px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;padding:0}
+    .deepBtn{position:absolute;right:64px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;padding:0}
     .deepBtn.on{border-color:var(--blue);color:var(--blue);background:rgba(26,106,240,0.1)}
     .deepBtn svg{width:13px;height:13px}
-    #clearBtn{position:absolute;right:64px;width:20px;height:20px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
+    #clearBtn{position:absolute;right:92px;width:20px;height:20px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
     #clearBtn svg{width:13px;height:13px}
     #sendBtn{position:absolute;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:var(--text);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
     #sendBtn:hover{transform:scale(1.1)}
@@ -84,6 +84,56 @@
 
     /* ══ HISTORY PANEL ══ */
     #histOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;display:none;backdrop-filter:blur(2px)}
+
+    /* ══ VISUAL SEARCH: upload/camera trigger button ══ */
+    .visBtn{position:absolute;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;padding:0;flex-shrink:0}
+    .visBtn:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,106,240,0.08)}
+    .visBtn svg{width:13px;height:13px}
+    #visBtn{right:36px;top:50%;transform:translateY(-50%)}
+    #homeVisBtn{right:118px;top:50%;transform:translateY(-50%);width:30px;height:30px}
+    #homeVisBtn svg{width:15px;height:15px}
+
+    /* ══ ACTION SHEET (choose upload vs camera) ══ */
+    #visSheetOv{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1700;display:none;backdrop-filter:blur(2px)}
+    #visSheetOv.open{display:block}
+    #visSheet{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:20px 20px 0 0;z-index:1701;transform:translateY(100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);padding:10px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(0,0,0,0.18)}
+    #visSheetOv.open #visSheet{transform:translateY(0)}
+    .visSheetGrip{width:36px;height:4px;border-radius:3px;background:var(--border);margin:6px auto 14px}
+    .visSheetTitle{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;padding:0 6px 10px}
+    .visSheetRow{display:flex;align-items:center;gap:14px;padding:14px 10px;border-radius:12px;cursor:pointer;transition:background 0.12s}
+    .visSheetRow:hover,.visSheetRow:active{background:var(--surface)}
+    .visSheetIcon{width:40px;height:40px;border-radius:11px;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text);flex-shrink:0}
+    .visSheetIcon svg{width:19px;height:19px}
+    .visSheetText .vT{font-size:14px;font-weight:600;color:var(--text)}
+    .visSheetText .vS{font-size:12px;color:var(--muted);margin-top:1px}
+    .visSheetCancel{margin-top:6px;text-align:center;padding:13px;font-size:14px;font-weight:600;color:var(--text);background:var(--surface);border-radius:12px;cursor:pointer}
+
+    /* ══ CAMERA MODAL ══ */
+    #camOv{position:fixed;inset:0;background:#000;z-index:1800;display:none;flex-direction:column}
+    #camOv.open{display:flex}
+    #camVideo{flex:1;width:100%;object-fit:cover;background:#000}
+    #camCanvas{display:none}
+    #camTop{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:16px;padding-top:calc(16px + env(safe-area-inset-top));z-index:2}
+    #camTop button{width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.4);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    #camTop button svg{width:19px;height:19px}
+    #camBottom{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;padding:30px;padding-bottom:calc(30px + env(safe-area-inset-bottom));z-index:2}
+    #camShutter{width:72px;height:72px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,0.35);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:transform 0.1s}
+    #camShutter:active{transform:scale(0.9)}
+    #camErr{color:#fff;text-align:center;padding:40px 24px;font-size:14px;line-height:1.7}
+
+    /* ══ IMAGE PREVIEW / VISUAL SEARCH CARD ══ */
+    #visPreviewBar{display:none;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:8px 10px;margin-top:8px}
+    #visPreviewBar.show{display:flex}
+    #visPreviewBar img{width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:var(--surface)}
+    #visPreviewBar .vpInfo{flex:1;min-width:0;font-size:12.5px;color:var(--muted)}
+    #visPreviewBar .vpRemove{width:26px;height:26px;border:none;background:var(--surface);border-radius:50%;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    #visPreviewBar .vpRemove svg{width:12px;height:12px}
+    #visualCard{display:flex;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;align-items:flex-start}
+    #visualCard img{width:96px;height:96px;object-fit:cover;border-radius:12px;flex-shrink:0;background:var(--surface);cursor:pointer}
+    #visualCard .vcBody{flex:1;min-width:0}
+    #visualCard .vcLbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    #visualCard .vcText{font-size:14px;line-height:1.75;color:var(--text);white-space:pre-wrap}
+
     #lbOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1500;display:none;align-items:center;justify-content:center;flex-direction:column}
     #lbOverlay.open{display:flex}
     #lbImg{max-width:92vw;max-height:78vh;object-fit:contain;border-radius:4px}
@@ -228,7 +278,7 @@
     .homeLogoText{font-size:30px;font-weight:400;letter-spacing:-0.5px;color:var(--text);font-family:'DM Serif Display',serif}
     .homeLogoAi{font-size:10px;font-weight:700;color:var(--blue);background:rgba(26,106,240,0.09);padding:3px 7px;border-radius:5px;margin-left:4px;align-self:flex-start;margin-top:8px}
     #homeSW{position:relative;width:100%;margin-bottom:0;z-index:200}
-    #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 124px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
+    #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 158px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
     #homeSearch::placeholder{color:var(--muted)}
     #homeSearch:focus{border-color:rgba(128,128,128,0.28);box-shadow:0 8px 28px rgba(0,0,0,0.09)}
     #homeClearBtn{position:absolute;right:84px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
@@ -305,7 +355,19 @@
     .codeCopyBtn{background:rgba(255,255,255,0.08);color:#ddd;border:none;font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:7px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:5px}
     .codeCopyBtn:hover{background:rgba(255,255,255,0.15)}
     .codeCopyBtn svg{width:13px;height:13px}
-    #codeBody{margin:0;padding:18px 20px;overflow-x:auto;font-family:'SF Mono',Monaco,'Courier New',monospace;font-size:13px;line-height:1.7;color:#d4d4d4;white-space:pre}
+    #codeBody{margin:0;padding:18px 20px;overflow-x:auto;overflow-y:auto;max-height:340px;font-family:'SF Mono',Monaco,'Courier New',monospace;font-size:13px;line-height:1.7;color:#d4d4d4;white-space:pre;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.18) transparent}
+    #codeBody::-webkit-scrollbar{width:8px;height:8px}
+    #codeBody::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:8px}
+    #codeBody::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.25)}
+    #codeBody.typing::after{content:'';display:inline-block;width:7px;height:14px;background:#d4d4d4;margin-left:1px;vertical-align:-2px;animation:caretBlink 0.85s step-end infinite}
+    @keyframes caretBlink{0%,100%{opacity:1}50%{opacity:0}}
+    .tok-kw{color:#c792ea}
+    .tok-str{color:#9ece6a}
+    .tok-com{color:#6a737d;font-style:italic}
+    .tok-num{color:#f78c6c}
+    .tok-fn{color:#82aaff}
+    .tok-tag{color:#f07178}
+    .tok-attr{color:#ffcb6b}
     .codeExplainer{padding:14px 18px;background:var(--card);border-top:1px solid var(--border);font-size:13px;line-height:1.6;color:var(--muted)}
     #wikiCard img{width:64px;height:64px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--surface)}
     #wikiCard .wikiBody{flex:1;min-width:0}
@@ -436,6 +498,9 @@
       <div id="barIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
       <input id="searchInput" type="text" placeholder="Search or ask anything…" autocomplete="off" spellcheck="false"/>
       <button id="clearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="visBtn" id="visBtn" title="Search with an image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </button>
       <button class="deepBtn" id="deepBtn" title="Deep Research">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
@@ -461,6 +526,40 @@
   </div>
 
   <div id="histOverlay"></div>
+
+  <!-- VISUAL SEARCH: hidden file input -->
+  <input type="file" id="visFileInput" accept="image/*" style="display:none"/>
+
+  <!-- VISUAL SEARCH: action sheet (upload vs camera) -->
+  <div id="visSheetOv">
+    <div id="visSheet">
+      <div class="visSheetGrip"></div>
+      <div class="visSheetTitle">Search with an image</div>
+      <div class="visSheetRow" id="visRowUpload">
+        <div class="visSheetIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="visSheetText"><div class="vT">Upload a photo</div><div class="vS">Choose from your library</div></div>
+      </div>
+      <div class="visSheetRow" id="visRowCamera">
+        <div class="visSheetIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <div class="visSheetText"><div class="vT">Take a photo</div><div class="vS">Open the camera</div></div>
+      </div>
+      <div class="visSheetCancel" id="visSheetCancel">Cancel</div>
+    </div>
+  </div>
+
+  <!-- VISUAL SEARCH: live camera modal -->
+  <div id="camOv">
+    <div id="camTop">
+      <button id="camClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button id="camFlip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+    </div>
+    <video id="camVideo" autoplay playsinline muted></video>
+    <canvas id="camCanvas"></canvas>
+    <div id="camBottom">
+      <button id="camShutter"><svg width="26" height="26" viewBox="0 0 24 24" fill="#1a1a1a"><circle cx="12" cy="12" r="10"/></svg></button>
+    </div>
+  </div>
+
   <div id="histPanel">
     <div class="hPH"><span class="hPT">History</span><button class="hPC" id="histClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="hPB" id="hPB"><div class="hPE">No history yet.</div></div>
@@ -575,11 +674,19 @@
       <div id="homeSW">
         <input id="homeSearch" type="text" placeholder="Ask me anything…" autocomplete="off" spellcheck="false"/>
         <button id="homeClearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="visBtn" id="homeVisBtn" title="Search with an image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
         <button class="deepBtn" id="homeDeepBtn" title="Deep Research">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
         <button id="homeGo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
         <div id="homeAutoBox"></div>
+      </div>
+      <div id="visPreviewBar">
+        <img id="vpThumb" src="" alt=""/>
+        <div class="vpInfo" id="vpInfo">Image attached — add a question or just search</div>
+        <button class="vpRemove" id="vpRemove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <div id="homeSearchBar"></div>
       <div class="homeHint">Powered by AI · Ask anything · Get direct answers</div>
@@ -603,6 +710,7 @@
               <div id="srcChips"></div>
             </div>
             <div id="wikiCard" class="rSec" style="display:none"></div>
+            <div id="visualCard" class="rSec" style="display:none"></div>
             <div id="codeSection" class="rSec" style="display:none"></div>
             <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
             <div id="linksSection" class="rSec" style="display:none">
@@ -635,6 +743,63 @@ function esc(s){
 function linkify(s){
   const safe=esc(s);
   return safe.replace(/(https?:\/\/[^\s<]+)/g,url=>'<a href="'+url+'" target="_blank" rel="noopener" class="ansLink">'+url+'</a>');
+}
+
+// ── CODE SYNTAX HIGHLIGHT (lightweight, language-agnostic enough for common langs) ──
+const CODE_KEYWORDS=new Set(['function','return','if','else','for','while','do','switch','case','break','continue','class','const','let','var','new','this','import','from','export','default','try','catch','finally','throw','async','await','typeof','instanceof','in','of','null','undefined','true','false','def','elif','None','True','False','self','print','lambda','with','as','pass','yield','raise','except','public','private','protected','static','void','int','float','double','string','String','bool','boolean','char','struct','enum','namespace','using','include','package','interface','extends','implements','super','fn','match','impl','pub','mod','use','end','then','module','require']);
+function highlightCode(src,lang){
+  const isMarkup=/html|xml|svg/.test((lang||'').toLowerCase());
+  let out='',i=0;const n=src.length;
+  while(i<n){
+    const ch=src[i];
+    // comments
+    if(ch==='/'&&src[i+1]==='/'){let j=i;while(j<n&&src[j]!=='\n')j++;out+='<span class="tok-com">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(ch==='#'&&!isMarkup){let j=i;while(j<n&&src[j]!=='\n')j++;out+='<span class="tok-com">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(ch==='/'&&src[i+1]==='*'){let j=src.indexOf('*/',i+2);j=j===-1?n:j+2;out+='<span class="tok-com">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(isMarkup&&ch==='<'&&src[i+1]==='!'&&src[i+2]==='-'){let j=src.indexOf('-->',i);j=j===-1?n:j+3;out+='<span class="tok-com">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    // strings
+    if(ch==='"'||ch==="'"||ch==='`'){const q=ch;let j=i+1;while(j<n&&src[j]!==q){if(src[j]==='\\')j++;j++;}j=Math.min(j+1,n);out+='<span class="tok-str">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    // numbers
+    if(/[0-9]/.test(ch)&&!/[a-zA-Z_]/.test(src[i-1]||'')){let j=i;while(j<n&&/[0-9.xXa-fA-F]/.test(src[j]))j++;out+='<span class="tok-num">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    // html tags
+    if(isMarkup&&ch==='<'){let j=src.indexOf('>',i);j=j===-1?n:j+1;const seg=src.slice(i,j);
+      const tagged=esc(seg).replace(/^(&lt;\/?)([a-zA-Z0-9-]+)/,'$1<span class="tok-tag">$2</span>')
+        .replace(/([a-zA-Z-]+)=/g,'<span class="tok-attr">$1</span>=');
+      out+=tagged;i=j;continue;}
+    // identifiers / keywords
+    if(/[a-zA-Z_]/.test(ch)){let j=i;while(j<n&&/[a-zA-Z0-9_]/.test(src[j]))j++;const word=src.slice(i,j);
+      if(CODE_KEYWORDS.has(word))out+='<span class="tok-kw">'+word+'</span>';
+      else if(src[j]==='(')out+='<span class="tok-fn">'+word+'</span>';
+      else out+=esc(word);
+      i=j;continue;}
+    out+=esc(ch);i++;
+  }
+  return out;
+}
+// Reveal code with a fast "typed" effect, chunked for performance on long files
+function typeCode(el,code,lang){
+  if(!el)return;
+  const highlighted=highlightCode(code,lang);
+  // Type using the plain string for correct pacing, then swap to highlighted HTML at the end.
+  // For snappy UX we reveal in small multi-character chunks rather than one-by-one.
+  el.classList.add('typing');
+  el.textContent='';
+  const total=code.length;
+  const chunk=Math.max(2,Math.ceil(total/220)); // ~220 visual steps regardless of length
+  let pos=0;
+  const stepMs=total>1200?4:10;
+  function step(){
+    pos=Math.min(total,pos+chunk);
+    el.textContent=code.slice(0,pos);
+    el.scrollTop=el.scrollHeight;
+    if(pos<total){
+      setTimeout(step,stepMs);
+    }else{
+      el.classList.remove('typing');
+      el.innerHTML=highlighted;
+    }
+  }
+  step();
 }
 
 // ── IMAGE LIGHTBOX ──
@@ -671,6 +836,8 @@ firebase.initializeApp(fbCfg);
 const auth=firebase.auth(),db=firebase.database();
 
 let cu=null,busy=false,lastQ='',hist=[],theme=localStorage.getItem('nmt')||'light',sT=null,isUp=false,deepMode=false;
+let pendingImage=null; // {dataUrl, base64, mime} — set when user attaches a photo for visual search
+let camStream=null,camFacing='environment';
 
 // Elements
 const SI=document.getElementById('searchInput'),HS=document.getElementById('homeSearch');
@@ -689,6 +856,14 @@ const answerSection=document.getElementById('answerSection'),imagesSection=docum
 const skelWrap=document.getElementById('skelWrap'),prog=document.getElementById('progBar'),splash=document.getElementById('splash');
 const relSection=document.getElementById('relSection');
 const deepBtn=document.getElementById('deepBtn'),homeDeepBtn=document.getElementById('homeDeepBtn');
+const visBtn=document.getElementById('visBtn'),homeVisBtn=document.getElementById('homeVisBtn');
+const visSheetOv=document.getElementById('visSheetOv'),visSheetCancel=document.getElementById('visSheetCancel');
+const visRowUpload=document.getElementById('visRowUpload'),visRowCamera=document.getElementById('visRowCamera');
+const visFileInput=document.getElementById('visFileInput');
+const camOv=document.getElementById('camOv'),camVideo=document.getElementById('camVideo'),camCanvas=document.getElementById('camCanvas');
+const camClose=document.getElementById('camClose'),camFlip=document.getElementById('camFlip'),camShutter=document.getElementById('camShutter');
+const visPreviewBar=document.getElementById('visPreviewBar'),vpThumb=document.getElementById('vpThumb'),vpInfo=document.getElementById('vpInfo'),vpRemove=document.getElementById('vpRemove');
+const visualCard=document.getElementById('visualCard');
 
 // ── THEME ──
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t==='light'?'':t);document.querySelectorAll('.topt').forEach(el=>el.classList.toggle('active',el.dataset.theme===t));}
@@ -818,7 +993,7 @@ document.addEventListener('click',e=>{
 });
 
 // ── NAV ──
-function showHome(){rp.classList.remove('vis');home.style.display='flex';HS.value='';SI.value='';updateClearBtns();lastQ='';clearResults();qe.textContent='';sw.innerHTML='';}
+function showHome(){rp.classList.remove('vis');home.style.display='flex';HS.value='';SI.value='';updateClearBtns();lastQ='';clearResults();qe.textContent='';sw.innerHTML='';clearPendingImage();}
 function clearResults(){
   ab.innerHTML='';sc.innerHTML='';ig.innerHTML='';lo.innerHTML='';
   document.getElementById('relOut').innerHTML='';
@@ -830,6 +1005,7 @@ function clearResults(){
   document.getElementById('intentBar').style.display='none';document.getElementById('intentBar').innerHTML='';
   document.getElementById('wikiCard').style.display='none';document.getElementById('wikiCard').innerHTML='';
   document.getElementById('codeSection').style.display='none';document.getElementById('codeSection').innerHTML='';
+  document.getElementById('visualCard').style.display='none';document.getElementById('visualCard').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -839,13 +1015,14 @@ function glowStatus(msg){return '<span class="glowMsg"><span class="glowDot"></s
 
 async function doSearch(qOv,forceAction){
   const q=(qOv||SI.value||HS.value).trim();
-  if(!q||busy)return;
+  const hasImg=!!pendingImage;
+  if((!q&&!hasImg)||busy)return;
 
-  busy=true;lastQ=q;
+  busy=true;lastQ=q||(hasImg?'this image':'');
   autoBox.style.display='none';homeAutoBox.style.display='none';
-  saveHist(q);
+  if(q)saveHist(q);
   home.style.display='none';rp.classList.add('vis');
-  qe.textContent=q;SI.value=q;updateClearBtns();
+  qe.textContent=q||'Image search';SI.value=q;updateClearBtns();
   clearResults();startProg();startSearchGlow();
 
   document.getElementById('rScroll').scrollTop=0;
@@ -854,6 +1031,7 @@ async function doSearch(qOv,forceAction){
   const payload={query:q};
   if(deepMode)payload.deep=true;
   if(forceAction)payload.force_action=forceAction;
+  if(hasImg){payload.image_base64=pendingImage.base64;payload.image_mime=pendingImage.mime;}
 
   try{
     const res=await fetch('/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -871,6 +1049,7 @@ async function doSearch(qOv,forceAction){
       +'</div>';
     answerSection.style.display='block';
   }
+  clearPendingImage();
   busy=false;
 }
 
@@ -888,7 +1067,7 @@ function renderResults(data,q){
       +'<span class="codeLang">'+esc(c.language)+'</span>'
       +'<button class="codeCopyBtn" id="codeCopyBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>'
       +'</div></div>'
-      +'<pre id="codeBody">'+esc(c.content)+'</pre>'
+      +'<pre id="codeBody"></pre>'
       +(c.explainer?'<div class="codeExplainer">'+esc(c.explainer)+'</div>':'');
     codeSec.style.display='block';
     document.getElementById('codeCopyBtn').onclick=function(){
@@ -897,6 +1076,7 @@ function renderResults(data,q){
         setTimeout(()=>{this.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy';},1800);
       });
     };
+    typeCode(document.getElementById('codeBody'),c.content,c.language);
   }else{
     codeSec.style.display='none';codeSec.innerHTML='';
   }
@@ -1012,6 +1192,19 @@ function renderResults(data,q){
     wikiCard.style.display='none';wikiCard.innerHTML='';
   }
 
+  // VISUAL SEARCH — description of an uploaded/captured image
+  if(data.visual&&data.visual.description){
+    const v=data.visual;
+    visualCard.innerHTML=(v.thumbnail?'<img src="'+v.thumbnail+'" alt="" id="vcThumbImg">':'')
+      +'<div class="vcBody"><div class="vcLbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>From your image</div>'
+      +'<div class="vcText">'+esc(v.description)+'</div></div>';
+    visualCard.style.display='flex';
+    const vimg=document.getElementById('vcThumbImg');
+    if(vimg)vimg.onclick=()=>openLightbox([vimg.src],0);
+  }else{
+    visualCard.style.display='none';visualCard.innerHTML='';
+  }
+
   // WEB RESULTS
   if(data.results&&data.results.length&&data.action!=='show_images'){
     lo.innerHTML='';
@@ -1027,7 +1220,7 @@ function renderResults(data,q){
     linksSection.style.display='block';
   }
 
-  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social){
+  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)){
     ab.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--muted)">No results found. Try rephrasing your search.</div>';
     answerSection.style.display='block';
   }
@@ -1061,6 +1254,88 @@ async function loadQuickCards(){
     [{i:0,t:'World News',s:'Latest global headlines',q:'Latest world news today'},{i:1,t:'AI & Tech',s:"What's new in technology",q:'top AI and tech news 2026'},{i:2,t:'Entertainment',s:'Movies, shows & music',q:'trending movies and shows 2026'},{i:3,t:'Science',s:'Discoveries & breakthroughs',q:'latest science discoveries 2026'}].forEach(f=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[f.i]+'</div><div class="qCardTitle">'+f.t+'</div><div class="qCardSub">'+f.s+'</div>';el.addEventListener('click',()=>go(f.q));grid.appendChild(el);});
   }
 }
+
+// ── VISUAL SEARCH: action sheet open/close ──
+function openVisSheet(){visSheetOv.classList.add('open');}
+function closeVisSheet(){visSheetOv.classList.remove('open');}
+visBtn.addEventListener('click',openVisSheet);
+homeVisBtn.addEventListener('click',openVisSheet);
+visSheetCancel.addEventListener('click',closeVisSheet);
+visSheetOv.addEventListener('click',e=>{if(e.target===visSheetOv)closeVisSheet();});
+
+// ── VISUAL SEARCH: file upload path ──
+visRowUpload.addEventListener('click',()=>{closeVisSheet();visFileInput.click();});
+visFileInput.addEventListener('change',()=>{
+  const file=visFileInput.files&&visFileInput.files[0];
+  if(file)handleImageFile(file);
+  visFileInput.value='';
+});
+
+function handleImageFile(file){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const dataUrl=reader.result;
+    const base64=dataUrl.split(',')[1];
+    setPendingImage(dataUrl,base64,file.type||'image/jpeg');
+  };
+  reader.readAsDataURL(file);
+}
+
+function setPendingImage(dataUrl,base64,mime){
+  pendingImage={dataUrl,base64,mime};
+  vpThumb.src=dataUrl;
+  vpInfo.textContent='Image attached — add a question or just search';
+  visPreviewBar.classList.add('show');
+  HS.focus();
+}
+function clearPendingImage(){
+  pendingImage=null;
+  visPreviewBar.classList.remove('show');
+  vpThumb.src='';
+}
+vpRemove.addEventListener('click',clearPendingImage);
+
+// ── VISUAL SEARCH: camera path ──
+visRowCamera.addEventListener('click',async()=>{closeVisSheet();await openCamera();});
+
+async function openCamera(facing){
+  camFacing=facing||camFacing||'environment';
+  camOv.classList.add('open');
+  document.getElementById('camErr')&&document.getElementById('camErr').remove();
+  try{
+    if(camStream){camStream.getTracks().forEach(t=>t.stop());}
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFacing},audio:false});
+    camVideo.srcObject=camStream;
+    camVideo.style.display='block';
+  }catch(err){
+    camVideo.style.display='none';
+    const errDiv=document.createElement('div');
+    errDiv.id='camErr';errDiv.className='';
+    errDiv.style.cssText='color:#fff;text-align:center;padding:80px 24px;font-size:14px;line-height:1.7;flex:1;display:flex;align-items:center;justify-content:center';
+    errDiv.textContent="We couldn't access your camera. Check your browser or app permissions and try again.";
+    camOv.insertBefore(errDiv,camCanvas);
+  }
+}
+function closeCamera(){
+  camOv.classList.remove('open');
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+  const errDiv=document.getElementById('camErr');if(errDiv)errDiv.remove();
+  camVideo.style.display='block';
+}
+camClose.addEventListener('click',closeCamera);
+camFlip.addEventListener('click',()=>{openCamera(camFacing==='environment'?'user':'environment');});
+camShutter.addEventListener('click',()=>{
+  if(!camStream)return;
+  const w=camVideo.videoWidth,h=camVideo.videoHeight;
+  if(!w||!h)return;
+  camCanvas.width=w;camCanvas.height=h;
+  const ctx=camCanvas.getContext('2d');
+  ctx.drawImage(camVideo,0,0,w,h);
+  const dataUrl=camCanvas.toDataURL('image/jpeg',0.9);
+  const base64=dataUrl.split(',')[1];
+  setPendingImage(dataUrl,base64,'image/jpeg');
+  closeCamera();
+});
 
 // ── AUTOCOMPLETE ──
 let lastSuggVal='',lastSuggBox=null;

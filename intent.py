@@ -27,6 +27,91 @@ def ask_groq(prompt, max_tokens=3000):
 
 
 # ─────────────────────────────────────────────────────────────────
+#  GROQ VISION  — understands an uploaded/captured photo
+# ─────────────────────────────────────────────────────────────────
+GROQ_VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"  # vision-capable Groq model
+
+def ask_groq_vision(image_base64: str, image_mime: str, user_text: str = ""):
+    """Send an image (as base64 data URL) + optional user question to a vision-capable
+    Groq model and get back a natural-language description/answer."""
+    data_url = f"data:{image_mime or 'image/jpeg'};base64,{image_base64}"
+
+    if user_text and user_text.strip():
+        prompt_text = (
+            f"The user uploaded this image and asked: \"{user_text.strip()}\". "
+            "Answer their question about the image directly and naturally. "
+            "If they didn't really ask anything specific, just describe what's in the image "
+            "clearly and usefully, as if explaining it to someone who can't see it. "
+            "Keep it to 2-4 short sentences unless more detail is clearly needed."
+        )
+    else:
+        prompt_text = (
+            "Describe what's in this image clearly and usefully, as if explaining it to "
+            "someone who can't see it. Mention the main subject, relevant details, and "
+            "anything notable (text, brand, location clues, etc). Keep it to 2-4 short sentences."
+        )
+
+    r = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
+        json={
+            "model": GROQ_VISION_MODEL,
+            "messages": [{
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt_text},
+                    {"type": "image_url", "image_url": {"url": data_url}},
+                ],
+            }],
+            "max_tokens": 600,
+        },
+        timeout=30,
+    )
+    data = r.json()
+    if "choices" not in data:
+        print(f"[groq vision error] status={r.status_code} body={data}")
+        raise RuntimeError(f"Groq vision API error: {data.get('error', data)}")
+    return data["choices"][0]["message"]["content"].strip()
+
+
+def ask_groq_vision_keywords(image_base64: str, image_mime: str):
+    """Ask the vision model for a short, search-friendly phrase describing the image,
+    so we can run a normal web search alongside the description (e.g. 'golden retriever
+    dog breed', 'Eiffel Tower Paris', 'Nike Air Max sneaker'). Best-effort — returns ''
+    on failure rather than raising, since this is supplementary."""
+    data_url = f"data:{image_mime or 'image/jpeg'};base64,{image_base64}"
+    try:
+        r = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {GROQ_TOKEN}"},
+            json={
+                "model": GROQ_VISION_MODEL,
+                "messages": [{
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": (
+                            "Reply with ONLY a short, specific search-engine query (3-7 words) "
+                            "that identifies the main subject of this image — e.g. 'golden "
+                            "retriever dog breed', 'Eiffel Tower Paris France', 'iPhone 15 Pro "
+                            "specs'. No punctuation, no explanation, just the query."
+                        )},
+                        {"type": "image_url", "image_url": {"url": data_url}},
+                    ],
+                }],
+                "max_tokens": 30,
+            },
+            timeout=20,
+        )
+        data = r.json()
+        if "choices" not in data:
+            return ""
+        return data["choices"][0]["message"]["content"].strip().strip('"')
+    except Exception as e:
+        print(f"[groq vision keywords error] {e}")
+        return ""
+
+
+# ─────────────────────────────────────────────────────────────────
 #  QUANTITY EXTRACTOR  — reads "100 images", "give me 10 photos", etc.
 # ─────────────────────────────────────────────────────────────────
 def extract_quantity(query: str):
@@ -313,9 +398,74 @@ def wikipedia_summary(topic: str):
 
 
 # ─────────────────────────────────────────────────────────────────
+#  IMAGE UNDERSTANDING  — handles an uploaded/captured photo end-to-end
+# ─────────────────────────────────────────────────────────────────
+def understand_image(image_base64: str, image_mime: str, user_text: str = ""):
+    """Given a base64-encoded image (and optional accompanying question/text),
+    returns a dict with a natural-language description plus supporting web
+    results, in the same shape the frontend's `renderResults()` expects:
+      { action, understood, answer, images, results, sources, social, wiki,
+        code, visual: { description, thumbnail } }
+    Never raises — on failure it returns a graceful fallback so the UI still
+    has something sensible to show.
+    """
+    thumbnail = f"data:{image_mime or 'image/jpeg'};base64,{image_base64}"
+
+    try:
+        description = ask_groq_vision(image_base64, image_mime, user_text)
+    except Exception as e:
+        print(f"[understand_image vision error] {e}")
+        return {
+            "action": "show_results",
+            "understood": "Understand the uploaded image",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
+            "visual": {
+                "description": "I couldn't quite analyze that image — give it another try, or add a question about what you'd like to know.",
+                "thumbnail": thumbnail,
+            },
+        }
+
+    # Best-effort companion web search so the person also gets real links,
+    # e.g. if it's a dog breed, a landmark, a product, etc.
+    search_q = (user_text.strip() if user_text and user_text.strip() else "") or ask_groq_vision_keywords(image_base64, image_mime)
+    results, sources = [], []
+    if search_q:
+        try:
+            hits = exa_search(search_q, num=5)
+            results = hits[:4]
+            for item in hits[:6]:
+                dom = item.get("domain", "")
+                if dom and not any(s["domain"] == dom for s in sources):
+                    sources.append({"domain": dom, "url": item["url"]})
+        except Exception as e:
+            print(f"[understand_image search error] {e}")
+
+    return {
+        "action": "show_results",
+        "understood": user_text.strip() if user_text and user_text.strip() else "Understand the uploaded image",
+        "answer": "",
+        "images": [],
+        "results": results,
+        "sources": sources,
+        "social": None,
+        "wiki": None,
+        "code": None,
+        "visual": {
+            "description": description,
+            "thumbnail": thumbnail,
+        },
+    }
+
+
+# ─────────────────────────────────────────────────────────────────
 #  MAIN  understand()
 # ─────────────────────────────────────────────────────────────────
-def understand(query: str, force_action: str = None):
+def understand(query: str, force_action: str = None, image_base64: str = None, image_mime: str = None):
+    # ── VISUAL SEARCH: an image was attached — handle via vision model, skip the text pipeline ──
+    if image_base64:
+        return understand_image(image_base64, image_mime, query or "")
+
     explicit_qty = extract_quantity(query)
 
     # ── Social URL pasted directly? ──
