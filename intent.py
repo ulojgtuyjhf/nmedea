@@ -158,6 +158,34 @@ def looks_like_code_request(query: str) -> bool:
 
 
 # ─────────────────────────────────────────────────────────────────
+#  CAMERA / UPLOAD INTENT  — purely typed, no buttons anywhere in the UI.
+#  These are deterministic regex checks (not Groq) since the phrasing is
+#  simple and unambiguous, and we don't want an LLM round-trip on the
+#  common case of "open the camera" / "let me upload a photo".
+# ─────────────────────────────────────────────────────────────────
+def looks_like_camera_request(query: str) -> bool:
+    q = query.lower()
+    return bool(re.search(
+        r'\b(open|launch|turn on|start|activate|show me|use)\b.{0,15}\bcamera\b'
+        r'|\bcamera\b.{0,15}\b(open|please|now)\b'
+        r'|^\s*camera\s*$',
+        q,
+    ))
+
+def looks_like_upload_request(query: str) -> bool:
+    q = query.lower()
+    return bool(re.search(
+        r'\b(upload|attach)\b.{0,25}\b(image|photo|picture|pic)\b'
+        r'|\b(image|photo|picture|pic)\b.{0,15}\bupload\b'
+        r'|\b(give|show)\s+me\b.{0,25}\b(an?\s+)?upload\b'
+        r'|\bupload\b.{0,15}\binterface\b'
+        r'|\binterface\b.{0,15}\bupload\b'
+        r'|\blet\s+me\s+upload\b',
+        q,
+    ))
+
+
+# ─────────────────────────────────────────────────────────────────
 #  EXA  — neural web search
 # ─────────────────────────────────────────────────────────────────
 def exa_search(query: str, num: int = 5, include_text: bool = True, site: str = None):
@@ -465,6 +493,26 @@ def understand(query: str, force_action: str = None, image_base64: str = None, i
     # ── VISUAL SEARCH: an image was attached — handle via vision model, skip the text pipeline ──
     if image_base64:
         return understand_image(image_base64, image_mime, query or "")
+
+    # ── TYPED CAMERA / UPLOAD INTENT — no buttons in the UI, this is the only entry point.
+    #    Handled deterministically (no Groq round-trip) and skips the rest of the pipeline,
+    #    since the frontend renders these as their own inline card. ──
+    if looks_like_camera_request(query):
+        return {
+            "action": "open_camera",
+            "url": "",
+            "understood": "Open the camera",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
+        }
+    if looks_like_upload_request(query):
+        return {
+            "action": "show_upload",
+            "url": "",
+            "understood": "Show an image upload interface",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
+        }
 
     explicit_qty = extract_quantity(query)
 
