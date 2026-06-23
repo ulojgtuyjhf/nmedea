@@ -184,6 +184,16 @@ def looks_like_upload_request(query: str) -> bool:
         q,
     ))
 
+def looks_like_todo_request(query: str) -> bool:
+    q = query.lower()
+    return bool(re.search(
+        r'\b(give|show|make|create|build|start)\s+me\b.{0,15}\b(a|my)?\s*to[\s-]?do\s*list\b'
+        r'|\bto[\s-]?do\s*list\b'
+        r'|\bcreate\s+a\s+checklist\b'
+        r'|\bmake\s+(me\s+)?a\s+checklist\b',
+        q,
+    ))
+
 
 # ─────────────────────────────────────────────────────────────────
 #  EXA  — neural web search
@@ -510,6 +520,14 @@ def understand(query: str, force_action: str = None, image_base64: str = None, i
             "action": "show_upload",
             "url": "",
             "understood": "Show an image upload interface",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
+        }
+    if looks_like_todo_request(query):
+        return {
+            "action": "show_todo",
+            "url": "",
+            "understood": "Show a to-do list",
             "answer": "", "images": [], "results": [], "sources": [],
             "social": None, "wiki": None, "code": None,
         }

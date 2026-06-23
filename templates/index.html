@@ -101,6 +101,32 @@
     #cameraCard .ccErr{color:#fff;text-align:center;padding:50px 24px;font-size:13.5px;line-height:1.7}
     #cameraCard .ccHint{color:rgba(255,255,255,0.5);font-size:11px;text-align:center;padding-top:8px}
 
+    /* ══ INLINE TO-DO LIST CARD (rendered inside results) ══ */
+    #todoCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    #todoCard .tdTop{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+    #todoCard .tdTitle{font-size:13.5px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+    #todoCard .tdTitle svg{width:15px;height:15px;color:var(--blue)}
+    #todoCard .tdCount{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+    #todoList{list-style:none;padding:6px 8px;margin:0}
+    .tdItem{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:9px;transition:background 0.12s}
+    .tdItem:hover{background:var(--surface)}
+    .tdCheck{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;background:transparent}
+    .tdCheck svg{width:11px;height:11px;color:#fff;opacity:0;transition:opacity 0.1s}
+    .tdItem.done .tdCheck{background:var(--blue);border-color:var(--blue)}
+    .tdItem.done .tdCheck svg{opacity:1}
+    .tdText{flex:1;font-size:13.5px;color:var(--text);line-height:1.4;cursor:pointer}
+    .tdItem.done .tdText{color:var(--muted);text-decoration:line-through}
+    .tdRemove{width:22px;height:22px;border:none;background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.12s;flex-shrink:0}
+    .tdItem:hover .tdRemove{opacity:1}
+    .tdRemove svg{width:13px;height:13px}
+    #todoAddRow{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--border)}
+    #todoAddInput{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none}
+    #todoAddInput:focus{border-color:var(--blue)}
+    #todoAddBtn{width:32px;height:32px;border-radius:8px;border:none;background:var(--blue);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    #todoAddBtn svg{width:15px;height:15px}
+    #todoCard .tdDoneMsg{padding:24px 16px;text-align:center;color:var(--muted);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+    #todoCard .tdDoneMsg svg{width:26px;height:26px;color:var(--green,#1da462)}
+
     /* ══ INLINE UPLOAD CARD (rendered inside results) ══ */
     #uploadCard{background:var(--card);border:1.5px dashed var(--border);border-radius:14px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;cursor:pointer;transition:border-color 0.15s,background 0.15s}
     #uploadCard:hover{border-color:var(--blue);background:rgba(26,106,240,0.04)}
@@ -653,6 +679,7 @@
             <div id="visualCard" class="rSec" style="display:none"></div>
             <div id="cameraSection" class="rSec" style="display:none"></div>
             <div id="uploadSection" class="rSec" style="display:none"></div>
+            <div id="todoSection" class="rSec" style="display:none"></div>
             <div id="codeSection" class="rSec" style="display:none"></div>
             <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
             <div id="linksSection" class="rSec" style="display:none">
@@ -943,6 +970,7 @@ function clearResults(){
   stopInlineCamera();
   document.getElementById('cameraSection').style.display='none';document.getElementById('cameraSection').innerHTML='';
   document.getElementById('uploadSection').style.display='none';document.getElementById('uploadSection').innerHTML='';
+  document.getElementById('todoSection').style.display='none';document.getElementById('todoSection').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -1050,6 +1078,14 @@ function renderResults(data,q){
     wireUploadCard();
   }else{
     upSec.style.display='none';upSec.innerHTML='';
+  }
+
+  // INLINE TO-DO LIST — user typed something like "give me a to-do list"
+  const todoSec=document.getElementById('todoSection');
+  if(data.action==='show_todo'){
+    renderTodoCard(todoSec);
+  }else{
+    todoSec.style.display='none';todoSec.innerHTML='';
   }
 
   // INTENT LINE — show what we understood (no action chips, they weren't reliable)
@@ -1191,7 +1227,7 @@ function renderResults(data,q){
     linksSection.style.display='block';
   }
 
-  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)&&data.action!=='open_camera'&&data.action!=='show_upload'){
+  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)&&data.action!=='open_camera'&&data.action!=='show_upload'&&data.action!=='show_todo'){
     ab.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--muted)">No results found. Try rephrasing your search.</div>';
     answerSection.style.display='block';
   }
@@ -1294,6 +1330,118 @@ function wireUploadCard(){
     const file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
     if(file)handleInlineUploadFile(file);
   });
+}
+
+// ── INLINE TO-DO LIST ──
+// Persisted in localStorage (this is a real standalone page, not a sandboxed
+// artifact, so localStorage works fine here). A list clears itself out the
+// moment every item on it is checked off, per how this was asked for.
+const TODO_STORAGE_KEY='nmt_todo_list';
+
+function loadTodos(){
+  try{
+    const raw=localStorage.getItem(TODO_STORAGE_KEY);
+    return raw?JSON.parse(raw):[];
+  }catch(e){return [];}
+}
+function saveTodos(items){
+  try{localStorage.setItem(TODO_STORAGE_KEY,JSON.stringify(items));}catch(e){}
+}
+
+function renderTodoCard(container){
+  const items=loadTodos();
+  const doneCount=items.filter(i=>i.done).length;
+
+  let bodyHtml;
+  if(!items.length){
+    bodyHtml='<ul id="todoList"></ul>';
+  }else{
+    bodyHtml='<ul id="todoList">'+items.map(item=>
+      '<li class="tdItem'+(item.done?' done':'')+'" data-id="'+item.id+'">'
+        +'<button class="tdCheck" data-action="toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>'
+        +'<span class="tdText" data-action="toggle">'+esc(item.text)+'</span>'
+        +'<button class="tdRemove" data-action="remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>'
+      +'</li>'
+    ).join('')+'</ul>';
+  }
+
+  container.innerHTML='<div id="todoCard">'
+    +'<div class="tdTop"><div class="tdTitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>To-do list</div>'
+    +(items.length?'<span class="tdCount" id="todoCount">'+doneCount+' / '+items.length+'</span>':'')
+    +'</div>'
+    +bodyHtml
+    +'<div id="todoAddRow"><input type="text" id="todoAddInput" placeholder="Add a task…" autocomplete="off"/>'
+    +'<button id="todoAddBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>'
+    +'</div>';
+  container.style.display='block';
+  wireTodoCard(container);
+}
+
+function wireTodoCard(container){
+  const list=container.querySelector('#todoList');
+  const addInput=container.querySelector('#todoAddInput');
+  const addBtn=container.querySelector('#todoAddBtn');
+
+  if(list){
+    list.addEventListener('click',e=>{
+      const li=e.target.closest('.tdItem');
+      if(!li)return;
+      const id=li.dataset.id;
+      const action=e.target.closest('[data-action]')?.dataset.action;
+      if(action==='toggle')toggleTodo(container,id);
+      else if(action==='remove')removeTodo(container,id);
+    });
+  }
+
+  function addFromInput(){
+    const text=addInput.value.trim();
+    if(!text)return;
+    const items=loadTodos();
+    items.push({id:'t_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),text,done:false});
+    saveTodos(items);
+    addInput.value='';
+    renderTodoCard(container);
+    const freshInput=container.querySelector('#todoAddInput');
+    if(freshInput)freshInput.focus();
+  }
+  addBtn.addEventListener('click',addFromInput);
+  addInput.addEventListener('keydown',e=>{if(e.key==='Enter')addFromInput();});
+  addInput.focus();
+}
+
+function toggleTodo(container,id){
+  let items=loadTodos();
+  items=items.map(i=>i.id===id?{...i,done:!i.done}:i);
+  saveTodos(items);
+
+  // If every item is now checked off, the list clears itself — per how
+  // this feature was asked for — after a brief moment so the last check
+  // is visible before it disappears.
+  if(items.length&&items.every(i=>i.done)){
+    renderTodoCard(container); // show the final all-checked state first
+    setTimeout(()=>{
+      saveTodos([]);
+      const card=document.getElementById('todoCard');
+      if(!card)return; // user may have navigated away already
+      container.innerHTML='<div id="todoCard"><div class="tdDoneMsg">'
+        +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+        +'All done — list cleared'
+        +'</div>'
+        +'<div id="todoAddRow"><input type="text" id="todoAddInput" placeholder="Add a task…" autocomplete="off"/>'
+        +'<button id="todoAddBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>'
+        +'</div>';
+      wireTodoCard(container);
+    },700);
+  }else{
+    renderTodoCard(container);
+  }
+}
+
+function removeTodo(container,id){
+  let items=loadTodos();
+  items=items.filter(i=>i.id!==id);
+  saveTodos(items);
+  renderTodoCard(container);
 }
 
 // ── AUTOCOMPLETE ──
