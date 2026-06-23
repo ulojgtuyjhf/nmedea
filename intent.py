@@ -194,6 +194,33 @@ def looks_like_todo_request(query: str) -> bool:
         q,
     ))
 
+def looks_like_music_request(query: str) -> bool:
+    """Deliberately requires an explicit music/song/lyric phrase — never
+    triggers on a bare word or title alone (e.g. just 'dandelion'), since
+    that would false-positive on every short factual query. The person
+    needs to say it's music they're after."""
+    q = query.lower()
+    return bool(re.search(
+        r'\b(song|music|track|lyric|lyrics)\b.{0,20}\b(that|which|called|named|goes|says|sounds like)\b'
+        r'|\b(give|show|find|play)\s+me\b.{0,20}\b(that|the|a)\b.{0,20}\b(song|music|track)\b'
+        r'|\bwhat\s+(is\s+)?(this|that)\s+song\b'
+        r'|\bwhat\s+song\s+(is\s+)?(this|that)\b'
+        r'|\bidentify\s+(this|that)\s+song\b'
+        r'|\b(name|title)\s+of\s+(this|that)\s+song\b'
+        r'|\bsong\s+that\s+goes\b',
+        q,
+    ))
+
+def looks_like_weather_request(query: str) -> bool:
+    q = query.lower()
+    return bool(re.search(
+        r'\bweather\b'
+        r'|\bforecast\b'
+        r'|\bis\s+it\s+(going\s+to\s+)?(rain|raining|snow|snowing|sunny|cold|hot)\b'
+        r'|\btemperature\s+(today|tomorrow|outside|right\s+now)\b',
+        q,
+    ))
+
 
 # ─────────────────────────────────────────────────────────────────
 #  EXA  — neural web search
@@ -241,7 +268,17 @@ def exa_search(query: str, num: int = 5, include_text: bool = True, site: str = 
 #  TAVILY  — images (supports large batches via multiple calls)
 # ─────────────────────────────────────────────────────────────────
 def tavily_images(query: str, qty: int):
-    """Fetch up to `qty` images. Makes multiple Tavily calls if qty > 20."""
+    """Fetch up to `qty` images. Makes multiple Tavily calls if qty > 20.
+
+    Bug fix: earlier versions appended generic words ("hd photos", "gallery",
+    etc) to the query on later calls to fetch more images. That drifts the
+    search away from what the person actually asked for — e.g. asking for
+    30 images of "boys playing basketball" could start pulling generic
+    "basketball gallery" stock photos by the 3rd/4th call that have nothing
+    to do with the original subject. Every call now uses the EXACT same
+    query; duplicate URLs across calls are already deduped below, so this
+    costs nothing and keeps every batch on-topic.
+    """
     all_images = []
     seen_urls = set()
     batch = min(qty + 10, 30)  # Tavily max per call
@@ -251,12 +288,10 @@ def tavily_images(query: str, qty: int):
     for call_i in range(calls_needed):
         if len(all_images) >= qty:
             break
-        # vary query slightly on later calls to get different images
-        q = query if call_i == 0 else f"{query} {'hd photos' if call_i==1 else 'high resolution' if call_i==2 else 'gallery' if call_i==3 else 'collection'}"
         try:
             tv = requests.post(
                 "https://api.tavily.com/search",
-                json={"api_key": TAVILY_KEY, "query": q,
+                json={"api_key": TAVILY_KEY, "query": query,
                       "search_depth": "advanced",
                       "include_images": True,
                       "include_image_descriptions": True,
@@ -436,6 +471,154 @@ def wikipedia_summary(topic: str):
 
 
 # ─────────────────────────────────────────────────────────────────
+#  MUSIC IDENTIFICATION  — iTunes Search API (free, no key, no auth)
+#  Per Apple's terms, previews/artwork are for promotional/identification
+#  purposes only — streamed, never downloaded — paired with a real store
+#  link. This mirrors how Shazam/Google "identify this song" results work:
+#  title, artist, artwork, a 30-second preview, and links to actually
+#  listen on a licensed platform. No full track audio, ever.
+# ─────────────────────────────────────────────────────────────────
+def music_search(query: str, limit: int = 5):
+    """Look up songs matching a name, lyric snippet, or description.
+    Returns a list of track dicts, or an empty list if nothing matched —
+    caller should treat an empty list as 'couldn't identify that song',
+    not as an error."""
+    try:
+        r = requests.get(
+            "https://itunes.apple.com/search",
+            params={"term": query, "media": "music", "entity": "song", "limit": limit},
+            timeout=10,
+        )
+        if r.status_code != 200:
+            return []
+        data = r.json()
+        tracks = []
+        for item in data.get("results", []):
+            if item.get("wrapperType") != "track":
+                continue
+            track_name = item.get("trackName", "")
+            artist_name = item.get("artistName", "")
+            if not track_name or not artist_name:
+                continue
+            search_term = requests.utils.quote(f"{track_name} {artist_name}")
+            tracks.append({
+                "title": track_name,
+                "artist": artist_name,
+                "album": item.get("collectionName", ""),
+                "artwork": (item.get("artworkUrl100") or item.get("artworkUrl60") or "").replace("100x100", "300x300"),
+                "preview_url": item.get("previewUrl", ""),  # 30-second licensed preview, stream-only
+                "itunes_url": item.get("trackViewUrl", ""),
+                "spotify_search_url": f"https://open.spotify.com/search/{search_term}",
+                "youtube_search_url": f"https://www.youtube.com/results?search_query={search_term}",
+                "release_date": (item.get("releaseDate") or "")[:10],
+            })
+        return tracks
+    except Exception as e:
+        print(f"[music_search error] {e}")
+        return []
+
+
+# ─────────────────────────────────────────────────────────────────
+#  WEATHER  — Open-Meteo (free, no key, no auth)
+# ─────────────────────────────────────────────────────────────────
+WEATHER_CODE_MAP = {
+    0: "Clear sky", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
+    45: "Fog", 48: "Freezing fog",
+    51: "Light drizzle", 53: "Drizzle", 55: "Dense drizzle",
+    56: "Freezing drizzle", 57: "Dense freezing drizzle",
+    61: "Light rain", 63: "Rain", 65: "Heavy rain",
+    66: "Freezing rain", 67: "Heavy freezing rain",
+    71: "Light snow", 73: "Snow", 75: "Heavy snow", 77: "Snow grains",
+    80: "Light showers", 81: "Showers", 82: "Violent showers",
+    85: "Light snow showers", 86: "Heavy snow showers",
+    95: "Thunderstorm", 96: "Thunderstorm with hail", 99: "Severe thunderstorm with hail",
+}
+
+def geocode_place(place: str):
+    """Resolve a place name to lat/lon using Open-Meteo's free geocoding endpoint."""
+    try:
+        r = requests.get(
+            "https://geocoding-api.open-meteo.com/v1/search",
+            params={"name": place, "count": 1},
+            timeout=8,
+        )
+        if r.status_code != 200:
+            return None
+        results = r.json().get("results")
+        if not results:
+            return None
+        top = results[0]
+        label_parts = [top.get("name", "")]
+        if top.get("admin1"):
+            label_parts.append(top["admin1"])
+        if top.get("country"):
+            label_parts.append(top["country"])
+        return {
+            "lat": top["latitude"], "lon": top["longitude"],
+            "label": ", ".join(p for p in label_parts if p),
+        }
+    except Exception as e:
+        print(f"[geocode error] {e}")
+        return None
+
+def weather_lookup(place: str = None, lat: float = None, lon: float = None):
+    """Fetch current conditions + a short daily forecast for a place name
+    OR explicit coordinates. Returns None if the place can't be resolved
+    or the weather API fails — caller should treat that as 'try again
+    with a different location', not crash the whole response."""
+    label = None
+    if (lat is None or lon is None) and place:
+        geo = geocode_place(place)
+        if not geo:
+            return None
+        lat, lon, label = geo["lat"], geo["lon"], geo["label"]
+    if lat is None or lon is None:
+        return None
+    try:
+        r = requests.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={
+                "latitude": lat, "longitude": lon,
+                "current": "temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m",
+                "daily": "weather_code,temperature_2m_max,temperature_2m_min",
+                "temperature_unit": "celsius",
+                "wind_speed_unit": "kmh",
+                "timezone": "auto",
+                "forecast_days": 5,
+            },
+            timeout=10,
+        )
+        if r.status_code != 200:
+            return None
+        data = r.json()
+        current = data.get("current", {})
+        daily = data.get("daily", {})
+        code = current.get("weather_code")
+        days = []
+        dates = daily.get("time", [])
+        for i in range(min(5, len(dates))):
+            d_code = daily.get("weather_code", [None]*5)[i]
+            days.append({
+                "date": dates[i],
+                "max": daily.get("temperature_2m_max", [None]*5)[i],
+                "min": daily.get("temperature_2m_min", [None]*5)[i],
+                "condition": WEATHER_CODE_MAP.get(d_code, ""),
+            })
+        return {
+            "label": label or f"{lat:.2f}, {lon:.2f}",
+            "temp": current.get("temperature_2m"),
+            "feels_like": current.get("apparent_temperature"),
+            "humidity": current.get("relative_humidity_2m"),
+            "wind_speed": current.get("wind_speed_10m"),
+            "condition": WEATHER_CODE_MAP.get(code, ""),
+            "daily": days,
+        }
+    except Exception as e:
+        print(f"[weather error] {e}")
+        return None
+
+
+# ─────────────────────────────────────────────────────────────────
 #  IMAGE UNDERSTANDING  — handles an uploaded/captured photo end-to-end
 # ─────────────────────────────────────────────────────────────────
 def understand_image(image_base64: str, image_mime: str, user_text: str = ""):
@@ -499,7 +682,7 @@ def understand_image(image_base64: str, image_mime: str, user_text: str = ""):
 # ─────────────────────────────────────────────────────────────────
 #  MAIN  understand()
 # ─────────────────────────────────────────────────────────────────
-def understand(query: str, force_action: str = None, image_base64: str = None, image_mime: str = None):
+def understand(query: str, force_action: str = None, image_base64: str = None, image_mime: str = None, lat: float = None, lon: float = None):
     # ── VISUAL SEARCH: an image was attached — handle via vision model, skip the text pipeline ──
     if image_base64:
         return understand_image(image_base64, image_mime, query or "")
@@ -530,6 +713,64 @@ def understand(query: str, force_action: str = None, image_base64: str = None, i
             "understood": "Show a to-do list",
             "answer": "", "images": [], "results": [], "sources": [],
             "social": None, "wiki": None, "code": None,
+        }
+    if looks_like_music_request(query):
+        # Strip wrapper phrasing ("give me that song that says...", "what
+        # is this song called", etc) down to the actual title/lyric/artist
+        # to search for. If nothing meaningful survives the strip (e.g. the
+        # person never actually named the song — "what song is this?" on
+        # its own), there's nothing to search for yet.
+        clean = re.sub(
+            r'\b(give|show|find|play)\s+me\b'
+            r'|\b(that|this|the|a|an)\b'
+            r'|\b(song|music|track)\b'
+            r'|\b(goes|says|sounds\s+like|called|named|which)\b'
+            r"|\bwhat'?s?\b|\bwhat\s+is\b|\bis\b"
+            r'|\bidentify\b|\bname\s+of\b|\btitle\s+of\b',
+            ' ', query, flags=re.IGNORECASE,
+        )
+        clean = re.sub(r'\s+', ' ', clean).strip(' ?.,!')
+        if not clean:
+            return {
+                "action": "answer",
+                "url": "",
+                "understood": "Identify a song",
+                "answer": "Tell me a lyric, the title, or the artist and I'll find it for you.",
+                "images": [], "results": [], "sources": [],
+                "social": None, "wiki": None, "code": None,
+            }
+        tracks = music_search(clean)
+        return {
+            "action": "show_music",
+            "url": "",
+            "understood": f"Find the song: {clean}",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
+            "music": tracks,
+        }
+    if looks_like_weather_request(query):
+        # Pull a place name out if one was given (e.g. "weather in Tokyo").
+        # If none was given, fall back to lat/lon supplied by the frontend
+        # (browser geolocation) — and if that's not available either,
+        # signal that a location is needed instead of guessing one.
+        place = None
+        m = re.search(r'\b(?:in|for|at)\s+([a-zA-Z][a-zA-Z\s,.\-]{1,60})$', query.strip(), re.IGNORECASE)
+        if m:
+            place = m.group(1).strip(' ?.,!')
+        if place:
+            weather = weather_lookup(place=place)
+        elif lat is not None and lon is not None:
+            weather = weather_lookup(lat=lat, lon=lon)
+        else:
+            weather = None
+        return {
+            "action": "show_weather",
+            "url": "",
+            "understood": f"Weather for {place}" if place else "Weather for your location",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
+            "weather": weather,
+            "weather_needs_location": weather is None,
         }
 
     explicit_qty = extract_quantity(query)

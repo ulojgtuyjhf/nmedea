@@ -101,6 +101,40 @@
     #cameraCard .ccErr{color:#fff;text-align:center;padding:50px 24px;font-size:13.5px;line-height:1.7}
     #cameraCard .ccHint{color:rgba(255,255,255,0.5);font-size:11px;text-align:center;padding-top:8px}
 
+    /* ══ MUSIC IDENTIFICATION CARDS ══ */
+    #musicCard{display:flex;flex-direction:column;gap:10px}
+    .musicTrack{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;align-items:center}
+    .musicTrack img{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--surface);flex-shrink:0}
+    .musicTrack .mtBody{flex:1;min-width:0}
+    .musicTrack .mtTitle{font-size:14.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .musicTrack .mtArtist{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+    .musicTrack .mtControls{display:flex;align-items:center;gap:8px;margin-top:8px}
+    .mtPlayBtn{width:30px;height:30px;border-radius:50%;background:var(--blue);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .mtPlayBtn svg{width:13px;height:13px}
+    .mtLink{font-size:11.5px;font-weight:600;color:var(--blue);padding:5px 10px;border-radius:14px;border:1px solid var(--border);white-space:nowrap}
+    .mtLink:hover{border-color:var(--blue)}
+    .mtPreviewNote{font-size:10px;color:var(--muted);margin-left:auto;white-space:nowrap}
+    #musicEmptyMsg{text-align:center;padding:24px 16px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    /* ══ WEATHER CARD ══ */
+    #weatherCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    #weatherCard .wTop{padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    #weatherCard .wLoc{font-size:13px;font-weight:700;color:var(--text)}
+    #weatherCard .wCond{font-size:12.5px;color:var(--muted);margin-top:2px}
+    #weatherCard .wTemp{font-size:36px;font-weight:300;color:var(--text);line-height:1}
+    #weatherCard .wFeels{font-size:11px;color:var(--muted);margin-top:4px}
+    #weatherCard .wMeta{display:flex;gap:18px;padding:0 20px 16px;font-size:11.5px;color:var(--muted)}
+    #weatherCard .wMeta span{display:flex;align-items:center;gap:5px}
+    #weatherCard .wMeta svg{width:12px;height:12px}
+    #weatherDays{display:flex;border-top:1px solid var(--border)}
+    .wDay{flex:1;padding:12px 6px;text-align:center;border-right:1px solid var(--border)}
+    .wDay:last-child{border-right:none}
+    .wDay .wDayLbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+    .wDay .wDayMax{font-size:13px;font-weight:700;color:var(--text)}
+    .wDay .wDayMin{font-size:11.5px;color:var(--muted);margin-top:1px}
+    #weatherLocBtn{margin:0 20px 18px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;width:calc(100% - 40px);display:flex;align-items:center;justify-content:center;gap:8px}
+    #weatherLocBtn svg{width:14px;height:14px}
+
     /* ══ INLINE TO-DO LIST CARD (rendered inside results) ══ */
     #todoCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
     #todoCard .tdTop{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
@@ -680,6 +714,8 @@
             <div id="cameraSection" class="rSec" style="display:none"></div>
             <div id="uploadSection" class="rSec" style="display:none"></div>
             <div id="todoSection" class="rSec" style="display:none"></div>
+            <div id="musicSection" class="rSec" style="display:none"></div>
+            <div id="weatherSection" class="rSec" style="display:none"></div>
             <div id="codeSection" class="rSec" style="display:none"></div>
             <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
             <div id="linksSection" class="rSec" style="display:none">
@@ -971,6 +1007,9 @@ function clearResults(){
   document.getElementById('cameraSection').style.display='none';document.getElementById('cameraSection').innerHTML='';
   document.getElementById('uploadSection').style.display='none';document.getElementById('uploadSection').innerHTML='';
   document.getElementById('todoSection').style.display='none';document.getElementById('todoSection').innerHTML='';
+  stopMusicPreview();
+  document.getElementById('musicSection').style.display='none';document.getElementById('musicSection').innerHTML='';
+  document.getElementById('weatherSection').style.display='none';document.getElementById('weatherSection').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -978,7 +1017,7 @@ function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.
 const STATUSMSGS=['Understanding your request…','Searching the web…','Finding the best answers…','Composing your results…','Almost ready…'];
 function glowStatus(msg){return '<span class="glowMsg"><span class="glowDot"></span>'+msg+'</span>';}
 
-async function doSearch(qOv,forceAction,imageData){
+async function doSearch(qOv,forceAction,imageData,geoData){
   const q=(qOv||SI.value||HS.value).trim();
   if((!q&&!imageData)||busy)return;
 
@@ -996,6 +1035,7 @@ async function doSearch(qOv,forceAction,imageData){
   if(deepMode)payload.deep=true;
   if(forceAction)payload.force_action=forceAction;
   if(imageData){payload.image_base64=imageData.base64;payload.image_mime=imageData.mime;}
+  if(geoData){payload.lat=geoData.lat;payload.lon=geoData.lon;}
 
   try{
     const res=await fetch('/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -1086,6 +1126,22 @@ function renderResults(data,q){
     renderTodoCard(todoSec);
   }else{
     todoSec.style.display='none';todoSec.innerHTML='';
+  }
+
+  // MUSIC IDENTIFICATION — user typed something like "give me that song that goes..."
+  const musicSec=document.getElementById('musicSection');
+  if(data.action==='show_music'){
+    renderMusicCard(musicSec,data.music||[]);
+  }else{
+    musicSec.style.display='none';musicSec.innerHTML='';
+  }
+
+  // WEATHER — user typed something like "what's the weather" / "weather in Tokyo"
+  const weatherSec=document.getElementById('weatherSection');
+  if(data.action==='show_weather'){
+    renderWeatherCard(weatherSec,data.weather||null,!!data.weather_needs_location);
+  }else{
+    weatherSec.style.display='none';weatherSec.innerHTML='';
   }
 
   // INTENT LINE — show what we understood (no action chips, they weren't reliable)
@@ -1227,7 +1283,7 @@ function renderResults(data,q){
     linksSection.style.display='block';
   }
 
-  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)&&data.action!=='open_camera'&&data.action!=='show_upload'&&data.action!=='show_todo'){
+  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)&&data.action!=='open_camera'&&data.action!=='show_upload'&&data.action!=='show_todo'&&data.action!=='show_music'&&data.action!=='show_weather'){
     ab.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--muted)">No results found. Try rephrasing your search.</div>';
     answerSection.style.display='block';
   }
@@ -1442,6 +1498,122 @@ function removeTodo(container,id){
   items=items.filter(i=>i.id!==id);
   saveTodos(items);
   renderTodoCard(container);
+}
+
+// ── MUSIC IDENTIFICATION ──
+// Plays only the licensed 30-second preview clip the backend returns
+// (from Apple's iTunes Search API) — never a full track, by design.
+let currentPreviewAudio=null,currentPreviewBtnId=null;
+
+function stopMusicPreview(){
+  if(currentPreviewAudio){
+    currentPreviewAudio.pause();
+    currentPreviewAudio=null;
+  }
+  if(currentPreviewBtnId){
+    const btn=document.getElementById(currentPreviewBtnId);
+    if(btn)btn.innerHTML=PLAY_ICON_SVG;
+    currentPreviewBtnId=null;
+  }
+}
+
+const PLAY_ICON_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+const PAUSE_ICON_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+function renderMusicCard(container,tracks){
+  if(!tracks||!tracks.length){
+    container.innerHTML='<div id="musicCard"><div id="musicEmptyMsg">Couldn\'t find a match for that — try the exact title, artist, or a clearer lyric.</div></div>';
+    container.style.display='block';
+    return;
+  }
+  container.innerHTML='<div id="musicCard">'+tracks.map((t,i)=>{
+    const btnId='mtPlay_'+i;
+    const hasPreview=!!t.preview_url;
+    return '<div class="musicTrack">'
+      +(t.artwork?'<img src="'+esc(t.artwork)+'" alt="" onerror="this.style.display=\'none\'">':'')
+      +'<div class="mtBody">'
+        +'<div class="mtTitle">'+esc(t.title)+'</div>'
+        +'<div class="mtArtist">'+esc(t.artist)+(t.album?' · '+esc(t.album):'')+'</div>'
+        +'<div class="mtControls">'
+          +(hasPreview?'<button class="mtPlayBtn" id="'+btnId+'" onclick="toggleMusicPreview(\''+btnId+'\',\''+esc(t.preview_url).replace(/'/g,"\\'")+'\')">'+PLAY_ICON_SVG+'</button>':'')
+          +(t.itunes_url?'<a class="mtLink" href="'+esc(t.itunes_url)+'" target="_blank" rel="noopener">Apple Music</a>':'')
+          +(t.spotify_search_url?'<a class="mtLink" href="'+esc(t.spotify_search_url)+'" target="_blank" rel="noopener">Spotify</a>':'')
+          +(t.youtube_search_url?'<a class="mtLink" href="'+esc(t.youtube_search_url)+'" target="_blank" rel="noopener">YouTube</a>':'')
+          +(hasPreview?'<span class="mtPreviewNote">30s preview</span>':'')
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('')+'</div>';
+  container.style.display='block';
+}
+
+function toggleMusicPreview(btnId,previewUrl){
+  const btn=document.getElementById(btnId);
+  if(!btn)return;
+  // Tapping the currently-playing button again pauses it.
+  if(currentPreviewBtnId===btnId&&currentPreviewAudio){
+    stopMusicPreview();
+    return;
+  }
+  stopMusicPreview();
+  currentPreviewAudio=new Audio(previewUrl);
+  currentPreviewBtnId=btnId;
+  btn.innerHTML=PAUSE_ICON_SVG;
+  currentPreviewAudio.play().catch(()=>{
+    stopMusicPreview();
+  });
+  currentPreviewAudio.addEventListener('ended',stopMusicPreview);
+}
+
+// ── WEATHER ──
+function renderWeatherCard(container,weather,needsLocation,errorMsg){
+  if(needsLocation||!weather){
+    container.innerHTML='<div id="weatherCard">'
+      +'<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7">'+(errorMsg?esc(errorMsg):'Tell me a place ("weather in Tokyo") or share your location for current conditions.')+'</div>'
+      +'<button id="weatherLocBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Use my location</button>'
+      +'</div>';
+    container.style.display='block';
+    const btn=document.getElementById('weatherLocBtn');
+    if(btn)btn.onclick=requestLocationWeather;
+    return;
+  }
+  const dayFmt=d=>{
+    const dt=new Date(d+'T00:00:00');
+    return dt.toLocaleDateString(undefined,{weekday:'short'});
+  };
+  container.innerHTML='<div id="weatherCard">'
+    +'<div class="wTop">'
+      +'<div><div class="wLoc">'+esc(weather.label)+'</div><div class="wCond">'+esc(weather.condition||'')+'</div></div>'
+      +'<div style="text-align:right"><div class="wTemp">'+Math.round(weather.temp)+'°</div><div class="wFeels">Feels like '+Math.round(weather.feels_like)+'°</div></div>'
+    +'</div>'
+    +'<div class="wMeta">'
+      +'<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>'+weather.humidity+'% humidity</span>'
+      +'<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>'+Math.round(weather.wind_speed)+' km/h</span>'
+    +'</div>'
+    +(weather.daily&&weather.daily.length?'<div id="weatherDays">'+weather.daily.map(d=>
+      '<div class="wDay"><div class="wDayLbl">'+dayFmt(d.date)+'</div><div class="wDayMax">'+Math.round(d.max)+'°</div><div class="wDayMin">'+Math.round(d.min)+'°</div></div>'
+    ).join('')+'</div>':'')
+    +'</div>';
+  container.style.display='block';
+}
+
+function requestLocationWeather(){
+  const weatherSec=document.getElementById('weatherSection');
+  if(!navigator.geolocation){
+    renderWeatherCard(weatherSec,null,true,'Location is not available in this browser.');
+    return;
+  }
+  const btn=document.getElementById('weatherLocBtn');
+  if(btn){btn.disabled=true;btn.textContent='Locating…';}
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      doSearch('weather',null,null,{lat:pos.coords.latitude,lon:pos.coords.longitude});
+    },
+    ()=>{
+      renderWeatherCard(weatherSec,null,true,'Could not get your location — check your browser permissions and try again.');
+    },
+    {timeout:8000}
+  );
 }
 
 // ── AUTOCOMPLETE ──
