@@ -161,23 +161,65 @@
     .calcBtn.eq:hover{opacity:0.9;background:var(--blue)}
     .calcBtn.fn{color:var(--muted);font-size:14px;font-weight:600}
 
-    /* ══ WEATHER CARD ══ */
-    #weatherCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-    #weatherCard .wTop{padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    #weatherCard .wLoc{font-size:13px;font-weight:700;color:var(--text)}
-    #weatherCard .wCond{font-size:12.5px;color:var(--muted);margin-top:2px}
-    #weatherCard .wTemp{font-size:36px;font-weight:300;color:var(--text);line-height:1}
-    #weatherCard .wFeels{font-size:11px;color:var(--muted);margin-top:4px}
-    #weatherCard .wMeta{display:flex;gap:18px;padding:0 20px 16px;font-size:11.5px;color:var(--muted)}
-    #weatherCard .wMeta span{display:flex;align-items:center;gap:5px}
-    #weatherCard .wMeta svg{width:12px;height:12px}
-    #weatherDays{display:flex;border-top:1px solid var(--border)}
-    .wDay{flex:1;padding:12px 6px;text-align:center;border-right:1px solid var(--border)}
-    .wDay:last-child{border-right:none}
-    .wDay .wDayLbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
-    .wDay .wDayMax{font-size:13px;font-weight:700;color:var(--text)}
-    .wDay .wDayMin{font-size:11.5px;color:var(--muted);margin-top:1px}
-    #weatherLocBtn{margin:0 20px 18px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;width:calc(100% - 40px);display:flex;align-items:center;justify-content:center;gap:8px}
+    /* ══ WEATHER CARD — FULL IMMERSIVE ══ */
+    #weatherCard{border-radius:20px;overflow:hidden;position:relative;min-height:340px;display:flex;flex-direction:column;background:linear-gradient(160deg,#1a3a6e 0%,#0f2347 40%,#0a1628 100%);color:#fff;border:none}
+    #weatherCard.sunny{background:linear-gradient(160deg,#f7941d 0%,#f95d00 40%,#c23b00 100%)}
+    #weatherCard.cloudy{background:linear-gradient(160deg,#4a5568 0%,#2d3748 40%,#1a202c 100%)}
+    #weatherCard.rainy{background:linear-gradient(160deg,#2c5282 0%,#1a365d 40%,#0d1f3c 100%)}
+    #weatherCard.snowy{background:linear-gradient(160deg,#4a7a9b 0%,#2c6a8a 40%,#1a4a6a 100%)}
+    #weatherCard.stormy{background:linear-gradient(160deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%)}
+    /* Animated background particles */
+    #wBg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .wParticle{position:absolute;border-radius:50%;opacity:0.08;animation:wFloat linear infinite}
+    @keyframes wFloat{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}100%{transform:translateY(0) scale(1)}}
+    /* Top bar with location + flag */
+    #wTopBar{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;position:relative;z-index:1}
+    #wLocBlock{display:flex;flex-direction:column;gap:2px}
+    #wLocName{font-size:16px;font-weight:700;color:#fff;line-height:1.2}
+    #wLocTime{font-size:11.5px;color:rgba(255,255,255,0.6)}
+    #wFlagBtn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:6px 12px;font-size:13px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:6px;transition:background 0.2s;backdrop-filter:blur(4px)}
+    #wFlagBtn:hover{background:rgba(255,255,255,0.22)}
+    #wFlagBtn svg{width:13px;height:13px;opacity:0.7}
+    /* Main temp hero */
+    #wHero{padding:16px 20px 8px;position:relative;z-index:1;display:flex;align-items:flex-end;gap:16px}
+    #wBigTemp{font-size:80px;font-weight:200;letter-spacing:-4px;line-height:1;color:#fff}
+    #wHeroRight{padding-bottom:10px}
+    #wCondition{font-size:18px;font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:4px}
+    #wFeelsRow{font-size:12.5px;color:rgba(255,255,255,0.6)}
+    /* Weather emoji icon */
+    #wEmoji{font-size:52px;line-height:1;margin-bottom:4px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3))}
+    /* Stats row */
+    #wStats{display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);margin:12px 0 0;position:relative;z-index:1}
+    .wStat{flex:1;padding:14px 8px;text-align:center;border-right:1px solid rgba(255,255,255,0.08)}
+    .wStat:last-child{border-right:none}
+    .wStatVal{font-size:15px;font-weight:700;color:#fff}
+    .wStatLbl{font-size:9.5px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+    /* 5-day forecast strip */
+    #wForecast{display:flex;position:relative;z-index:1;padding:4px 0}
+    .wFDay{flex:1;padding:14px 4px;text-align:center}
+    .wFDayLbl{font-size:10px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+    .wFDayEmoji{font-size:18px;margin-bottom:5px;line-height:1}
+    .wFDayMax{font-size:13px;font-weight:700;color:#fff}
+    .wFDayMin{font-size:11px;color:rgba(255,255,255,0.45);margin-top:1px}
+    /* Flag picker overlay */
+    #flagOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+    #flagOverlay.open{display:flex}
+    #flagSheet{background:var(--card);border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:75vh;display:flex;flex-direction:column;overflow:hidden;padding-bottom:env(safe-area-inset-bottom,0)}
+    #flagSheetHeader{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+    #flagSheetTitle{font-size:15px;font-weight:700;color:var(--text)}
+    #flagSheetClose{width:30px;height:30px;border-radius:50%;border:none;background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center}
+    #flagSheetClose svg{width:14px;height:14px}
+    #flagSearch{margin:12px 16px 0;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--input);font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;flex-shrink:0}
+    #flagSearch:focus{border-color:var(--blue)}
+    #flagList{overflow-y:auto;flex:1;padding:8px 0}
+    .flagItem{display:flex;align-items:center;gap:12px;padding:13px 20px;cursor:pointer;transition:background 0.1s}
+    .flagItem:hover,.flagItem:active{background:var(--surface)}
+    .flagEmoji{font-size:22px;line-height:1;width:28px;text-align:center;flex-shrink:0}
+    .flagName{font-size:14px;color:var(--text);font-weight:500}
+    .flagCity{font-size:12px;color:var(--muted);margin-top:1px}
+    /* Location button when no weather yet */
+    #weatherLocBtn{margin:0 20px 18px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:#fff;font-size:13px;font-weight:600;cursor:pointer;width:calc(100% - 40px);display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(4px);transition:background 0.2s}
+    #weatherLocBtn:hover{background:rgba(255,255,255,0.2)}
     #weatherLocBtn svg{width:14px;height:14px}
 
     /* ══ MORNING BRIEFING ══ */
@@ -405,14 +447,7 @@
     #homeGo svg{width:14px;height:14px}
     #homeAutoBox{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,0.14);z-index:500;display:none;overflow:hidden}
     .homeHint{font-size:12px;color:var(--muted);margin-top:10px;margin-bottom:22px;text-align:center}
-    .quickGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%}
-    .qCard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:background 0.12s,transform 0.15s,box-shadow 0.15s}
-    .qCard:hover{background:var(--surface);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.1)}
-    .qCard:active{transform:translateY(0);box-shadow:none}
-    .qCardIcon{width:28px;height:28px;margin-bottom:10px;color:var(--blue)}
-    .qCardIcon svg{width:28px;height:28px}
-    .qCardTitle{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
-    .qCardSub{font-size:11px;color:var(--muted);line-height:1.5}
+    /* quick cards removed */
 
     /* ══ RESULT PAGE ══ */
     #resultPage{position:absolute;left:0;right:0;bottom:0;top:52px;background:var(--bg);display:flex;flex-direction:column;transform:translateY(102%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);z-index:5;pointer-events:none}
@@ -788,8 +823,7 @@
         <div id="homeAutoBox"></div>
       </div>
       <div id="homeSearchBar"></div>
-      <div class="homeHint">Powered by AI · Ask anything · Get direct answers</div>
-      <div class="quickGrid" id="quickGrid"></div>
+      <div class="homeHint">Your AI — smarter every search</div>
       <!-- MORNING BRIEFING -->
       <div id="morningBriefing" style="display:none;margin:0 0 8px;max-width:680px;width:100%">
         <div id="mbHeader">
@@ -860,6 +894,17 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- FLAG / COUNTRY PICKER -->
+  <div id="flagOverlay" onclick="if(event.target===this)closeFlagPicker()">
+    <div id="flagSheet">
+      <div id="flagSheetHeader">
+        <div id="flagSheetTitle">Choose a city or country</div>
+        <button id="flagSheetClose" onclick="closeFlagPicker()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <input id="flagSearch" type="text" placeholder="Search city or country…" oninput="filterFlags(this.value)" autocomplete="off"/>
+      <div id="flagList"></div>
     </div>
   </div>
 </div><!-- #app -->
@@ -1028,7 +1073,7 @@ auth.onAuthStateChanged(u=>{
   home.style.display='flex';
   if(u){upUI(u);loadHist(u.uid);}
   else{upUI(null);}
-  loadPrefs();loadQuickCards();
+  loadPrefs();
 });
 
 function upUI(u){
@@ -1436,21 +1481,8 @@ document.getElementById('dmNew').addEventListener('click',()=>{dotMenu.classList
 document.getElementById('dmBack').addEventListener('click',()=>{dotMenu.classList.remove('open');showHome();});
 document.getElementById('dmRefresh').addEventListener('click',()=>{dotMenu.classList.remove('open');if(lastQ)doSearch(lastQ);});
 
-const CICONS=['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'];
+// quick cards removed
 
-async function loadQuickCards(){
-  const grid=document.getElementById('quickGrid');
-  try{
-    const r=await fetch('/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:'suggest 4 interesting homepage explore topics. Reply ONLY as JSON array, no markdown: [{"title":"2-3 word title","subtitle":"max 7 word subtitle","query":"full search query string"}]. Topics: news, science/tech, entertainment, lifestyle.'})});
-    const d=await r.json();let cards=[];
-    try{const raw=(d.suggestions||[]).join(' ');const m=raw.match(/\[[\s\S]*\]/);if(m)cards=JSON.parse(m[0]);}catch(e2){}
-    if(!cards||cards.length<4)throw new Error('fail');
-    grid.innerHTML='';
-    cards.slice(0,4).forEach((c,i)=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[i%CICONS.length]+'</div><div class="qCardTitle">'+esc(c.title)+'</div><div class="qCardSub">'+esc(c.subtitle)+'</div>';el.addEventListener('click',()=>go(c.query||c.title));grid.appendChild(el);});
-  }catch(e){
-    [{i:0,t:'World News',s:'Latest global headlines',q:'Latest world news today'},{i:1,t:'AI & Tech',s:"What's new in technology",q:'top AI and tech news 2026'},{i:2,t:'Entertainment',s:'Movies, shows & music',q:'trending movies and shows 2026'},{i:3,t:'Science',s:'Discoveries & breakthroughs',q:'latest science discoveries 2026'}].forEach(f=>{const el=document.createElement('div');el.className='qCard';el.innerHTML='<div class="qCardIcon">'+CICONS[f.i]+'</div><div class="qCardTitle">'+f.t+'</div><div class="qCardSub">'+f.s+'</div>';el.addEventListener('click',()=>go(f.q));grid.appendChild(el);});
-  }
-}
 
 // ── INLINE CAMERA CARD ──
 // Rendered inside the results column (see renderResults' "open_camera" branch).
@@ -1733,32 +1765,196 @@ function toggleMusicPreview(btnId,previewUrl){
 function renderWeatherCard(container,weather,needsLocation,errorMsg){
   if(needsLocation||!weather){
     container.innerHTML='<div id="weatherCard">'
-      +'<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7">'+(errorMsg?esc(errorMsg):'Tell me a place ("weather in Tokyo") or share your location for current conditions.')+'</div>'
+      +'<div id="wBg"></div>'
+      +'<div style="padding:28px 20px 10px;position:relative;z-index:1;text-align:center">'
+        +'<div style="font-size:48px;margin-bottom:12px">🌍</div>'
+        +'<div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:6px">'+(errorMsg?esc(errorMsg):'Where are you?')+'</div>'
+        +'<div style="font-size:12.5px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:20px">Allow location access or pick a city</div>'
+      +'</div>'
       +'<button id="weatherLocBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Use my location</button>'
-      +'</div>';
+      +'<button id="weatherLocBtn" onclick="openFlagPicker()" style="margin-top:0;border-top:1px solid rgba(255,255,255,0.1);border-radius:0 0 12px 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Pick a city or country</button>'
+    +'</div>';
     container.style.display='block';
+    addWeatherParticles();
     const btn=document.getElementById('weatherLocBtn');
     if(btn)btn.onclick=requestLocationWeather;
     return;
   }
+
+  // Determine theme class + emoji from weather condition
+  const cond=(weather.condition||'').toLowerCase();
+  let theme='', emoji='🌤️';
+  if(/clear|sunny/.test(cond)){theme='sunny';emoji='☀️';}
+  else if(/overcast|cloudy/.test(cond)){theme='cloudy';emoji='☁️';}
+  else if(/drizzle|rain|shower/.test(cond)){theme='rainy';emoji='🌧️';}
+  else if(/snow|blizzard/.test(cond)){theme='snowy';emoji='❄️';}
+  else if(/thunder|storm/.test(cond)){theme='stormy';emoji='⛈️';}
+  else if(/fog/.test(cond)){theme='cloudy';emoji='🌫️';}
+  else if(/partly/.test(cond)){emoji='⛅';}
+
   const dayFmt=d=>{
     const dt=new Date(d+'T00:00:00');
     return dt.toLocaleDateString(undefined,{weekday:'short'});
   };
-  container.innerHTML='<div id="weatherCard">'
-    +'<div class="wTop">'
-      +'<div><div class="wLoc">'+esc(weather.label)+'</div><div class="wCond">'+esc(weather.condition||'')+'</div></div>'
-      +'<div style="text-align:right"><div class="wTemp">'+Math.round(weather.temp)+'°</div><div class="wFeels">Feels like '+Math.round(weather.feels_like)+'°</div></div>'
+
+  const condEmoji=c=>{
+    const cl=(c||'').toLowerCase();
+    if(/clear|sunny/.test(cl))return'☀️';
+    if(/partly/.test(cl))return'⛅';
+    if(/overcast|cloudy/.test(cl))return'☁️';
+    if(/drizzle/.test(cl))return'🌦️';
+    if(/rain|shower/.test(cl))return'🌧️';
+    if(/snow/.test(cl))return'❄️';
+    if(/thunder|storm/.test(cl))return'⛈️';
+    if(/fog/.test(cl))return'🌫️';
+    return'🌤️';
+  };
+
+  const now=new Date();
+  const timeStr=now.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+  const dateStr=now.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+
+  container.innerHTML='<div id="weatherCard" class="'+theme+'">'
+    +'<div id="wBg"></div>'
+    +'<div id="wTopBar">'
+      +'<div id="wLocBlock">'
+        +'<div id="wLocName">'+esc(weather.label)+'</div>'
+        +'<div id="wLocTime">'+dateStr+' · '+timeStr+'</div>'
+      +'</div>'
+      +'<button id="wFlagBtn" onclick="openFlagPicker()">'
+        +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+        +'Change'
+      +'</button>'
     +'</div>'
-    +'<div class="wMeta">'
-      +'<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>'+weather.humidity+'% humidity</span>'
-      +'<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>'+Math.round(weather.wind_speed)+' km/h</span>'
+    +'<div id="wHero">'
+      +'<div id="wBigTemp">'+Math.round(weather.temp)+'°</div>'
+      +'<div id="wHeroRight">'
+        +'<div id="wEmoji">'+emoji+'</div>'
+        +'<div id="wCondition">'+esc(weather.condition||'')+'</div>'
+        +'<div id="wFeelsRow">Feels like '+Math.round(weather.feels_like)+'°C</div>'
+      +'</div>'
     +'</div>'
-    +(weather.daily&&weather.daily.length?'<div id="weatherDays">'+weather.daily.map(d=>
-      '<div class="wDay"><div class="wDayLbl">'+dayFmt(d.date)+'</div><div class="wDayMax">'+Math.round(d.max)+'°</div><div class="wDayMin">'+Math.round(d.min)+'°</div></div>'
-    ).join('')+'</div>':'')
-    +'</div>';
+    +'<div id="wStats">'
+      +'<div class="wStat"><div class="wStatVal">'+weather.humidity+'%</div><div class="wStatLbl">Humidity</div></div>'
+      +'<div class="wStat"><div class="wStatVal">'+Math.round(weather.wind_speed)+' km/h</div><div class="wStatLbl">Wind</div></div>'
+      +'<div class="wStat"><div class="wStatVal">'+Math.round(weather.temp)+'°C</div><div class="wStatLbl">Temp</div></div>'
+      +'<div class="wStat"><div class="wStatVal">'+Math.round(weather.feels_like)+'°C</div><div class="wStatLbl">Feels</div></div>'
+    +'</div>'
+    +(weather.daily&&weather.daily.length
+      ?'<div id="wForecast">'+weather.daily.map((d,i)=>
+        '<div class="wFDay">'
+          +'<div class="wFDayLbl">'+(i===0?'Today':dayFmt(d.date))+'</div>'
+          +'<div class="wFDayEmoji">'+condEmoji(d.condition)+'</div>'
+          +'<div class="wFDayMax">'+Math.round(d.max)+'°</div>'
+          +'<div class="wFDayMin">'+Math.round(d.min)+'°</div>'
+        +'</div>'
+      ).join('')+'</div>'
+      :'')
+  +'</div>';
   container.style.display='block';
+  addWeatherParticles();
+}
+
+function addWeatherParticles(){
+  const bg=document.getElementById('wBg');
+  if(!bg)return;
+  bg.innerHTML='';
+  for(let i=0;i<6;i++){
+    const p=document.createElement('div');
+    p.className='wParticle';
+    const size=40+Math.random()*120;
+    p.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:rgba(255,255,255,0.06);animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*4}s`;
+    bg.appendChild(p);
+  }
+}
+
+// ── FLAG / COUNTRY PICKER ──
+const FLAG_PLACES=[
+  {flag:'🇿🇦',name:'South Africa',city:'Cape Town',q:'weather in Cape Town'},
+  {flag:'🇿🇦',name:'South Africa',city:'Johannesburg',q:'weather in Johannesburg'},
+  {flag:'🇿🇦',name:'South Africa',city:'Durban',q:'weather in Durban'},
+  {flag:'🇺🇸',name:'United States',city:'New York',q:'weather in New York'},
+  {flag:'🇺🇸',name:'United States',city:'Los Angeles',q:'weather in Los Angeles'},
+  {flag:'🇺🇸',name:'United States',city:'Chicago',q:'weather in Chicago'},
+  {flag:'🇬🇧',name:'United Kingdom',city:'London',q:'weather in London'},
+  {flag:'🇫🇷',name:'France',city:'Paris',q:'weather in Paris'},
+  {flag:'🇩🇪',name:'Germany',city:'Berlin',q:'weather in Berlin'},
+  {flag:'🇯🇵',name:'Japan',city:'Tokyo',q:'weather in Tokyo'},
+  {flag:'🇨🇳',name:'China',city:'Beijing',q:'weather in Beijing'},
+  {flag:'🇮🇳',name:'India',city:'Mumbai',q:'weather in Mumbai'},
+  {flag:'🇮🇳',name:'India',city:'Delhi',q:'weather in Delhi'},
+  {flag:'🇧🇷',name:'Brazil',city:'São Paulo',q:'weather in Sao Paulo'},
+  {flag:'🇦🇺',name:'Australia',city:'Sydney',q:'weather in Sydney'},
+  {flag:'🇦🇺',name:'Australia',city:'Melbourne',q:'weather in Melbourne'},
+  {flag:'🇳🇬',name:'Nigeria',city:'Lagos',q:'weather in Lagos'},
+  {flag:'🇳🇬',name:'Nigeria',city:'Abuja',q:'weather in Abuja'},
+  {flag:'🇰🇪',name:'Kenya',city:'Nairobi',q:'weather in Nairobi'},
+  {flag:'🇬🇭',name:'Ghana',city:'Accra',q:'weather in Accra'},
+  {flag:'🇪🇬',name:'Egypt',city:'Cairo',q:'weather in Cairo'},
+  {flag:'🇲🇦',name:'Morocco',city:'Casablanca',q:'weather in Casablanca'},
+  {flag:'🇿🇼',name:'Zimbabwe',city:'Harare',q:'weather in Harare'},
+  {flag:'🇧🇼',name:'Botswana',city:'Gaborone',q:'weather in Gaborone'},
+  {flag:'🇲🇿',name:'Mozambique',city:'Maputo',q:'weather in Maputo'},
+  {flag:'🇿🇲',name:'Zambia',city:'Lusaka',q:'weather in Lusaka'},
+  {flag:'🇧🇩',name:'Bangladesh',city:'Dhaka',q:'weather in Dhaka'},
+  {flag:'🇵🇰',name:'Pakistan',city:'Karachi',q:'weather in Karachi'},
+  {flag:'🇷🇺',name:'Russia',city:'Moscow',q:'weather in Moscow'},
+  {flag:'🇨🇦',name:'Canada',city:'Toronto',q:'weather in Toronto'},
+  {flag:'🇲🇽',name:'Mexico',city:'Mexico City',q:'weather in Mexico City'},
+  {flag:'🇦🇷',name:'Argentina',city:'Buenos Aires',q:'weather in Buenos Aires'},
+  {flag:'🇮🇩',name:'Indonesia',city:'Jakarta',q:'weather in Jakarta'},
+  {flag:'🇸🇦',name:'Saudi Arabia',city:'Riyadh',q:'weather in Riyadh'},
+  {flag:'🇦🇪',name:'UAE',city:'Dubai',q:'weather in Dubai'},
+  {flag:'🇹🇷',name:'Turkey',city:'Istanbul',q:'weather in Istanbul'},
+  {flag:'🇸🇬',name:'Singapore',city:'Singapore',q:'weather in Singapore'},
+  {flag:'🇹🇭',name:'Thailand',city:'Bangkok',q:'weather in Bangkok'},
+  {flag:'🇵🇭',name:'Philippines',city:'Manila',q:'weather in Manila'},
+  {flag:'🇪🇸',name:'Spain',city:'Madrid',q:'weather in Madrid'},
+  {flag:'🇮🇹',name:'Italy',city:'Rome',q:'weather in Rome'},
+  {flag:'🇵🇹',name:'Portugal',city:'Lisbon',q:'weather in Lisbon'},
+  {flag:'🇳🇱',name:'Netherlands',city:'Amsterdam',q:'weather in Amsterdam'},
+  {flag:'🇸🇪',name:'Sweden',city:'Stockholm',q:'weather in Stockholm'},
+  {flag:'🇳🇴',name:'Norway',city:'Oslo',q:'weather in Oslo'},
+  {flag:'🇨🇭',name:'Switzerland',city:'Zurich',q:'weather in Zurich'},
+];
+let allFlagPlaces=[...FLAG_PLACES];
+
+function openFlagPicker(){
+  const overlay=document.getElementById('flagOverlay');
+  const list=document.getElementById('flagList');
+  const searchEl=document.getElementById('flagSearch');
+  if(!overlay)return;
+  renderFlagList(allFlagPlaces,list);
+  overlay.classList.add('open');
+  setTimeout(()=>{if(searchEl)searchEl.focus();},200);
+}
+function closeFlagPicker(){
+  const overlay=document.getElementById('flagOverlay');
+  if(overlay)overlay.classList.remove('open');
+  const searchEl=document.getElementById('flagSearch');
+  if(searchEl)searchEl.value='';
+}
+function filterFlags(val){
+  const list=document.getElementById('flagList');
+  if(!list)return;
+  const filtered=allFlagPlaces.filter(p=>
+    p.name.toLowerCase().includes(val.toLowerCase())||
+    p.city.toLowerCase().includes(val.toLowerCase())
+  );
+  renderFlagList(filtered,list);
+}
+function renderFlagList(places,list){
+  if(!list)return;
+  list.innerHTML=places.map(p=>
+    '<div class="flagItem" onclick="pickFlag(\''+esc(p.q)+'\')">'
+      +'<div class="flagEmoji">'+p.flag+'</div>'
+      +'<div><div class="flagName">'+esc(p.city)+'</div><div class="flagCity">'+esc(p.name)+'</div></div>'
+    +'</div>'
+  ).join('');
+}
+function pickFlag(query){
+  closeFlagPicker();
+  go(query);
 }
 
 function requestLocationWeather(){
