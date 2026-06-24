@@ -2372,13 +2372,16 @@ try {
 
 // ── AUTO GEO INJECT on weather search ──
 // Wrap the original doSearch to auto-inject geo for weather queries
+// ── SAFE doSearch PATCH — only intercepts bare weather queries ──
 const _origDoSearch = doSearch;
 window.doSearch = async function(qOv, forceAction, imageData, geoData) {
   const q = (qOv || SI.value || HS.value || '').trim().toLowerCase();
-  const isWeather = /weather|forecast|temperature|rain|snow|sunny|hot|cold/.test(q);
-  const hasPlace = /\bin\s+\w|\bfor\s+\w|\bat\s+\w/.test(q);
+  // VERY tight weather check — must start with or be purely a weather intent
+  // Never intercept code, general, or ambiguous queries
+  const isBareWeather = /^(weather|forecast|what('s| is) the weather|today'?s? weather|weather today|current weather|temperature (today|now|outside)|is it (raining|snowing|sunny|hot|cold) (today|now|outside)?)(\s|$)/.test(q);
+  const hasPlace = /\b(in|for|at)\s+[a-z]/.test(q);
 
-  if (isWeather && !hasPlace && !geoData && !imageData) {
+  if (isBareWeather && !hasPlace && !geoData && !imageData) {
     requestGeoWeather(geo => {
       _origDoSearch(qOv, forceAction, imageData, geo || undefined);
     });
@@ -2387,12 +2390,16 @@ window.doSearch = async function(qOv, forceAction, imageData, geoData) {
   }
 };
 
-// Patch saveHist to also track for intelligence engine
-const _origSaveHist = saveHist;
-window.saveHist = function(q) {
-  _origSaveHist(q);
-  uiTrackSearch(q);
-};
+// ── TRACK searches for intelligence engine (safe — hooks via event on doSearch) ──
+// Instead of patching saveHist (which may not exist), we hook into doSearch result
+// by observing when qEcho changes — that's the most reliable signal a search completed
+const _qEchoEl = document.getElementById('qEcho');
+if (_qEchoEl) {
+  new MutationObserver(() => {
+    const q = _qEchoEl.textContent || '';
+    if (q) uiTrackSearch(q);
+  }).observe(_qEchoEl, { childList: true, subtree: true, characterData: true });
+}
 
 // ── MORNING BRIEFING ──
 function getGreeting() {
@@ -2484,28 +2491,28 @@ async function loadMorningBriefing() {
   }
 }
 
-// ── INJECT INTELLIGENCE BADGE on search results ──
-// Patches renderResults to show "Based on your interests" when relevant
+// ── INJECT INTELLIGENCE BADGE on answer/results only — never on code/special cards ──
 const _origRenderResults = renderResults;
 window.renderResults = function(data, q) {
   _origRenderResults(data, q);
 
-  // If query matches user's top topics, show a badge
-  if (q) {
-    const top = uiTopTopics(3);
-    const qLow = q.toLowerCase();
-    const matched = top.find(t => {
-      const label = t.replace(/^[^\w]+/, '').toLowerCase();
-      return qLow.includes(label.split(' ')[0]) || label.split(' ').some(w => qLow.includes(w));
-    });
-    if (matched) {
-      const ibar = document.getElementById('intentBar');
-      if (ibar && ibar.style.display !== 'none') {
-        const badge = document.createElement('div');
-        badge.className = 'uiBadge';
-        badge.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Based on your interests`;
-        ibar.appendChild(badge);
-      }
+  // Only badge on plain answer or web results — never on code, weather, music, calculator etc
+  const specialActions = ['build_code','show_weather','show_music','show_calculator','show_todo','open_camera','show_upload'];
+  if (!q || specialActions.includes(data.action)) return;
+
+  const top = uiTopTopics(3);
+  const qLow = q.toLowerCase();
+  const matched = top.find(t => {
+    const label = t.replace(/^[^\w\s]+\s*/, '').toLowerCase();
+    return label.split(/\s+/).some(w => w.length > 3 && qLow.includes(w));
+  });
+  if (matched) {
+    const ibar = document.getElementById('intentBar');
+    if (ibar && ibar.style.display !== 'none' && !ibar.querySelector('.uiBadge')) {
+      const badge = document.createElement('div');
+      badge.className = 'uiBadge';
+      badge.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Based on your interests`;
+      ibar.appendChild(badge);
     }
   }
 };
