@@ -165,6 +165,30 @@
     #weatherLocBtn{margin:0 20px 18px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;width:calc(100% - 40px);display:flex;align-items:center;justify-content:center;gap:8px}
     #weatherLocBtn svg{width:14px;height:14px}
 
+    /* ══ MORNING BRIEFING ══ */
+    #morningBriefing{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:14px}
+    #mbHeader{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+    #mbGreeting{font-size:15px;font-weight:700;color:var(--text)}
+    #mbDate{font-size:11px;color:var(--muted);margin-top:1px}
+    #mbWeatherSnap{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--blue)}
+    #mbWeatherSnap svg{width:14px;height:14px}
+    .mbSection{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .mbSection:last-child{border-bottom:none}
+    .mbSecLabel{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:8px}
+    .mbTopicPill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;margin:3px 3px 0 0;transition:background 0.15s,border-color 0.15s}
+    .mbTopicPill:hover{background:var(--pill);border-color:var(--blue);color:var(--blue)}
+    .mbTopicPill svg{width:11px;height:11px;color:var(--muted)}
+    .mbInsight{font-size:12.5px;color:var(--text);line-height:1.65;padding:4px 0}
+    .mbInsightBullet{display:flex;align-items:flex-start;gap:8px;padding:4px 0}
+    .mbInsightBullet::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:7px}
+    #mbDismiss{display:flex;align-items:center;justify-content:center;padding:10px;cursor:pointer;font-size:11.5px;color:var(--muted);gap:5px;transition:color 0.15s}
+    #mbDismiss:hover{color:var(--text)}
+    #mbDismiss svg{width:12px;height:12px}
+
+    /* ══ USER INTELLIGENCE BADGE on results ══ */
+    .uiBadge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:rgba(26,106,240,0.08);border:1px solid rgba(26,106,240,0.18);border-radius:20px;font-size:10.5px;font-weight:700;color:var(--blue);margin-bottom:8px}
+    .uiBadge svg{width:10px;height:10px}
+
     /* ══ INLINE TO-DO LIST CARD (rendered inside results) ══ */
     #todoCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
     #todoCard .tdTop{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
@@ -747,6 +771,31 @@
       <div id="homeSearchBar"></div>
       <div class="homeHint">Powered by AI · Ask anything · Get direct answers</div>
       <div class="quickGrid" id="quickGrid"></div>
+      <!-- MORNING BRIEFING -->
+      <div id="morningBriefing" style="display:none;margin:0 0 8px;max-width:680px;width:100%">
+        <div id="mbHeader">
+          <div>
+            <div id="mbGreeting">Good morning ☀️</div>
+            <div id="mbDate"></div>
+          </div>
+          <div id="mbWeatherSnap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <span id="mbWeatherText">Loading…</span>
+          </div>
+        </div>
+        <div class="mbSection" id="mbTopicsWrap" style="display:none">
+          <div class="mbSecLabel">Your interests · based on recent searches</div>
+          <div id="mbTopics"></div>
+        </div>
+        <div class="mbSection" id="mbInsightsWrap" style="display:none">
+          <div class="mbSecLabel">Smart suggestions</div>
+          <div id="mbInsights"></div>
+        </div>
+        <div id="mbDismiss" onclick="dismissBriefing()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Dismiss for today
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1959,6 +2008,275 @@ document.getElementById('micBtn').addEventListener('click',()=>{if(!voiceActive)
 document.getElementById('homeMicBtn').addEventListener('click',()=>{if(!voiceActive)startVoiceSearch();});
 document.getElementById('voiceStopBtn').addEventListener('click',stopVoiceSearch);
 document.getElementById('voiceOverlay').addEventListener('click',e=>{if(e.target.id==='voiceOverlay')stopVoiceSearch();});
+
+// ════════════════════════════════════════════════════════════════
+//  USER INTELLIGENCE ENGINE
+//  — tracks search patterns, extracts topics, drives morning briefing
+//  — all data stays local (localStorage) — zero server tracking
+// ════════════════════════════════════════════════════════════════
+
+const UI_KEY = 'nmedea_ui';
+
+function uiLoad() {
+  try { return JSON.parse(localStorage.getItem(UI_KEY)) || {}; } catch(e) { return {}; }
+}
+function uiSave(d) {
+  try { localStorage.setItem(UI_KEY, JSON.stringify(d)); } catch(e) {}
+}
+
+// Called every time the user runs a search — records the query and infers a topic
+function uiTrackSearch(query) {
+  if (!query || query.length < 2) return;
+  const d = uiLoad();
+  if (!d.searches) d.searches = [];
+
+  // Extract topic category from query using keyword matching
+  const q = query.toLowerCase();
+  let topic = inferTopic(q);
+
+  d.searches.unshift({ q: query, topic, ts: Date.now() });
+  // Keep only last 200 searches
+  if (d.searches.length > 200) d.searches = d.searches.slice(0, 200);
+
+  // Build topic frequency map from last 50 searches
+  const recent = d.searches.slice(0, 50);
+  const freq = {};
+  recent.forEach(s => { if (s.topic) freq[s.topic] = (freq[s.topic] || 0) + 1; });
+  d.topicFreq = freq;
+  d.lastSearch = Date.now();
+  uiSave(d);
+}
+
+const TOPIC_MAP = [
+  { label: '🏥 Health',       keys: ['health','symptom','pain','disease','medicine','vitamin','diet','doctor','mental','anxiety','depression','sleep','exercise','workout','fitness','weight'] },
+  { label: '💰 Finance',      keys: ['stock','crypto','bitcoin','invest','money','price','market','economy','dollar','budget','loan','mortgage','tax','salary','income'] },
+  { label: '🌍 World News',   keys: ['war','election','president','government','politics','protest','climate','news','report','crisis','summit','treaty','policy'] },
+  { label: '⚽ Sports',       keys: ['football','soccer','nba','nfl','match','game','score','team','player','league','championship','tennis','golf','cricket','basketball'] },
+  { label: '🎬 Entertainment',keys: ['movie','film','series','show','episode','netflix','spotify','music','song','album','artist','actor','celebrity','trailer','watch'] },
+  { label: '🤖 Tech & AI',    keys: ['ai','gpt','llm','chatgpt','technology','software','code','programming','app','api','robot','startup','openai','google','apple','gadget','phone','laptop'] },
+  { label: '🍕 Food',         keys: ['recipe','food','cook','restaurant','eat','meal','diet','vegan','nutrition','calories','ingredient','drink','coffee','pizza','sushi'] },
+  { label: '✈️ Travel',       keys: ['travel','hotel','flight','visa','country','city','trip','vacation','tourism','beach','mountain','tour','book','airbnb'] },
+  { label: '🎓 Learning',     keys: ['how to','tutorial','learn','explain','what is','definition','course','study','school','university','history','science','math','physics'] },
+  { label: '🛍️ Shopping',    keys: ['buy','price','cheap','deal','amazon','review','product','order','discount','sale','shipping','brand','store'] },
+];
+
+function inferTopic(q) {
+  for (const t of TOPIC_MAP) {
+    if (t.keys.some(k => q.includes(k))) return t.label;
+  }
+  return null;
+}
+
+// Returns top N topics the user searches most
+function uiTopTopics(n = 5) {
+  const d = uiLoad();
+  if (!d.topicFreq) return [];
+  return Object.entries(d.topicFreq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([label]) => label);
+}
+
+// Returns smart suggestions based on search patterns
+function uiSmartInsights() {
+  const d = uiLoad();
+  if (!d.searches || d.searches.length < 3) return [];
+  const insights = [];
+  const recent = d.searches.slice(0, 10).map(s => s.q);
+
+  // Repeated topic
+  const top = uiTopTopics(1)[0];
+  if (top) insights.push(`You search ${top} a lot — tap to explore the latest`);
+
+  // Time-based
+  const hour = new Date().getHours();
+  if (hour >= 6 && hour < 10) insights.push('Morning: great time to check today\'s news and weather');
+  if (hour >= 12 && hour < 14) insights.push('Lunchtime: quick answers ready for anything');
+  if (hour >= 20) insights.push('Evening: catch up on what happened today');
+
+  // Search count milestone
+  const total = d.searches.length;
+  if (total >= 10) insights.push(`You\'ve made ${total} searches on nmedea`);
+
+  return insights.slice(0, 3);
+}
+
+// ── GEOLOCATION WEATHER — auto-detect via browser GPS, no typing needed ──
+let userGeo = null; // cached { lat, lon }
+
+function requestGeoWeather(callback) {
+  if (userGeo) { callback(userGeo); return; }
+  if (!navigator.geolocation) { callback(null); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      userGeo = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      // Persist for this session
+      try { sessionStorage.setItem('nmedea_geo', JSON.stringify(userGeo)); } catch(e) {}
+      callback(userGeo);
+    },
+    () => callback(null),
+    { timeout: 8000, maximumAge: 300000 }
+  );
+}
+
+// Try to restore geo from session storage
+try {
+  const sg = JSON.parse(sessionStorage.getItem('nmedea_geo'));
+  if (sg && sg.lat) userGeo = sg;
+} catch(e) {}
+
+// ── AUTO GEO INJECT on weather search ──
+// Wrap the original doSearch to auto-inject geo for weather queries
+const _origDoSearch = doSearch;
+window.doSearch = async function(qOv, forceAction, imageData, geoData) {
+  const q = (qOv || SI.value || HS.value || '').trim().toLowerCase();
+  const isWeather = /weather|forecast|temperature|rain|snow|sunny|hot|cold/.test(q);
+  const hasPlace = /\bin\s+\w|\bfor\s+\w|\bat\s+\w/.test(q);
+
+  if (isWeather && !hasPlace && !geoData && !imageData) {
+    requestGeoWeather(geo => {
+      _origDoSearch(qOv, forceAction, imageData, geo || undefined);
+    });
+  } else {
+    _origDoSearch(qOv, forceAction, imageData, geoData);
+  }
+};
+
+// Patch saveHist to also track for intelligence engine
+const _origSaveHist = saveHist;
+window.saveHist = function(q) {
+  _origSaveHist(q);
+  uiTrackSearch(q);
+};
+
+// ── MORNING BRIEFING ──
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning ☀️';
+  if (h < 17) return 'Good afternoon 👋';
+  return 'Good evening 🌙';
+}
+
+function shouldShowBriefing() {
+  const today = new Date().toDateString();
+  const dismissed = localStorage.getItem('nmedea_brief_dismiss');
+  if (dismissed === today) return false;
+  // Show if it's morning (6am-11am) OR user has 3+ searches recorded
+  const h = new Date().getHours();
+  const d = uiLoad();
+  const hasHistory = d.searches && d.searches.length >= 3;
+  return (h >= 6 && h < 12) || hasHistory;
+}
+
+function dismissBriefing() {
+  localStorage.setItem('nmedea_brief_dismiss', new Date().toDateString());
+  const el = document.getElementById('morningBriefing');
+  if (el) { el.style.opacity = '0'; el.style.transform = 'translateY(-10px)'; el.style.transition = 'all 0.3s ease'; setTimeout(() => el.style.display = 'none', 300); }
+}
+
+async function loadMorningBriefing() {
+  if (!shouldShowBriefing()) return;
+
+  const el = document.getElementById('morningBriefing');
+  if (!el) return;
+
+  // Set greeting + date
+  document.getElementById('mbGreeting').textContent = getGreeting();
+  document.getElementById('mbDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+  el.style.display = 'block';
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(8px)';
+  el.style.transition = 'all 0.4s ease';
+  setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 50);
+
+  // Load weather via geolocation
+  document.getElementById('mbWeatherText').textContent = 'Detecting location…';
+  requestGeoWeather(async geo => {
+    if (geo) {
+      try {
+        const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.lat}&longitude=${geo.lon}&current=temperature_2m,weather_code&temperature_unit=celsius&timezone=auto`);
+        const wd = await r.json();
+        const temp = Math.round(wd.current?.temperature_2m ?? 0);
+        const wCodes = {0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Freezing fog',51:'Drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Showers',82:'Heavy showers',95:'Thunderstorm'};
+        const cond = wCodes[wd.current?.weather_code] || '';
+        document.getElementById('mbWeatherText').textContent = `${temp}°C · ${cond}`;
+      } catch(e) {
+        document.getElementById('mbWeatherText').textContent = 'Weather unavailable';
+      }
+    } else {
+      document.getElementById('mbWeatherText').textContent = 'Allow location for weather';
+    }
+  });
+
+  // Load personalized topics
+  const topics = uiTopTopics(6);
+  if (topics.length > 0) {
+    const wrap = document.getElementById('mbTopicsWrap');
+    const cont = document.getElementById('mbTopics');
+    cont.innerHTML = '';
+    topics.forEach(t => {
+      const pill = document.createElement('div');
+      pill.className = 'mbTopicPill';
+      pill.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>${t}`;
+      pill.addEventListener('click', () => {
+        // search for latest in this topic
+        const label = t.replace(/^[^\w]+/, '').trim();
+        go(`latest ${label} news today`);
+      });
+      cont.appendChild(pill);
+    });
+    wrap.style.display = 'block';
+  }
+
+  // Smart insights
+  const insights = uiSmartInsights();
+  if (insights.length > 0) {
+    const wrap = document.getElementById('mbInsightsWrap');
+    const cont = document.getElementById('mbInsights');
+    cont.innerHTML = insights.map(i => `<div class="mbInsightBullet mbInsight">${i}</div>`).join('');
+    wrap.style.display = 'block';
+  }
+}
+
+// ── INJECT INTELLIGENCE BADGE on search results ──
+// Patches renderResults to show "Based on your interests" when relevant
+const _origRenderResults = renderResults;
+window.renderResults = function(data, q) {
+  _origRenderResults(data, q);
+
+  // If query matches user's top topics, show a badge
+  if (q) {
+    const top = uiTopTopics(3);
+    const qLow = q.toLowerCase();
+    const matched = top.find(t => {
+      const label = t.replace(/^[^\w]+/, '').toLowerCase();
+      return qLow.includes(label.split(' ')[0]) || label.split(' ').some(w => qLow.includes(w));
+    });
+    if (matched) {
+      const ibar = document.getElementById('intentBar');
+      if (ibar && ibar.style.display !== 'none') {
+        const badge = document.createElement('div');
+        badge.className = 'uiBadge';
+        badge.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Based on your interests`;
+        ibar.appendChild(badge);
+      }
+    }
+  }
+};
+
+// ── BOOT: load morning briefing after auth resolves ──
+// We hook into the auth callback by waiting for splash to hide
+const _briefingObserver = new MutationObserver((mutations) => {
+  for (const m of mutations) {
+    if (m.target.classList.contains('hide') || m.target.style.display === 'none') {
+      _briefingObserver.disconnect();
+      // Small delay to let home page render
+      setTimeout(loadMorningBriefing, 800);
+    }
+  }
+});
+_briefingObserver.observe(document.getElementById('splash'), { attributes: true, attributeFilter: ['class', 'style'] });
 
 // ── AUTOCOMPLETE ──
 let lastSuggVal='',lastSuggBox=null;
