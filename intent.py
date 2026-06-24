@@ -221,6 +221,16 @@ def looks_like_weather_request(query: str) -> bool:
         q,
     ))
 
+def looks_like_calculator_request(query: str) -> bool:
+    q = query.lower()
+    return bool(re.search(
+        r'\b(give|show|open|need|want)\b.{0,15}\bcalculator\b'
+        r'|^\s*calculator\s*$'
+        r'|\bopen\s+(a\s+|the\s+)?calculator\b'
+        r'|\bcalculator\s+(app|please|now)\b',
+        q,
+    ))
+
 
 # ─────────────────────────────────────────────────────────────────
 #  EXA  — neural web search
@@ -771,6 +781,14 @@ def understand(query: str, force_action: str = None, image_base64: str = None, i
             "social": None, "wiki": None, "code": None,
             "weather": weather,
             "weather_needs_location": weather is None,
+        }
+    if looks_like_calculator_request(query):
+        return {
+            "action": "show_calculator",
+            "url": "",
+            "understood": "Show a calculator",
+            "answer": "", "images": [], "results": [], "sources": [],
+            "social": None, "wiki": None, "code": None,
         }
 
     explicit_qty = extract_quantity(query)

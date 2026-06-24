@@ -41,16 +41,32 @@
     .nbtn svg{width:16px;height:16px}
     @media(max-width:600px){#backBtn,#refreshBtn,#newBtn{display:none}}
     #sw{flex:1;position:relative;display:flex;align-items:center;min-width:0;z-index:200}
-    #searchInput{width:100%;height:36px;background:var(--input);border:1.5px solid var(--border);border-radius:18px;padding:0 78px 0 36px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+    #searchInput{width:100%;height:36px;background:var(--input);border:1.5px solid var(--border);border-radius:18px;padding:0 106px 0 36px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
     #searchInput::placeholder{color:var(--muted)}
     #searchInput:focus{border-color:rgba(128,128,128,0.35);box-shadow:0 0 0 3px rgba(0,0,0,0.05)}
     #barIcon{position:absolute;left:12px;pointer-events:none;color:var(--muted);display:flex;align-items:center}
     #barIcon svg{width:14px;height:14px}
     /* deep research toggle, icon only */
-    .deepBtn{position:absolute;right:34px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;padding:0}
+    .deepBtn{position:absolute;right:64px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;padding:0}
     .deepBtn.on{border-color:var(--blue);color:var(--blue);background:rgba(26,106,240,0.1)}
     .deepBtn svg{width:13px;height:13px}
-    #clearBtn{position:absolute;right:64px;width:20px;height:20px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
+    #clearBtn{position:absolute;right:92px;width:20px;height:20px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
+    /* ══ VOICE SEARCH ══ */
+    .micBtn{position:absolute;right:36px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;padding:0;flex-shrink:0}
+    .micBtn:hover{border-color:var(--blue);color:var(--blue)}
+    .micBtn svg{width:13px;height:13px}
+    .micBtn.listening{border-color:#ff4560;color:#ff4560;background:rgba(255,69,96,0.08);animation:micPulse 1.4s ease-in-out infinite}
+    @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,69,96,0.35)}50%{box-shadow:0 0 0 6px rgba(255,69,96,0.08)}}
+    #voiceOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1600;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+    #voiceOverlay.open{display:flex}
+    #voicePanel{background:var(--card);border-radius:24px;padding:36px 32px;width:320px;max-width:88vw;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+    #voiceWave{display:flex;align-items:center;justify-content:center;gap:5px;height:64px;margin-bottom:20px}
+    #voiceWave .vBar{width:5px;border-radius:3px;background:var(--blue);transition:height 0.12s ease}
+    #voiceTranscript{font-size:15px;color:var(--text);min-height:48px;line-height:1.5;margin-bottom:20px;word-break:break-word}
+    #voiceTranscript.placeholder{color:var(--muted)}
+    #voiceStopBtn{width:52px;height:52px;border-radius:50%;background:#ff4560;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto}
+    #voiceStopBtn svg{width:18px;height:18px}
+    #voiceHint{font-size:11.5px;color:var(--muted);margin-top:14px}
     #clearBtn svg{width:13px;height:13px}
     #sendBtn{position:absolute;right:6px;width:26px;height:26px;border-radius:50%;border:none;background:var(--text);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s}
     #sendBtn:hover{transform:scale(1.1)}
@@ -115,6 +131,20 @@
     .mtLink:hover{border-color:var(--blue)}
     .mtPreviewNote{font-size:10px;color:var(--muted);margin-left:auto;white-space:nowrap}
     #musicEmptyMsg{text-align:center;padding:24px 16px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    /* ══ INLINE CALCULATOR ══ */
+    #calcCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;max-width:320px}
+    #calcDisplay{padding:20px 18px 14px;text-align:right}
+    #calcExpr{font-size:12px;color:var(--muted);min-height:16px;font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #calcResult{font-size:32px;font-weight:300;color:var(--text);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+    #calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);padding:1px}
+    .calcBtn{background:var(--card);border:none;padding:18px 0;font-size:18px;font-weight:500;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.1s}
+    .calcBtn:hover{background:var(--surface)}
+    .calcBtn:active{background:var(--input)}
+    .calcBtn.op{color:var(--blue);font-weight:600}
+    .calcBtn.eq{background:var(--blue);color:#fff;font-weight:700}
+    .calcBtn.eq:hover{opacity:0.9;background:var(--blue)}
+    .calcBtn.fn{color:var(--muted);font-size:14px;font-weight:600}
 
     /* ══ WEATHER CARD ══ */
     #weatherCard{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
@@ -322,10 +352,12 @@
     .homeLogoText{font-size:30px;font-weight:400;letter-spacing:-0.5px;color:var(--text);font-family:'DM Serif Display',serif}
     .homeLogoAi{font-size:10px;font-weight:700;color:var(--blue);background:rgba(26,106,240,0.09);padding:3px 7px;border-radius:5px;margin-left:4px;align-self:flex-start;margin-top:8px}
     #homeSW{position:relative;width:100%;margin-bottom:0;z-index:200}
-    #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 124px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
+    #homeSearch{width:100%;height:54px;border:2px solid var(--border);border-radius:15px;padding:0 158px 0 20px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:border-color 0.2s,box-shadow 0.2s}
     #homeSearch::placeholder{color:var(--muted)}
     #homeSearch:focus{border-color:rgba(128,128,128,0.28);box-shadow:0 8px 28px rgba(0,0,0,0.09)}
-    #homeClearBtn{position:absolute;right:84px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
+    #homeClearBtn{position:absolute;right:118px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:none;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--muted);padding:0}
+    .micBtn#homeMicBtn{right:84px;top:50%;transform:translateY(-50%);width:30px;height:30px}
+    .micBtn#homeMicBtn svg{width:15px;height:15px}
     #homeClearBtn svg{width:14px;height:14px}
     .deepBtn#homeDeepBtn{right:54px;top:50%;transform:translateY(-50%);width:30px;height:30px}
     .deepBtn#homeDeepBtn svg{width:15px;height:15px}
@@ -542,6 +574,9 @@
       <div id="barIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
       <input id="searchInput" type="text" placeholder="Search or ask anything…" autocomplete="off" spellcheck="false"/>
       <button id="clearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="micBtn" id="micBtn" title="Voice search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
       <button class="deepBtn" id="deepBtn" title="Deep Research">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
@@ -567,6 +602,24 @@
   </div>
 
   <div id="histOverlay"></div>
+
+  <!-- VOICE SEARCH: continuous listening overlay -->
+  <div id="voiceOverlay">
+    <div id="voicePanel">
+      <div id="voiceWave">
+        <div class="vBar" style="height:14px"></div>
+        <div class="vBar" style="height:24px"></div>
+        <div class="vBar" style="height:36px"></div>
+        <div class="vBar" style="height:24px"></div>
+        <div class="vBar" style="height:14px"></div>
+      </div>
+      <div id="voiceTranscript" class="placeholder">Listening…</div>
+      <button id="voiceStopBtn" title="Stop listening">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+      </button>
+      <div id="voiceHint">Speak naturally — it searches each time you pause</div>
+    </div>
+  </div>
 
   <div id="histPanel">
     <div class="hPH"><span class="hPT">History</span><button class="hPC" id="histClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -682,6 +735,9 @@
       <div id="homeSW">
         <input id="homeSearch" type="text" placeholder="Ask me anything…" autocomplete="off" spellcheck="false"/>
         <button id="homeClearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="micBtn" id="homeMicBtn" title="Voice search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
         <button class="deepBtn" id="homeDeepBtn" title="Deep Research">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 8v3l2 2"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
@@ -716,6 +772,7 @@
             <div id="todoSection" class="rSec" style="display:none"></div>
             <div id="musicSection" class="rSec" style="display:none"></div>
             <div id="weatherSection" class="rSec" style="display:none"></div>
+            <div id="calculatorSection" class="rSec" style="display:none"></div>
             <div id="codeSection" class="rSec" style="display:none"></div>
             <div id="lnkDivider" style="display:none"><div class="rSecDivider"><span>Web Results</span></div></div>
             <div id="linksSection" class="rSec" style="display:none">
@@ -1010,6 +1067,7 @@ function clearResults(){
   stopMusicPreview();
   document.getElementById('musicSection').style.display='none';document.getElementById('musicSection').innerHTML='';
   document.getElementById('weatherSection').style.display='none';document.getElementById('weatherSection').innerHTML='';
+  document.getElementById('calculatorSection').style.display='none';document.getElementById('calculatorSection').innerHTML='';
 }
 function go(q){if(!q||!q.trim())return;autoBox.style.display='none';homeAutoBox.style.display='none';SI.value=q;HS.value=q;updateClearBtns();doSearch(q);}
 
@@ -1142,6 +1200,14 @@ function renderResults(data,q){
     renderWeatherCard(weatherSec,data.weather||null,!!data.weather_needs_location);
   }else{
     weatherSec.style.display='none';weatherSec.innerHTML='';
+  }
+
+  // CALCULATOR — user typed something like "give me a calculator"
+  const calcSec=document.getElementById('calculatorSection');
+  if(data.action==='show_calculator'){
+    renderCalculator(calcSec);
+  }else{
+    calcSec.style.display='none';calcSec.innerHTML='';
   }
 
   // INTENT LINE — show what we understood (no action chips, they weren't reliable)
@@ -1283,7 +1349,7 @@ function renderResults(data,q){
     linksSection.style.display='block';
   }
 
-  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)&&data.action!=='open_camera'&&data.action!=='show_upload'&&data.action!=='show_todo'&&data.action!=='show_music'&&data.action!=='show_weather'){
+  if(!data.answer&&!data.results?.length&&!hasImages&&!data.social&&!(data.visual&&data.visual.description)&&data.action!=='open_camera'&&data.action!=='show_upload'&&data.action!=='show_todo'&&data.action!=='show_music'&&data.action!=='show_weather'&&data.action!=='show_calculator'){
     ab.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--muted)">No results found. Try rephrasing your search.</div>';
     answerSection.style.display='block';
   }
@@ -1615,6 +1681,284 @@ function requestLocationWeather(){
     {timeout:8000}
   );
 }
+
+// ── CALCULATOR ──
+// Safe expression evaluator — deliberately NOT using eval()/Function() on
+// user input. Plain tokenizer + shunting-yard, supports + - × ÷ % and
+// parentheses with normal operator precedence.
+function calcTokenize(expr){
+  const tokens=[];
+  const re=/\s*([0-9]*\.?[0-9]+|[+\-×÷%()])\s*/g;
+  let m,lastIndex=0;
+  while((m=re.exec(expr))){
+    if(m.index!==lastIndex)break; // stop on anything unrecognized
+    tokens.push(m[1]);
+    lastIndex=re.lastIndex;
+  }
+  return tokens;
+}
+function calcEvaluate(expr){
+  const tokens=calcTokenize(expr);
+  if(!tokens.length)return null;
+  const prec={'+':1,'-':1,'×':2,'÷':2,'%':2};
+  const output=[],ops=[];
+  function applyOp(op,b,a){
+    if(op==='+')return a+b;
+    if(op==='-')return a-b;
+    if(op==='×')return a*b;
+    if(op==='÷')return b===0?NaN:a/b;
+    if(op==='%')return a%b;
+  }
+  for(let i=0;i<tokens.length;i++){
+    const t=tokens[i];
+    if(/^[0-9.]+$/.test(t)){
+      output.push(parseFloat(t));
+    }else if(t==='('){
+      ops.push(t);
+    }else if(t===')'){
+      while(ops.length&&ops[ops.length-1]!=='('){
+        const op=ops.pop(),b=output.pop(),a=output.pop();
+        output.push(applyOp(op,b,a));
+      }
+      ops.pop();
+    }else{
+      // unary minus at expression start or after an operator/open-paren
+      if(t==='-'&&(i===0||['+','-','×','÷','%','('].includes(tokens[i-1]))){
+        output.push(0);
+      }
+      while(ops.length&&ops[ops.length-1]!=='('&&prec[ops[ops.length-1]]>=prec[t]){
+        const op=ops.pop(),b=output.pop(),a=output.pop();
+        output.push(applyOp(op,b,a));
+      }
+      ops.push(t);
+    }
+  }
+  while(ops.length){
+    const op=ops.pop(),b=output.pop(),a=output.pop();
+    output.push(applyOp(op,b,a));
+  }
+  const result=output.pop();
+  return (typeof result==='number'&&isFinite(result))?result:(isNaN(result)?'Error':result);
+}
+function calcFormat(n){
+  if(n==='Error'||n==null)return n||'0';
+  if(!isFinite(n))return 'Error';
+  // trim long floating point tails without mangling integers
+  const rounded=Math.round(n*1e10)/1e10;
+  let s=rounded.toString();
+  if(s.length>14)s=rounded.toPrecision(10).replace(/\.?0+$/,'').replace(/\.?0+e/,'e');
+  return s;
+}
+
+function renderCalculator(container){
+  container.innerHTML='<div id="calcCard">'
+    +'<div id="calcDisplay"><div id="calcExpr"></div><div id="calcResult">0</div></div>'
+    +'<div id="calcGrid">'
+      +calcBtnHtml('AC','fn')+calcBtnHtml('(','fn')+calcBtnHtml(')','fn')+calcBtnHtml('÷','op')
+      +calcBtnHtml('7')+calcBtnHtml('8')+calcBtnHtml('9')+calcBtnHtml('×','op')
+      +calcBtnHtml('4')+calcBtnHtml('5')+calcBtnHtml('6')+calcBtnHtml('-','op')
+      +calcBtnHtml('1')+calcBtnHtml('2')+calcBtnHtml('3')+calcBtnHtml('+','op')
+      +calcBtnHtml('⌫','fn')+calcBtnHtml('0')+calcBtnHtml('.')+calcBtnHtml('=','eq')
+    +'</div>'
+    +'</div>';
+  container.style.display='block';
+  wireCalculator(container);
+}
+function calcBtnHtml(label,cls){
+  return '<button class="calcBtn'+(cls?' '+cls:'')+'" data-key="'+esc(label)+'">'+esc(label)+'</button>';
+}
+
+let calcExprStr='';
+function wireCalculator(container){
+  calcExprStr='';
+  const exprEl=container.querySelector('#calcExpr');
+  const resultEl=container.querySelector('#calcResult');
+
+  function refresh(){
+    exprEl.textContent=calcExprStr;
+    const val=calcExprStr?calcEvaluate(calcExprStr):null;
+    resultEl.textContent=val==null?'0':calcFormat(val);
+  }
+
+  function pressKey(key){
+    if(key==='AC'){
+      calcExprStr='';
+    }else if(key==='⌫'){
+      calcExprStr=calcExprStr.slice(0,-1);
+    }else if(key==='='){
+      const val=calcExprStr?calcEvaluate(calcExprStr):null;
+      if(val!=null&&val!=='Error'){
+        calcExprStr=calcFormat(val);
+      }
+    }else{
+      calcExprStr+=key;
+    }
+    refresh();
+  }
+
+  container.querySelectorAll('.calcBtn').forEach(btn=>{
+    btn.addEventListener('click',()=>pressKey(btn.dataset.key));
+  });
+
+  // keyboard support while the calculator is on screen
+  const keyHandler=e=>{
+    if(!document.body.contains(container))return;
+    const map={'*':'×','/':'÷','Enter':'=','Backspace':'⌫','Escape':'AC'};
+    const k=map[e.key]||e.key;
+    if(/^[0-9.+\-()]$/.test(k)||['×','÷','=','⌫','AC'].includes(k)){
+      e.preventDefault();
+      pressKey(k);
+    }
+  };
+  document.addEventListener('keydown',keyHandler);
+  // clean up the listener once this calculator card leaves the DOM, so
+  // repeated calculator searches don't stack multiple active listeners
+  const observer=new MutationObserver(()=>{
+    if(!document.body.contains(container)){
+      document.removeEventListener('keydown',keyHandler);
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+
+  refresh();
+}
+
+// ── VOICE SEARCH ──
+// Continuous listening, fully visible while active (animated overlay +
+// pulsing mic icon), mic permission requested only at the moment the
+// person taps the mic button. Auto-searches each time speech recognition
+// detects a pause, then keeps listening until they tap stop — never runs
+// silently or in the background.
+const SpeechRecognitionImpl=window.SpeechRecognition||window.webkitSpeechRecognition;
+let voiceRecognition=null,voiceActive=false,voiceAudioCtx=null,voiceAnalyser=null,voiceStream=null,voiceRafId=null;
+
+function voiceSupported(){return !!SpeechRecognitionImpl;}
+
+function startVoiceSearch(){
+  if(!voiceSupported()){
+    document.getElementById('voiceTranscript').textContent="Voice search isn't supported in this browser.";
+    document.getElementById('voiceTranscript').classList.remove('placeholder');
+    document.getElementById('voiceOverlay').classList.add('open');
+    setTimeout(stopVoiceSearch,2200);
+    return;
+  }
+  voiceActive=true;
+  document.getElementById('voiceOverlay').classList.add('open');
+  document.getElementById('voiceTranscript').textContent='Listening…';
+  document.getElementById('voiceTranscript').classList.add('placeholder');
+  document.getElementById('micBtn').classList.add('listening');
+  document.getElementById('homeMicBtn').classList.add('listening');
+
+  // Real waveform driven by actual mic input level, not a fake animation —
+  // this is the bit that makes the indicator trustworthy: the bars only
+  // move because the mic is genuinely capturing sound right now.
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    voiceStream=stream;
+    voiceAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    const source=voiceAudioCtx.createMediaStreamSource(stream);
+    voiceAnalyser=voiceAudioCtx.createAnalyser();
+    voiceAnalyser.fftSize=256;
+    source.connect(voiceAnalyser);
+    drawVoiceWave();
+  }).catch(()=>{
+    // mic permission denied — recognition itself will also fail below,
+    // surfaced through recognition.onerror
+  });
+
+  voiceRecognition=new SpeechRecognitionImpl();
+  voiceRecognition.continuous=true;
+  voiceRecognition.interimResults=true;
+  voiceRecognition.lang=(navigator.language||'en-US');
+
+  voiceRecognition.onresult=e=>{
+    let finalText='',interimText='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const transcript=e.results[i][0].transcript;
+      if(e.results[i].isFinal)finalText+=transcript;
+      else interimText+=transcript;
+    }
+    const transcriptEl=document.getElementById('voiceTranscript');
+    if(finalText.trim()){
+      transcriptEl.textContent=finalText.trim();
+      transcriptEl.classList.remove('placeholder');
+      const q=finalText.trim();
+      stopVoiceSearch();
+      doSearch(q);
+    }else if(interimText.trim()){
+      transcriptEl.textContent=interimText.trim();
+      transcriptEl.classList.remove('placeholder');
+    }
+  };
+  voiceRecognition.onerror=e=>{
+    const transcriptEl=document.getElementById('voiceTranscript');
+    if(e.error==='not-allowed'||e.error==='permission-denied'){
+      transcriptEl.textContent='Microphone access was denied.';
+      transcriptEl.classList.remove('placeholder');
+      setTimeout(stopVoiceSearch,1800);
+    }else if(e.error==='no-speech'){
+      // just keep listening — silence isn't an error worth surfacing
+    }else{
+      transcriptEl.textContent="Couldn't hear that — try again.";
+      transcriptEl.classList.remove('placeholder');
+    }
+  };
+  voiceRecognition.onend=()=>{
+    // Browsers auto-stop recognition after a result or pause even in
+    // continuous mode — restart it automatically so listening truly
+    // continues until the person taps stop themselves.
+    if(voiceActive){
+      try{voiceRecognition.start();}catch(e){}
+    }
+  };
+
+  try{
+    voiceRecognition.start();
+  }catch(e){
+    document.getElementById('voiceTranscript').textContent="Couldn't start the microphone.";
+    document.getElementById('voiceTranscript').classList.remove('placeholder');
+  }
+}
+
+function drawVoiceWave(){
+  if(!voiceAnalyser)return;
+  const bars=document.querySelectorAll('#voiceWave .vBar');
+  const data=new Uint8Array(voiceAnalyser.frequencyBinCount);
+  function frame(){
+    if(!voiceActive)return;
+    voiceAnalyser.getByteFrequencyData(data);
+    const slice=Math.floor(data.length/bars.length);
+    bars.forEach((bar,i)=>{
+      let sum=0;
+      for(let j=i*slice;j<(i+1)*slice;j++)sum+=data[j];
+      const avg=sum/slice;
+      const height=Math.max(10,Math.min(56,10+avg*0.4));
+      bar.style.height=height+'px';
+    });
+    voiceRafId=requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+function stopVoiceSearch(){
+  voiceActive=false;
+  document.getElementById('voiceOverlay').classList.remove('open');
+  document.getElementById('micBtn').classList.remove('listening');
+  document.getElementById('homeMicBtn').classList.remove('listening');
+  if(voiceRecognition){
+    try{voiceRecognition.onend=null;voiceRecognition.stop();}catch(e){}
+    voiceRecognition=null;
+  }
+  if(voiceRafId){cancelAnimationFrame(voiceRafId);voiceRafId=null;}
+  if(voiceStream){voiceStream.getTracks().forEach(t=>t.stop());voiceStream=null;}
+  if(voiceAudioCtx){voiceAudioCtx.close().catch(()=>{});voiceAudioCtx=null;}
+  voiceAnalyser=null;
+}
+
+document.getElementById('micBtn').addEventListener('click',()=>{if(!voiceActive)startVoiceSearch();});
+document.getElementById('homeMicBtn').addEventListener('click',()=>{if(!voiceActive)startVoiceSearch();});
+document.getElementById('voiceStopBtn').addEventListener('click',stopVoiceSearch);
+document.getElementById('voiceOverlay').addEventListener('click',e=>{if(e.target.id==='voiceOverlay')stopVoiceSearch();});
 
 // ── AUTOCOMPLETE ──
 let lastSuggVal='',lastSuggBox=null;
