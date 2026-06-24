@@ -117,19 +117,34 @@
     #cameraCard .ccErr{color:#fff;text-align:center;padding:50px 24px;font-size:13.5px;line-height:1.7}
     #cameraCard .ccHint{color:rgba(255,255,255,0.5);font-size:11px;text-align:center;padding-top:8px}
 
-    /* ══ MUSIC IDENTIFICATION CARDS ══ */
-    #musicCard{display:flex;flex-direction:column;gap:10px}
-    .musicTrack{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;align-items:center}
-    .musicTrack img{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--surface);flex-shrink:0}
-    .musicTrack .mtBody{flex:1;min-width:0}
-    .musicTrack .mtTitle{font-size:14.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .musicTrack .mtArtist{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-    .musicTrack .mtControls{display:flex;align-items:center;gap:8px;margin-top:8px}
-    .mtPlayBtn{width:30px;height:30px;border-radius:50%;background:var(--blue);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .mtPlayBtn svg{width:13px;height:13px}
-    .mtLink{font-size:11.5px;font-weight:600;color:var(--blue);padding:5px 10px;border-radius:14px;border:1px solid var(--border);white-space:nowrap}
-    .mtLink:hover{border-color:var(--blue)}
-    .mtPreviewNote{font-size:10px;color:var(--muted);margin-left:auto;white-space:nowrap}
+    /* ══ MUSIC IDENTIFICATION — SHAZAM STYLE ══ */
+    #musicShell{width:100%;overflow:hidden}
+    #musicHeader{display:flex;align-items:center;justify-content:space-between;padding:0 0 12px}
+    #musicHeaderLabel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.13em;color:var(--muted);display:flex;align-items:center;gap:6px}
+    #musicHeaderLabel svg{width:12px;height:12px}
+    #musicScroll{display:flex;gap:12px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none;-ms-overflow-style:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+    #musicScroll::-webkit-scrollbar{display:none}
+    .mTrackTile{flex:0 0 148px;display:flex;flex-direction:column;scroll-snap-align:start;cursor:pointer;transition:transform 0.18s}
+    .mTrackTile:active{transform:scale(0.96)}
+    .mArtWrap{position:relative;width:148px;height:148px;border-radius:14px;overflow:hidden;background:var(--surface);flex-shrink:0}
+    .mArtWrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .mPlayOverlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);transition:background 0.2s}
+    .mTrackTile:hover .mPlayOverlay{background:rgba(0,0,0,0.38)}
+    .mPlayBtn{width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,0.92);color:#111;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0.8);transition:opacity 0.2s,transform 0.2s;flex-shrink:0}
+    .mTrackTile:hover .mPlayBtn{opacity:1;transform:scale(1)}
+    .mPlayBtn svg{width:16px;height:16px}
+    .mPlayBtn.playing{opacity:1;transform:scale(1);background:var(--blue);color:#fff}
+    .mNowBar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform 0.1s linear}
+    .mNowBar.active{transform:scaleX(1)}
+    .mTrackInfo{padding:8px 2px 0}
+    .mTrackTitle{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+    .mTrackArtist{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+    .mTrackLinks{display:flex;gap:5px;margin-top:7px;flex-wrap:nowrap}
+    .mLink{font-size:10px;font-weight:700;padding:4px 8px;border-radius:20px;border:1.5px solid var(--border);color:var(--text);text-decoration:none;white-space:nowrap;transition:border-color 0.15s,background 0.15s;background:var(--surface)}
+    .mLink:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,106,240,0.06)}
+    .mLink.apple{border-color:rgba(255,255,255,0.15);background:#111;color:#fff}
+    .mLink.apple:hover{background:#222}
+    [data-theme="dark"] .mLink.apple,[data-theme="midnight"] .mLink.apple{background:#222;border-color:rgba(255,255,255,0.2)}
     #musicEmptyMsg{text-align:center;padding:24px 16px;color:var(--muted);font-size:13px;line-height:1.7}
 
     /* ══ INLINE CALCULATOR ══ */
@@ -230,7 +245,7 @@
     #visualCard img{width:96px;height:96px;object-fit:cover;border-radius:12px;flex-shrink:0;background:var(--surface);cursor:pointer}
     #visualCard .vcBody{flex:1;min-width:0}
     #visualCard .vcLbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-    #visualCard .vcText{font-size:14px;line-height:1.75;color:var(--text);white-space:pre-wrap}
+    #visualCard .vcText{font-size:14px;line-height:1.75;color:var(--text);white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
 
     #lbOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1500;display:none;align-items:center;justify-content:center;flex-direction:column}
     #lbOverlay.open{display:flex}
@@ -407,9 +422,9 @@
     #rScroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
     /* full-width on mobile, constrained on desktop */
     .rInner{width:100%;padding:0 16px;max-width:1100px}
-    #qEcho{font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px;font-family:inherit;line-height:1.3}
-    #intentBar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-size:12px;color:var(--muted)}
-    #intentBar .iLabel{white-space:nowrap}
+    #qEcho{font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px;font-family:inherit;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+    #intentBar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-size:12px;color:var(--muted);min-width:0;overflow:hidden}
+    #intentBar .iLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:100%}
     #intentBar .iChip{border:1px solid var(--border);background:transparent;color:var(--text);font-size:12px;padding:5px 12px;border-radius:100px;cursor:pointer;white-space:nowrap;transition:background 0.15s,border-color 0.15s}
     #intentBar .iChip:hover{background:var(--surface);border-color:var(--muted)}
     #intentBar .iChip:active{transform:scale(0.97)}
@@ -438,7 +453,7 @@
     .rSecDivider span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);white-space:nowrap}
 
     /* ANSWER CARD */
-    #answerBody{font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;border-left:3px solid transparent}
+    #answerBody{font-size:15px;line-height:2;color:var(--text);white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;border-left:3px solid transparent}
     #wikiCard{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-top:14px;align-items:flex-start}
 
     /* CODE ARTIFACT CONTAINER */
@@ -473,7 +488,8 @@
     #wikiCard .wikiBody{flex:1;min-width:0}
     #wikiCard .wikiLbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
     #wikiCard .wikiTitle{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
-    #wikiCard .wikiText{font-size:13px;line-height:1.6;color:var(--muted)}
+    #wikiCard .wikiText{font-size:13px;line-height:1.6;color:var(--muted);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+    @media(max-width:400px){#wikiCard img{display:none}}
     #wikiCard .wikiLink{font-size:12px;color:#4f8ef7;text-decoration:none;display:inline-block;margin-top:6px}
     .ansLink{color:#4f8ef7;text-decoration:underline;text-decoration-color:rgba(79,142,247,0.35);text-underline-offset:2px;font-weight:600;word-break:break-word}
     .ansLink:hover{text-decoration-color:#4f8ef7}
@@ -526,6 +542,9 @@
     .lTitle{font-size:14px;font-weight:700;color:var(--blue);margin-bottom:4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .lDesc{font-size:12px;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
     .lThumb{width:72px;height:58px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);align-self:center}
+    @media(max-width:360px){.lThumb{display:none}}
+    /* prevent lBody text from ever overflowing its flex container */
+    .lSite{font-size:11px;color:var(--muted);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 
     /* RELATED SEARCHES */
     #relOut{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;width:100%}
@@ -533,7 +552,7 @@
     .relCard:last-child{border-bottom:none}
     .relCard:hover{background:var(--surface)}
     .relCard svg{width:13px;height:13px;color:var(--muted);flex-shrink:0}
-    .relCard span{font-size:13px;color:var(--text);flex:1}
+    .relCard span{font-size:13px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
     .relArrow svg{width:11px;height:11px;color:var(--muted)}
 
     /* SOCIAL CARD */
@@ -1627,7 +1646,11 @@ function stopMusicPreview(){
   }
   if(currentPreviewBtnId){
     const btn=document.getElementById(currentPreviewBtnId);
-    if(btn)btn.innerHTML=PLAY_ICON_SVG;
+    if(btn){btn.innerHTML=PLAY_ICON_SVG;btn.classList.remove('playing');}
+    // reset now-bar
+    const idx=currentPreviewBtnId.replace('mPlay_','');
+    const bar=document.getElementById('mBar_'+idx);
+    if(bar)bar.classList.remove('active');
     currentPreviewBtnId=null;
   }
 }
@@ -1637,35 +1660,52 @@ const PAUSE_ICON_SVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y
 
 function renderMusicCard(container,tracks){
   if(!tracks||!tracks.length){
-    container.innerHTML='<div id="musicCard"><div id="musicEmptyMsg">Couldn\'t find a match for that — try the exact title, artist, or a clearer lyric.</div></div>';
+    container.innerHTML='<div id="musicShell"><div id="musicEmptyMsg">Couldn\'t find a match for that — try the exact title, artist, or a clearer lyric.</div></div>';
     container.style.display='block';
     return;
   }
-  container.innerHTML='<div id="musicCard">'+tracks.map((t,i)=>{
-    const btnId='mtPlay_'+i;
+  const tilesHTML = tracks.map((t,i)=>{
+    const btnId='mPlay_'+i;
     const hasPreview=!!t.preview_url;
-    return '<div class="musicTrack">'
-      +(t.artwork?'<img src="'+esc(t.artwork)+'" alt="" onerror="this.style.display=\'none\'">':'')
-      +'<div class="mtBody">'
-        +'<div class="mtTitle">'+esc(t.title)+'</div>'
-        +'<div class="mtArtist">'+esc(t.artist)+(t.album?' · '+esc(t.album):'')+'</div>'
-        +'<div class="mtControls">'
-          +(hasPreview?'<button class="mtPlayBtn" id="'+btnId+'" onclick="toggleMusicPreview(\''+btnId+'\',\''+esc(t.preview_url).replace(/'/g,"\\'")+'\')">'+PLAY_ICON_SVG+'</button>':'')
-          +(t.itunes_url?'<a class="mtLink" href="'+esc(t.itunes_url)+'" target="_blank" rel="noopener">Apple Music</a>':'')
-          +(t.spotify_search_url?'<a class="mtLink" href="'+esc(t.spotify_search_url)+'" target="_blank" rel="noopener">Spotify</a>':'')
-          +(t.youtube_search_url?'<a class="mtLink" href="'+esc(t.youtube_search_url)+'" target="_blank" rel="noopener">YouTube</a>':'')
-          +(hasPreview?'<span class="mtPreviewNote">30s preview</span>':'')
+    const previewAttr=hasPreview?'data-preview="'+esc(t.preview_url)+'"':'';
+    const artFallback=t.artwork?'':'style="background:var(--surface);display:flex;align-items:center;justify-content:center"';
+    const artImg=t.artwork?'<img src="'+esc(t.artwork)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    return '<div class="mTrackTile" onclick="tileClick(\''+btnId+'\')">'
+      +'<div class="mArtWrap" '+artFallback+'>'
+        +artImg
+        +'<div class="mPlayOverlay">'
+          +(hasPreview?'<button class="mPlayBtn" id="'+btnId+'" '+previewAttr+' onclick="event.stopPropagation();toggleMusicPreview(\''+btnId+'\',this.dataset.preview)">'+PLAY_ICON_SVG+'</button>':'')
+        +'</div>'
+        +'<div class="mNowBar" id="mBar_'+i+'"></div>'
+      +'</div>'
+      +'<div class="mTrackInfo">'
+        +'<div class="mTrackTitle">'+esc(t.title)+'</div>'
+        +'<div class="mTrackArtist">'+esc(t.artist)+'</div>'
+        +'<div class="mTrackLinks">'
+          +(t.itunes_url?'<a class="mLink apple" href="'+esc(t.itunes_url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()"> Music</a>':'')
+          +(t.spotify_search_url?'<a class="mLink" href="'+esc(t.spotify_search_url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Spotify</a>':'')
+          +(t.youtube_search_url?'<a class="mLink" href="'+esc(t.youtube_search_url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">YT</a>':'')
         +'</div>'
       +'</div>'
     +'</div>';
-  }).join('')+'</div>';
+  }).join('');
+
+  container.innerHTML='<div id="musicShell">'
+    +'<div id="musicHeader"><div id="musicHeaderLabel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Music Results · scroll to explore</div></div>'
+    +'<div id="musicScroll">'+tilesHTML+'</div>'
+  +'</div>';
   container.style.display='block';
+}
+
+function tileClick(btnId){
+  // If tile has a preview button, trigger it; otherwise do nothing extra
+  const btn=document.getElementById(btnId);
+  if(btn&&btn.dataset.preview)toggleMusicPreview(btnId,btn.dataset.preview);
 }
 
 function toggleMusicPreview(btnId,previewUrl){
   const btn=document.getElementById(btnId);
-  if(!btn)return;
-  // Tapping the currently-playing button again pauses it.
+  if(!btn||!previewUrl)return;
   if(currentPreviewBtnId===btnId&&currentPreviewAudio){
     stopMusicPreview();
     return;
@@ -1674,9 +1714,18 @@ function toggleMusicPreview(btnId,previewUrl){
   currentPreviewAudio=new Audio(previewUrl);
   currentPreviewBtnId=btnId;
   btn.innerHTML=PAUSE_ICON_SVG;
-  currentPreviewAudio.play().catch(()=>{
-    stopMusicPreview();
-  });
+  btn.classList.add('playing');
+  // animate now-bar
+  const idx=btnId.replace('mPlay_','');
+  const bar=document.getElementById('mBar_'+idx);
+  if(bar){
+    bar.style.transition='none';bar.style.transform='scaleX(0)';
+    requestAnimationFrame(()=>{
+      bar.style.transition='transform 30s linear';
+      bar.classList.add('active');
+    });
+  }
+  currentPreviewAudio.play().catch(()=>stopMusicPreview());
   currentPreviewAudio.addEventListener('ended',stopMusicPreview);
 }
 
