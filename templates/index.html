@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sentinel — Security API Dashboard</title>
+<title>Wardun — Dashboard</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -76,13 +76,17 @@
 
   <!-- AUTH VIEW -->
   <div id="authView">
-    <h1>🛡️ Sentinel</h1>
+    <h1>🛡️ Wardun</h1>
     <p class="sub">Real-time attack detection for your app</p>
 
     <div class="card">
       <div id="authError" class="error"></div>
 
       <div id="loginForm">
+        <button class="btn-secondary" onclick="loginWithGoogle()" style="margin-bottom:14px;">
+          Continue with Google
+        </button>
+        <div style="text-align:center;color:#475569;font-size:12px;margin-bottom:14px;">or use email</div>
         <input type="email" id="loginEmail" placeholder="Email" />
         <input type="password" id="loginPassword" placeholder="Password" />
         <button class="btn-primary" onclick="login()">Log In</button>
@@ -90,6 +94,10 @@
       </div>
 
       <div id="signupForm" class="hidden">
+        <button class="btn-secondary" onclick="loginWithGoogle()" style="margin-bottom:14px;">
+          Continue with Google
+        </button>
+        <div style="text-align:center;color:#475569;font-size:12px;margin-bottom:14px;">or use email</div>
         <input type="email" id="signupEmail" placeholder="Email" />
         <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" />
         <button class="btn-primary" onclick="signup()">Create Account</button>
@@ -98,12 +106,26 @@
     </div>
   </div>
 
+  <!-- USERNAME SETUP VIEW (shown once, right after first signup) -->
+  <div id="usernameView" class="hidden">
+    <h1>🛡️ Wardun</h1>
+    <p class="sub">One last step</p>
+    <div class="card">
+      <div id="usernameError" class="error"></div>
+      <p style="font-size:14px;color:#94a3b8;margin-bottom:14px;">
+        Pick a username. Letters, numbers, and underscores only.
+      </p>
+      <input id="usernameInput" placeholder="e.g. justin_dev" />
+      <button class="btn-primary" onclick="saveUsername()">Continue</button>
+    </div>
+  </div>
+
   <!-- DASHBOARD VIEW -->
   <div id="dashboardView" class="hidden">
     <div class="top-bar">
       <div>
-        <h1>🛡️ Sentinel</h1>
-        <p class="sub" style="margin-bottom:0">Dashboard</p>
+        <h1>🛡️ Wardun</h1>
+        <p class="sub" style="margin-bottom:0" id="welcomeText">Dashboard</p>
       </div>
       <span class="logout" onclick="logout()">Log out</span>
     </div>
@@ -221,29 +243,76 @@ function login() {
     .catch(err => showError(err.message));
 }
 
+function loginWithGoogle() {
+  clearError();
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(err => showError(err.message));
+}
+
 function logout() {
   auth.signOut();
 }
 
 // Reacts to login/logout/signup automatically — Firebase handles the session.
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(async user => {
   if (user) {
-    enterDashboard(user);
+    const idToken = await user.getIdToken();
+    const res = await fetch("/api/profile", {
+      headers: { "Authorization": "Bearer " + idToken },
+    });
+    const data = await res.json();
+
+    if (!data.profile || !data.profile.username) {
+      // No username yet — show the one-time setup screen instead of the dashboard.
+      document.getElementById("authView").classList.add("hidden");
+      document.getElementById("dashboardView").classList.add("hidden");
+      document.getElementById("usernameView").classList.remove("hidden");
+    } else {
+      enterDashboard(user, data.profile.username);
+    }
   } else {
     if (pollTimer) clearInterval(pollTimer);
+    document.getElementById("usernameView").classList.add("hidden");
     document.getElementById("dashboardView").classList.add("hidden");
     document.getElementById("authView").classList.remove("hidden");
   }
 });
+
+async function saveUsername() {
+  const errEl = document.getElementById("usernameError");
+  errEl.style.display = "none";
+
+  const username = document.getElementById("usernameInput").value.trim();
+  const user = auth.currentUser;
+  const idToken = await user.getIdToken();
+
+  const res = await fetch("/api/profile", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + idToken, "Content-Type": "application/json" },
+    body: JSON.stringify({ username }),
+  });
+  const data = await res.json();
+
+  if (!res.ok) {
+    errEl.textContent = data.error || "Could not save username.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  document.getElementById("usernameView").classList.add("hidden");
+  enterDashboard(user, data.username);
+}
 
 // ---------------------------------------------------------------------------
 // Dashboard — reads/writes go straight to Firebase using the logged-in user's UID.
 // This ONLY works safely if your Security Rules restrict each user to their
 // own data, e.g.: "users_keys/$uid": { ".read": "auth.uid === $uid", ".write": "auth.uid === $uid" }
 // ---------------------------------------------------------------------------
-function enterDashboard(user) {
+function enterDashboard(user, username) {
   document.getElementById("authView").classList.add("hidden");
+  document.getElementById("usernameView").classList.add("hidden");
   document.getElementById("dashboardView").classList.remove("hidden");
+  document.getElementById("welcomeText").textContent = username ? `Hey, ${username}` : "Dashboard";
   loadKeys(user.uid);
 }
 

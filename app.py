@@ -258,6 +258,11 @@ def run_detection(key_id, ip, target, payload):
 # Routes — frontend
 # ---------------------------------------------------------------------------
 @app.route("/")
+def landing():
+    return render_template("landing.html")
+
+
+@app.route("/app")
 def home():
     return render_template("index.html")
 
@@ -271,6 +276,37 @@ def test_page():
 # Routes — API keys (creation must stay server-side; everything else the
 # frontend can read directly from Firebase using Security Rules)
 # ---------------------------------------------------------------------------
+@app.route("/api/profile", methods=["GET", "POST"])
+def profile():
+    user_id = require_auth()
+    if not user_id:
+        return jsonify({"error": "Not authenticated."}), 401
+
+    if request.method == "GET":
+        existing = ref(f"profiles/{user_id}").get()
+        return jsonify({"profile": existing})
+
+    data = request.get_json(force=True)
+    username = (data.get("username") or "").strip()
+
+    if not username or len(username) < 3:
+        return jsonify({"error": "Username must be at least 3 characters."}), 400
+    if not re.match(r"^[a-zA-Z0-9_]+$", username):
+        return jsonify({"error": "Username can only contain letters, numbers, and underscores."}), 400
+
+    # Check uniqueness
+    all_profiles = ref("profiles").get() or {}
+    for uid, p in all_profiles.items():
+        if uid != user_id and p.get("username", "").lower() == username.lower():
+            return jsonify({"error": "That username is already taken."}), 400
+
+    ref(f"profiles/{user_id}").set({
+        "username": username,
+        "created_at": time.time(),
+    })
+    return jsonify({"username": username})
+
+
 @app.route("/api/keys/create", methods=["POST"])
 def create_key():
     user_id = require_auth()
