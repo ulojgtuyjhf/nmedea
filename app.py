@@ -1,18 +1,20 @@
 """
 Security Platform - Flask backend (app.py)
 
-Run locally:  python app.py
-Deploy on Render: gunicorn app:app  (see Procfile)
+Auth (signup/login) now happens directly in the browser via Firebase Auth —
+this backend no longer handles passwords at all. It only does two things
+that must stay server-side:
 
-Routes:
-  GET  /                      -> serves the dashboard (templates/index.html)
-  POST /api/signup            -> create account
-  POST /api/login             -> log in, get a token
-  POST /api/keys/create       -> create a new API key (auth required)
-  GET  /api/keys              -> list your API keys (auth required)
-  POST /api/keys/<id>/toggle  -> pause/resume a key (auth required)
-  GET  /api/status/<id>       -> live status + recent activity for a key (auth required)
-  POST /api/check             -> the detection endpoint customer sites call (uses x-api-key header)
+  1. API key creation/management — generating and hashing a real secret
+     key has to happen on a server, never in browser JS.
+  2. The /api/check detection endpoint — the actual rule logic. If this
+     ran in the browser, anyone could read the thresholds and craft
+     requests that dodge them, or just call "allow" themselves.
+
+Every protected route here verifies a Firebase ID token (sent from the
+frontend after login) using the Firebase Admin SDK — this confirms the
+request really came from a logged-in user, without this backend ever
+touching a password.
 """
 
 import hashlib
@@ -23,14 +25,14 @@ import time
 import uuid
 
 import firebase_admin
+from firebase_admin import auth as firebase_auth
 from firebase_admin import credentials, db
 from flask import Flask, jsonify, render_template, request
-from passlib.hash import bcrypt
 
 app = Flask(__name__)
 
 # ---------------------------------------------------------------------------
-# Firebase setup
+# Firebase setup (Admin SDK — server-side only, uses the service account key)
 # ---------------------------------------------------------------------------
 FIREBASE_DATABASE_URL = os.environ.get(
     "FIREBASE_DATABASE_URL",
@@ -44,7 +46,6 @@ def init_firebase():
 
     key_json = os.environ.get("FIREBASE_KEY_JSON")
     if key_json:
-        import json
         import tempfile
 
         tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
@@ -52,7 +53,6 @@ def init_firebase():
         tmp.close()
         cred = credentials.Certificate(tmp.name)
     else:
-        # Local dev: expects firebase-key.json next to this file
         local_path = os.path.join(os.path.dirname(__file__), "firebase-key.json")
         cred = credentials.Certificate(local_path)
 
@@ -65,26 +65,20 @@ def ref(path):
 
 
 # ---------------------------------------------------------------------------
-# Simple session tokens (no JWT library needed — random token stored in DB)
+# Auth — verify the Firebase ID token sent from the frontend
 # ---------------------------------------------------------------------------
-def make_token():
-    return secrets.token_hex(32)
-
-
-def get_user_from_token(token):
-    if not token:
-        return None
-    session = ref(f"sessions/{token}").get()
-    if not session:
-        return None
-    return session.get("user_id")
-
-
 def require_auth():
-    """Returns user_id if valid, or None if not authenticated."""
+    """Returns the user's Firebase UID if the token is valid, else None."""
+    init_firebase()
     auth_header = request.headers.get("Authorization", "")
-    token = auth_header.replace("Bearer ", "").strip()
-    return get_user_from_token(token)
+    id_token = auth_header.replace("Bearer ", "").strip()
+    if not id_token:
+        return None
+    try:
+        decoded = firebase_auth.verify_id_token(id_token)
+        return decoded["uid"]
+    except Exception:
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -125,11 +119,9 @@ def count_recent(key_id, ip, event_type, window):
 
 
 def run_detection(key_id, ip, target, payload):
-    # 1. Injection check
     if payload and INJECTION_PATTERNS.search(payload):
         return {"action": "block", "detector": "injection", "reason": "Suspicious input pattern detected"}
 
-    # 2. Brute-force check
     log_event(key_id, ip, f"brute_{target}")
     brute_count = count_recent(key_id, ip, f"brute_{target}", BRUTE_FORCE_WINDOW)
     if brute_count > BRUTE_FORCE_MAX:
@@ -139,7 +131,6 @@ def run_detection(key_id, ip, target, payload):
             "reason": f"{brute_count} attempts on '{target}' in {BRUTE_FORCE_WINDOW}s",
         }
 
-    # 3. Bot check
     log_event(key_id, ip, "request")
     bot_count = count_recent(key_id, ip, "request", BOT_WINDOW)
     if bot_count > BOT_MAX:
@@ -161,59 +152,8 @@ def home():
 
 
 # ---------------------------------------------------------------------------
-# Routes — auth
-# ---------------------------------------------------------------------------
-@app.route("/api/signup", methods=["POST"])
-def signup():
-    data = request.get_json(force=True)
-    email = (data.get("email") or "").strip().lower()
-    password = data.get("password") or ""
-
-    if not email or not password:
-        return jsonify({"error": "Email and password are required."}), 400
-
-    users = ref("users").get() or {}
-    for uid, u in users.items():
-        if u.get("email") == email:
-            return jsonify({"error": "An account with this email already exists."}), 400
-
-    user_id = str(uuid.uuid4())
-    ref(f"users/{user_id}").set({
-        "email": email,
-        "password_hash": bcrypt.hash(password),
-        "created_at": time.time(),
-    })
-
-    token = make_token()
-    ref(f"sessions/{token}").set({"user_id": user_id, "created_at": time.time()})
-
-    return jsonify({"token": token, "user_id": user_id})
-
-
-@app.route("/api/login", methods=["POST"])
-def login():
-    data = request.get_json(force=True)
-    email = (data.get("email") or "").strip().lower()
-    password = data.get("password") or ""
-
-    users = ref("users").get() or {}
-    user_id, user = None, None
-    for uid, u in users.items():
-        if u.get("email") == email:
-            user_id, user = uid, u
-            break
-
-    if not user or not bcrypt.verify(password, user["password_hash"]):
-        return jsonify({"error": "Invalid email or password."}), 401
-
-    token = make_token()
-    ref(f"sessions/{token}").set({"user_id": user_id, "created_at": time.time()})
-
-    return jsonify({"token": token, "user_id": user_id})
-
-
-# ---------------------------------------------------------------------------
-# Routes — API keys
+# Routes — API keys (creation must stay server-side; everything else the
+# frontend can read directly from Firebase using Security Rules)
 # ---------------------------------------------------------------------------
 @app.route("/api/keys/create", methods=["POST"])
 def create_key():
@@ -231,23 +171,11 @@ def create_key():
         "created_at": time.time(),
         "label": "Default key",
     })
+    # Also store a pointer under the user's own UID so the frontend can
+    # find their key(s) directly via Security Rules without this backend.
+    ref(f"user_keys/{user_id}/{key_id}").set(True)
 
     return jsonify({"key_id": key_id, "api_key": raw_key})
-
-
-@app.route("/api/keys", methods=["GET"])
-def list_keys():
-    user_id = require_auth()
-    if not user_id:
-        return jsonify({"error": "Not authenticated."}), 401
-
-    all_keys = ref("api_keys").get() or {}
-    result = [
-        {"key_id": kid, "label": k.get("label"), "active": k.get("active", True), "created_at": k.get("created_at")}
-        for kid, k in all_keys.items()
-        if k.get("user_id") == user_id
-    ]
-    return jsonify({"keys": result})
 
 
 @app.route("/api/keys/<key_id>/toggle", methods=["POST"])

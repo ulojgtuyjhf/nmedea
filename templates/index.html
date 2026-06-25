@@ -4,164 +4,43 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sentinel — Security API Dashboard</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, Segoe UI, Arial, sans-serif; }
-  body {
-    background: #0b0f17;
-    color: #e2e8f0;
-    min-height: 100vh;
-  }
+  body { background: #0b0f17; color: #e2e8f0; min-height: 100vh; }
   .container { max-width: 480px; margin: 0 auto; padding: 24px 18px 60px; }
   h1 { font-size: 22px; margin-bottom: 4px; }
   .sub { color: #64748b; font-size: 14px; margin-bottom: 28px; }
-
-  .card {
-    background: #131a26;
-    border: 1px solid #1f2937;
-    border-radius: 14px;
-    padding: 22px;
-    margin-bottom: 16px;
-  }
-
-  input {
-    width: 100%;
-    background: #0b0f17;
-    border: 1px solid #283446;
-    color: #e2e8f0;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 15px;
-    margin-bottom: 12px;
-  }
+  .card { background: #131a26; border: 1px solid #1f2937; border-radius: 14px; padding: 22px; margin-bottom: 16px; }
+  input { width: 100%; background: #0b0f17; border: 1px solid #283446; color: #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-bottom: 12px; }
   input:focus { outline: none; border-color: #3b82f6; }
-
-  button {
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-    padding: 13px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-  }
+  button { width: 100%; border: none; border-radius: 10px; padding: 13px; font-size: 15px; font-weight: 600; cursor: pointer; }
   .btn-primary { background: #3b82f6; color: white; }
   .btn-primary:hover { background: #2563eb; }
   .btn-secondary { background: #1f2937; color: #cbd5e1; margin-top: 8px; }
   .btn-danger { background: #7f1d1d; color: #fca5a5; }
   .btn-success { background: #14532d; color: #86efac; }
-
-  .link-btn {
-    background: none;
-    color: #60a5fa;
-    text-align: center;
-    margin-top: 14px;
-    font-size: 14px;
-  }
-
-  .error {
-    background: #2a0f0f;
-    color: #fca5a5;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 13px;
-    margin-bottom: 12px;
-    display: none;
-  }
-
+  .link-btn { background: none; color: #60a5fa; text-align: center; margin-top: 14px; font-size: 14px; }
+  .error { background: #2a0f0f; color: #fca5a5; border-radius: 8px; padding: 10px 12px; font-size: 13px; margin-bottom: 12px; display: none; }
   .hidden { display: none !important; }
-
-  .key-box {
-    background: #0b0f17;
-    border: 1px dashed #3b82f6;
-    border-radius: 10px;
-    padding: 14px;
-    font-family: monospace;
-    font-size: 13px;
-    word-break: break-all;
-    margin-bottom: 10px;
-    color: #93c5fd;
-  }
-
-  .warn {
-    color: #fbbf24;
-    font-size: 12px;
-    margin-bottom: 16px;
-  }
-
-  .status-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-  }
-
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 8px;
-  }
+  .key-box { background: #0b0f17; border: 1px dashed #3b82f6; border-radius: 10px; padding: 14px; font-family: monospace; font-size: 13px; word-break: break-all; margin-bottom: 10px; color: #93c5fd; }
+  .warn { color: #fbbf24; font-size: 12px; margin-bottom: 16px; }
+  .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
   .dot-live { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 1.5s infinite; }
   .dot-paused { background: #64748b; }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  .toggle-btn {
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 13px;
-    width: auto;
-  }
-
-  .section-title {
-    font-size: 13px;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-  }
-
-  .event-row {
-    border-left: 3px solid #3b82f6;
-    padding: 10px 12px;
-    background: #0b0f17;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 13px;
-  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .toggle-btn { padding: 8px 18px; border-radius: 20px; font-size: 13px; width: auto; }
+  .section-title { font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .event-row { border-left: 3px solid #3b82f6; padding: 10px 12px; background: #0b0f17; border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
   .event-row.block { border-color: #ef4444; }
   .event-row .meta { color: #64748b; font-size: 11px; margin-top: 4px; }
-
-  .empty-state {
-    text-align: center;
-    color: #475569;
-    font-size: 13px;
-    padding: 30px 0;
-  }
-
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+  .empty-state { text-align: center; color: #475569; font-size: 13px; padding: 30px 0; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .logout { color: #64748b; font-size: 13px; cursor: pointer; }
-
-  code.snippet {
-    display: block;
-    background: #0b0f17;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 12px;
-    color: #93c5fd;
-    overflow-x: auto;
-    white-space: pre;
-    margin-top: 8px;
-  }
+  code.snippet { display: block; background: #0b0f17; border-radius: 8px; padding: 12px; font-size: 12px; color: #93c5fd; overflow-x: auto; white-space: pre; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -202,7 +81,6 @@
       <span class="logout" onclick="logout()">Log out</span>
     </div>
 
-    <!-- No key yet -->
     <div id="noKeyCard" class="card hidden">
       <div class="section-title">Get started</div>
       <p style="font-size:14px;color:#94a3b8;margin-bottom:16px;">
@@ -211,7 +89,6 @@
       <button class="btn-primary" onclick="createKey()">Generate API Key</button>
     </div>
 
-    <!-- Key just created, show once -->
     <div id="newKeyCard" class="card hidden">
       <div class="section-title">Your new API key</div>
       <p class="warn">⚠️ Copy this now — it won't be shown again.</p>
@@ -219,7 +96,6 @@
       <button class="btn-secondary" onclick="dismissNewKey()">I've copied it</button>
     </div>
 
-    <!-- Active key dashboard -->
     <div id="keyDashboard" class="card hidden">
       <div class="status-row">
         <div>
@@ -233,8 +109,7 @@
       <div id="eventsList"></div>
     </div>
 
-    <!-- Integration snippet -->
-    <div class="card" id="snippetCard" class="hidden">
+    <div class="card" id="snippetCard">
       <div class="section-title">How to use this key</div>
       <p style="font-size:13px;color:#94a3b8;">Send each request you want checked to:</p>
       <code class="snippet" id="snippetText"></code>
@@ -244,13 +119,31 @@
 </div>
 
 <script>
-const API_BASE = ""; // same origin — Flask serves both frontend and API
+// ---------------------------------------------------------------------------
+// Firebase config — this part is MEANT to be public, sitting in the frontend.
+// Security comes from your Firebase Security Rules (Realtime Database > Rules),
+// not from hiding this object. Replace with your actual project's config.
+// ---------------------------------------------------------------------------
+const firebaseConfig = {
+  apiKey: "AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ",
+  authDomain: "globalchat-2d669.firebaseapp.com",
+  databaseURL: "https://globalchat-2d669-default-rtdb.firebaseio.com",
+  projectId: "globalchat-2d669",
+  storageBucket: "globalchat-2d669.firebasestorage.app",
+  messagingSenderId: "178714711978",
+  appId: "1:178714711978:web:e0d5888ae48170bd4bbdd3"
+};
 
-let token = localStorage.getItem("sentinel_token");
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const dbRef = firebase.database();
+
 let currentKeyId = null;
-let currentRawKey = null;
 let pollTimer = null;
 
+// ---------------------------------------------------------------------------
+// Auth UI helpers
+// ---------------------------------------------------------------------------
 function showError(msg) {
   const el = document.getElementById("authError");
   el.textContent = msg;
@@ -259,7 +152,6 @@ function showError(msg) {
 function clearError() {
   document.getElementById("authError").style.display = "none";
 }
-
 function showSignup() {
   clearError();
   document.getElementById("loginForm").classList.add("hidden");
@@ -271,7 +163,10 @@ function showLogin() {
   document.getElementById("loginForm").classList.remove("hidden");
 }
 
-async function signup() {
+// ---------------------------------------------------------------------------
+// Auth — directly against Firebase, no backend round-trip
+// ---------------------------------------------------------------------------
+function signup() {
   clearError();
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
@@ -281,24 +176,11 @@ async function signup() {
     return;
   }
 
-  try {
-    const res = await fetch(API_BASE + "/api/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) { showError(data.error || "Signup failed."); return; }
-
-    token = data.token;
-    localStorage.setItem("sentinel_token", token);
-    enterDashboard();
-  } catch (e) {
-    showError("Could not reach the server. Is it running?");
-  }
+  auth.createUserWithEmailAndPassword(email, password)
+    .catch(err => showError(err.message));
 }
 
-async function login() {
+function login() {
   clearError();
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
@@ -308,99 +190,99 @@ async function login() {
     return;
   }
 
-  try {
-    const res = await fetch(API_BASE + "/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) { showError(data.error || "Login failed."); return; }
-
-    token = data.token;
-    localStorage.setItem("sentinel_token", token);
-    enterDashboard();
-  } catch (e) {
-    showError("Could not reach the server. Is it running?");
-  }
+  auth.signInWithEmailAndPassword(email, password)
+    .catch(err => showError(err.message));
 }
 
 function logout() {
-  localStorage.removeItem("sentinel_token");
-  token = null;
-  currentKeyId = null;
-  if (pollTimer) clearInterval(pollTimer);
-  document.getElementById("dashboardView").classList.add("hidden");
-  document.getElementById("authView").classList.remove("hidden");
+  auth.signOut();
 }
 
-async function enterDashboard() {
+// Reacts to login/logout/signup automatically — Firebase handles the session.
+auth.onAuthStateChanged(user => {
+  if (user) {
+    enterDashboard(user);
+  } else {
+    if (pollTimer) clearInterval(pollTimer);
+    document.getElementById("dashboardView").classList.add("hidden");
+    document.getElementById("authView").classList.remove("hidden");
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Dashboard — reads/writes go straight to Firebase using the logged-in user's UID.
+// This ONLY works safely if your Security Rules restrict each user to their
+// own data, e.g.: "users_keys/$uid": { ".read": "auth.uid === $uid", ".write": "auth.uid === $uid" }
+// ---------------------------------------------------------------------------
+function enterDashboard(user) {
   document.getElementById("authView").classList.add("hidden");
   document.getElementById("dashboardView").classList.remove("hidden");
-  await loadKeys();
+  loadKeys(user.uid);
 }
 
-async function authedFetch(url, options = {}) {
-  options.headers = options.headers || {};
-  options.headers["Authorization"] = "Bearer " + token;
-  if (options.body) options.headers["Content-Type"] = "application/json";
-  const res = await fetch(API_BASE + url, options);
-  if (res.status === 401) { logout(); throw new Error("Session expired"); }
-  return res;
+function loadKeys(uid) {
+  dbRef.ref(`user_keys/${uid}`).once("value").then(snapshot => {
+    const keys = snapshot.val();
+    if (!keys) {
+      document.getElementById("noKeyCard").classList.remove("hidden");
+      document.getElementById("keyDashboard").classList.add("hidden");
+      return;
+    }
+    currentKeyId = Object.keys(keys)[0];
+    document.getElementById("noKeyCard").classList.add("hidden");
+    document.getElementById("keyDashboard").classList.remove("hidden");
+    document.getElementById("snippetText").textContent =
+      'POST ' + window.location.origin + '/api/check\nHeaders: { "x-api-key": "YOUR_KEY" }\nBody: { "ip": "1.2.3.4", "target": "login", "payload": "..." }';
+    startPolling();
+  });
 }
 
-async function loadKeys() {
-  const res = await authedFetch("/api/keys");
-  const data = await res.json();
-
-  if (!data.keys || data.keys.length === 0) {
-    document.getElementById("noKeyCard").classList.remove("hidden");
-    document.getElementById("keyDashboard").classList.add("hidden");
-    return;
-  }
-
-  currentKeyId = data.keys[0].key_id;
-  document.getElementById("noKeyCard").classList.add("hidden");
-  document.getElementById("keyDashboard").classList.remove("hidden");
-  document.getElementById("snippetCard").classList.remove("hidden");
-  document.getElementById("snippetText").textContent =
-    'POST ' + window.location.origin + '/api/check\nHeaders: { "x-api-key": "YOUR_KEY" }\nBody: { "ip": "1.2.3.4", "target": "login", "payload": "..." }';
-
-  startPolling();
-}
-
+// Key creation still calls the backend — generating + hashing a real secret
+// key must happen server-side, never in the browser.
 async function createKey() {
-  const res = await authedFetch("/api/keys/create", { method: "POST" });
+  const user = auth.currentUser;
+  const idToken = await user.getIdToken();
+
+  const res = await fetch("/api/keys/create", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + idToken },
+  });
   const data = await res.json();
 
   currentKeyId = data.key_id;
-  currentRawKey = data.api_key;
-
   document.getElementById("noKeyCard").classList.add("hidden");
   document.getElementById("newKeyCard").classList.remove("hidden");
-  document.getElementById("newKeyValue").textContent = currentRawKey;
+  document.getElementById("newKeyValue").textContent = data.api_key;
 }
 
 function dismissNewKey() {
   document.getElementById("newKeyCard").classList.add("hidden");
-  loadKeys();
+  loadKeys(auth.currentUser.uid);
 }
 
 async function toggleKey() {
   const dot = document.getElementById("statusDot");
   const isLive = dot.classList.contains("dot-live");
-  const newActive = !isLive;
+  const user = auth.currentUser;
+  const idToken = await user.getIdToken();
 
-  await authedFetch(`/api/keys/${currentKeyId}/toggle`, {
+  await fetch(`/api/keys/${currentKeyId}/toggle`, {
     method: "POST",
-    body: JSON.stringify({ active: newActive }),
+    headers: { "Authorization": "Bearer " + idToken, "Content-Type": "application/json" },
+    body: JSON.stringify({ active: !isLive }),
   });
   refreshStatus();
 }
 
 async function refreshStatus() {
   if (!currentKeyId) return;
-  const res = await authedFetch(`/api/status/${currentKeyId}`);
+  const user = auth.currentUser;
+  if (!user) return;
+  const idToken = await user.getIdToken();
+
+  const res = await fetch(`/api/status/${currentKeyId}`, {
+    headers: { "Authorization": "Bearer " + idToken },
+  });
   const data = await res.json();
 
   const dot = document.getElementById("statusDot");
@@ -439,11 +321,6 @@ function startPolling() {
   refreshStatus();
   if (pollTimer) clearInterval(pollTimer);
   pollTimer = setInterval(refreshStatus, 4000);
-}
-
-// On load: if we already have a token, skip straight to dashboard
-if (token) {
-  enterDashboard();
 }
 </script>
 
