@@ -240,19 +240,40 @@ function loadKeys(uid) {
 // Key creation still calls the backend — generating + hashing a real secret
 // key must happen server-side, never in the browser.
 async function createKey() {
-  const user = auth.currentUser;
-  const idToken = await user.getIdToken();
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      alert("DEBUG: No logged-in user found (auth.currentUser is null).");
+      return;
+    }
 
-  const res = await fetch("/api/keys/create", {
-    method: "POST",
-    headers: { "Authorization": "Bearer " + idToken },
-  });
-  const data = await res.json();
+    const idToken = await user.getIdToken();
 
-  currentKeyId = data.key_id;
-  document.getElementById("noKeyCard").classList.add("hidden");
-  document.getElementById("newKeyCard").classList.remove("hidden");
-  document.getElementById("newKeyValue").textContent = data.api_key;
+    const res = await fetch("/api/keys/create", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + idToken },
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      alert("DEBUG: Server responded with status " + res.status + ": " + errText);
+      return;
+    }
+
+    const data = await res.json();
+
+    if (!data.api_key) {
+      alert("DEBUG: Server response had no api_key field: " + JSON.stringify(data));
+      return;
+    }
+
+    currentKeyId = data.key_id;
+    document.getElementById("noKeyCard").classList.add("hidden");
+    document.getElementById("newKeyCard").classList.remove("hidden");
+    document.getElementById("newKeyValue").textContent = data.api_key;
+  } catch (err) {
+    alert("DEBUG: createKey() threw an error: " + err.message);
+  }
 }
 
 function dismissNewKey() {
