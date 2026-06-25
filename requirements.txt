@@ -1,8 +1,4 @@
-flask
-flask-cors
-requests
-nltk
-beautifulsoup4
-html5lib
-gunicorn
-python-dotenv
+Flask==3.0.3
+firebase-admin==6.5.0
+passlib[bcrypt]==1.7.4
+gunicorn==22.0.0
