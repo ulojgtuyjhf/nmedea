@@ -18,10 +18,12 @@ touching a password.
 """
 
 import hashlib
+import json
 import os
 import re
 import secrets
 import time
+import urllib.request
 import uuid
 
 import firebase_admin
@@ -30,6 +32,115 @@ from firebase_admin import credentials, db
 from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
+
+GROQ_API_KEY = os.environ.get("GROQ_TOKEN", "")
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+
+# ---------------------------------------------------------------------------
+# Safe action registry.
+#
+# Groq NEVER writes or executes arbitrary code. It only picks one of these
+# pre-built, fixed actions and fills in simple parameters (an IP, a duration).
+# This keeps attacker-controlled input from ever being able to influence
+# what code actually runs on the server — it can only select from a known,
+# safe menu and supply plain data values.
+# ---------------------------------------------------------------------------
+SAFE_ACTIONS = {
+    "block_ip": "Block this IP address for a set duration",
+    "rate_limit_target": "Slow down requests to this specific endpoint from this IP",
+    "flag_for_review": "Log this as suspicious but allow it, for a human to review later",
+}
+
+
+def call_groq_for_explanation(detector, reason, ip, target):
+    """
+    Ask Groq to explain a detected attack in plain English and choose one
+    safe action from SAFE_ACTIONS. Returns a dict with 'explanation',
+    'action', and 'duration_minutes' — or a safe fallback if Groq is
+    unavailable or returns something unexpected.
+    """
+    fallback = {
+        "explanation": f"{detector or 'A'} pattern was detected from {ip} on '{target}'.",
+        "action": "block_ip",
+        "duration_minutes": 30,
+    }
+
+    if not GROQ_API_KEY:
+        return fallback
+
+    prompt = (
+        "You are a security monitoring assistant. An automated detector just "
+        f"flagged this event: detector='{detector}', reason='{reason}', ip='{ip}', "
+        f"target='{target}'. Respond with ONLY a JSON object, no other text, "
+        "with these exact fields: "
+        '{"explanation": "<one short, plain-English sentence for a non-technical '
+        'dashboard viewer>", "action": "<one of: block_ip, rate_limit_target, '
+        'flag_for_review>", "duration_minutes": <integer between 5 and 120>}'
+    )
+
+    try:
+        body = json.dumps({
+            "model": "llama-3.1-8b-instant",
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.3,
+            "max_tokens": 200,
+        }).encode()
+
+        req = urllib.request.Request(
+            GROQ_URL,
+            data=body,
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            result = json.loads(resp.read())
+
+        raw_text = result["choices"][0]["message"]["content"].strip()
+        parsed = json.loads(raw_text)
+
+        # Validate strictly — never trust the model's output blindly.
+        action = parsed.get("action")
+        if action not in SAFE_ACTIONS:
+            action = "block_ip"
+
+        duration = parsed.get("duration_minutes", 30)
+        if not isinstance(duration, (int, float)) or duration < 5 or duration > 120:
+            duration = 30
+
+        explanation = str(parsed.get("explanation", fallback["explanation"]))[:200]
+
+        return {
+            "explanation": explanation,
+            "action": action,
+            "duration_minutes": int(duration),
+        }
+
+    except Exception:
+        # Any failure (timeout, bad response, malformed JSON) falls back
+        # to the safe default rather than blocking the request pipeline.
+        return fallback
+
+
+def apply_safe_action(key_id, ip, action, duration_minutes):
+    """
+    Executes one of the fixed, pre-built actions. This is the ONLY code
+    path that actually does anything — Groq selects which branch runs,
+    it never supplies code itself.
+    """
+    ip_safe = ip.replace(".", "_").replace(":", "_")
+    expires_at = time.time() + (duration_minutes * 60)
+
+    if action == "block_ip":
+        ref(f"blocked_ips/{key_id}/{ip_safe}").set({"expires_at": expires_at})
+    elif action == "rate_limit_target":
+        ref(f"rate_limited/{key_id}/{ip_safe}").set({"expires_at": expires_at})
+    elif action == "flag_for_review":
+        ref(f"flagged/{key_id}/{ip_safe}").push({"timestamp": time.time()})
+    # Unknown actions are silently ignored — they should never reach here
+    # because call_groq_for_explanation() already validated against SAFE_ACTIONS.
 
 # ---------------------------------------------------------------------------
 # Firebase setup (Admin SDK — server-side only, uses the service account key)
@@ -151,6 +262,11 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/test")
+def test_page():
+    return render_template("test-check.html")
+
+
 # ---------------------------------------------------------------------------
 # Routes — API keys (creation must stay server-side; everything else the
 # frontend can read directly from Firebase using Security Rules)
@@ -246,9 +362,18 @@ def check():
     target = data.get("target", "default")
     payload = data.get("payload", "")
 
+    # Check if this IP is already under an active block from a previous action.
+    ip_safe = ip.replace(".", "_").replace(":", "_")
+    existing_block = ref(f"blocked_ips/{key_id}/{ip_safe}").get()
+    if existing_block and existing_block.get("expires_at", 0) > time.time():
+        return jsonify({"action": "block", "detector": "active_block", "reason": "IP is currently blocked."})
+
     verdict = run_detection(key_id, ip, target, payload)
 
     if verdict["action"] in ("block", "flag"):
+        ai_result = call_groq_for_explanation(verdict["detector"], verdict["reason"], ip, target)
+        apply_safe_action(key_id, ip, ai_result["action"], ai_result["duration_minutes"])
+
         ref(f"logs/{key_id}").push({
             "ip": ip,
             "target": target,
@@ -256,7 +381,13 @@ def check():
             "reason": verdict["reason"],
             "detector": verdict["detector"],
             "timestamp": time.time(),
+            "ai_explanation": ai_result["explanation"],
+            "ai_action": ai_result["action"],
+            "ai_duration_minutes": ai_result["duration_minutes"],
         })
+
+        verdict["ai_explanation"] = ai_result["explanation"]
+        verdict["ai_action"] = ai_result["action"]
 
     return jsonify(verdict)
 

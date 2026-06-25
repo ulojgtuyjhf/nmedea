@@ -32,6 +32,33 @@
   .dot-live { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 1.5s infinite; }
   .dot-paused { background: #64748b; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* Soft square "live listening" indicator, replacing the plain dot */
+  .live-box {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #1e3a8a, #0b0f17);
+    border: 1px solid #3b82f6;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 14px; position: relative; overflow: hidden;
+  }
+  .live-box.paused {
+    background: #1f2937; border-color: #334155;
+  }
+  .live-box .spinner {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 2px solid rgba(96,165,250,0.25);
+    border-top-color: #60a5fa;
+    animation: spin 1s linear infinite;
+  }
+  .live-box.paused .spinner { animation: none; border-top-color: #475569; border-color: rgba(71,85,105,0.25); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .ai-explain {
+    margin-top: 6px; font-size: 12px; color: #93c5fd;
+    background: #0d1b2e; border-radius: 6px; padding: 8px 10px;
+    border-left: 2px solid #3b82f6;
+  }
+  .ai-explain::before { content: "✨ "; }
   .toggle-btn { padding: 8px 18px; border-radius: 20px; font-size: 13px; width: auto; }
   .section-title { font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
   .event-row { border-left: 3px solid #3b82f6; padding: 10px 12px; background: #0b0f17; border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
@@ -98,8 +125,8 @@
 
     <div id="keyDashboard" class="card hidden">
       <div class="status-row">
-        <div>
-          <span class="dot" id="statusDot"></span>
+        <div style="display:flex; align-items:center;">
+          <div class="live-box" id="liveBox"><div class="spinner"></div></div>
           <span id="statusText" style="font-weight:600;"></span>
         </div>
         <button class="toggle-btn" id="toggleBtn" onclick="toggleKey()"></button>
@@ -282,8 +309,8 @@ function dismissNewKey() {
 }
 
 async function toggleKey() {
-  const dot = document.getElementById("statusDot");
-  const isLive = dot.classList.contains("dot-live");
+  const liveBox = document.getElementById("liveBox");
+  const isLive = !liveBox.classList.contains("paused");
   const user = auth.currentUser;
   const idToken = await user.getIdToken();
 
@@ -306,17 +333,17 @@ async function refreshStatus() {
   });
   const data = await res.json();
 
-  const dot = document.getElementById("statusDot");
+  const liveBox = document.getElementById("liveBox");
   const text = document.getElementById("statusText");
   const btn = document.getElementById("toggleBtn");
 
   if (data.active) {
-    dot.className = "dot dot-live";
+    liveBox.classList.remove("paused");
     text.textContent = "Listening for attacks…";
     btn.textContent = "Pause";
     btn.className = "toggle-btn btn-danger";
   } else {
-    dot.className = "dot dot-paused";
+    liveBox.classList.add("paused");
     text.textContent = "Paused";
     btn.textContent = "Run";
     btn.className = "toggle-btn btn-success";
@@ -331,9 +358,13 @@ async function refreshStatus() {
   list.innerHTML = data.recent_events.map(ev => {
     const time = new Date(ev.timestamp * 1000).toLocaleTimeString();
     const cls = ev.action === "block" ? "block" : "";
+    const aiLine = ev.ai_explanation
+      ? `<div class="ai-explain">${ev.ai_explanation}</div>`
+      : "";
     return `<div class="event-row ${cls}">
       <strong>${ev.action.toUpperCase()}</strong> — ${ev.reason || ""}
       <div class="meta">${ev.detector || "unknown"} · IP ${ev.ip} · ${time}</div>
+      ${aiLine}
     </div>`;
   }).join("");
 }
