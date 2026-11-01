@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=overlays-content">
 <title>nmedea</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#07080d">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   html, body { height: 100%; margin: 0; overflow: hidden; background: #021428; touch-action: none; font-family: system-ui, sans-serif; -webkit-user-select: none; user-select: none; }
@@ -160,6 +162,10 @@
   .ln { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 11px; border: 1px solid transparent; background: none; color: var(--tx); font: 500 13.5px 'Outfit', sans-serif; text-align: left; transition: background .15s; }
   .ln svg { width: 17px; height: 17px; color: var(--mu); flex: none; }
   .ln.on { background: rgba(33,114,255,.12); border-color: rgba(33,114,255,.3); color: var(--gl); } .ln.on svg { color: var(--gl); }
+  /* get-the-app button: pinned to the bottom of the menu, under Settings */
+  .lapp { position: relative; z-index: 3; flex: none; display: flex; align-items: center; gap: 12px; width: calc(100% - 36px); margin: 0 18px 12px; padding: 7px 16px 7px 8px; border-radius: 99px; border: 1px solid rgba(125,180,255,.32); background: linear-gradient(135deg, rgba(33,114,255,.18), rgba(124,58,237,.14)); color: #cfe0ff; font: 600 14px 'Outfit', sans-serif; text-align: left; box-shadow: 0 6px 18px rgba(0,0,0,.4); } .lapp img, .lapp > b { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; display: block; box-shadow: 0 0 0 1.5px rgba(125,180,255,.55), 0 0 12px rgba(33,114,255,.4); } .lapp > b { display: grid; place-items: center; background: rgba(33,114,255,.25); font-size: 17px; } .lapp .lat { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; } .lapp small { font: 500 9.5px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #7d809b; } #lapptx { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .lapp .lchev { flex: none; font-style: normal; font-size: 24px; line-height: 1; color: var(--gl); } .lapp:active { transform: scale(.98); } .lapp[hidden] { display: none; }
+  .lbrand { display: grid; place-items: center; width: 60px; height: 60px; margin: 2px auto 8px; border-radius: 17px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,.45), 0 0 16px rgba(33,114,255,.3); } .lbrand img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #appToast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 99; max-width: 90%; padding: 9px 14px; border-radius: 12px; background: rgba(15,16,25,.95); border: 1px solid rgba(33,114,255,.4); color: #fff; font: 500 13px 'Outfit', system-ui, sans-serif; display: none; pointer-events: none; } #appToast.show { display: block; }
   #lmain { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
   .ltab { display: none; flex: 1; min-height: 0; flex-direction: column; } .ltab.on { display: flex; animation: lin .25s ease; }
   .lhr { position: relative; flex: 1; display: flex; align-items: center; gap: 8px; padding: 16px 20px; overflow: hidden; border-radius: 24px; background: linear-gradient(145deg, #2a0b17 0%, #0d0e16 55%, #1a0a28 100%); border: 1px solid rgba(255,100,120,.22); box-shadow: 0 20px 50px rgba(0,0,0,.5); }
@@ -206,7 +212,7 @@
   .lpf { background: none; border: 0; border-radius: 0; padding: 8px 14px; }
   @container (max-width: 640px) {
     #lnav { width: 54px; padding-right: 6px; align-items: stretch; } .lsec { display: none; }
-    .ln, #lplay { font-size: 0; gap: 0; justify-content: center; padding: 11px 0; } .ln svg { width: 19px; height: 19px; } #lplay svg { width: 15px; height: 15px; }
+    .ln, #lplay { font-size: 0; gap: 0; justify-content: center; padding: 11px 0; } .lbrand { width: 40px; height: 40px; border-radius: 12px; margin-bottom: 6px; } .ln svg { width: 19px; height: 19px; } #lplay svg { width: 15px; height: 15px; }
     #lfr { width: 112px; padding-left: 10px; }
     .lhr { flex-direction: column; justify-content: center; gap: 4px; } .lhr::before { left: 50%; transform: translate(-50%, -50%); width: 70%; }
     .lhv { flex: 0 1 auto; width: 62%; min-height: 0; } .lhi { flex: none; align-items: center; text-align: center; }
@@ -385,6 +391,39 @@ input.vol { accent-color: #2172ff; }
 .vparts .vp { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 12.5px; } .vparts .vp span { flex: 1; color: #c3c6da; } .vparts .vp i { font-style: normal; color: #7d809b; font-size: 11.5px; } .vparts .vp b { min-width: 58px; text-align: right; font-weight: 600; color: #ffd34d; }
 .vparts small { display: block; margin-top: 4px; font-size: 10.5px; line-height: 1.4; color: #8e93b3; }
 #vstats .vs span { width: 88px; white-space: nowrap; flex: none; } #vstats .vs em { min-width: 96px; }
+#acov.force #acclose { display: none !important; }
+
+/* ---- fit every screen: the animal chooser and the lobby never hide the animal or the cards ---- */
+#menuIn { container-type: size; }
+#vmain { min-height: 0; }
+#vleft { min-height: 0; overflow: hidden; }
+#vcan { object-fit: contain; flex: 0 1 auto; }
+#vinfo { min-width: 0; overflow: auto; }
+#vpop { max-height: calc(100cqh - 56px); }
+@container (min-aspect-ratio: 1/1) { #vinfo { width: clamp(170px, 32cqw, 280px); } }
+@container (max-aspect-ratio: 1/1) {   /* tall / portrait phones: animal on top, details underneath */
+  #vmain { flex-direction: column; gap: 6px; padding: 6px 12px 8px; }
+  #vleft { flex: 1 1 0; width: 100%; }
+  #vleft::before { width: 90%; }
+  #vinfo { flex: 0 0 auto; width: 100%; max-height: 48cqh; border-left: 0; border-top: 1px solid rgba(255,255,255,.08); padding: 8px 0 0; }
+  #vpop { left: 10px; right: 10px; width: auto; }
+}
+@container (max-height: 400px) and (min-aspect-ratio: 1/1) {   /* short landscape phones */
+  #vtop { height: 38px; } #vmain { padding: 6px 14px; gap: 10px; }
+  #vinfo { width: clamp(215px, 42cqw, 300px); } #vname { font-size: 20px; } #vstats { gap: 3px; } .vs { font-size: 11px; } .vs span { width: 52px; flex: none; } .vs em { min-width: 0; white-space: nowrap; }
+  #play { padding: 9px; font-size: 14px; }
+  #cards { padding: 4px 12px 6px; } #cards .card { width: 58px; } #cards .card canvas { width: 50px; }
+}
+@container (max-height: 340px) { #vsub { display: none; } #vinfo { gap: 4px; } #vname { font-size: 18px; } .vs { font-size: 10.5px; } #play { padding: 7px; font-size: 13px; } }
+@container (max-height: 300px) { #cards .card .nm { display: none; } #cards .card canvas { width: 38px; } #vsub { display: none; } }
+@container (max-width: 640px) {   /* lobby home on narrow screens: the animal shrinks to fit instead of being cut off */
+  .lhv { flex: 1 1 0; width: 100%; min-height: 0; }
+  #lhero { width: auto; height: auto; max-width: 100%; max-height: 100%; }
+  .lhi { flex: none; }
+}
+@container (max-height: 300px) { #lname { font-size: 20px; } #lsub { display: none; } }
+@container (max-height: 340px) { .lapp { margin-bottom: 6px; padding: 4px 14px 4px 6px; } .lapp img, .lapp > b { width: 28px; height: 28px; } .lapp small { display: none; } }
+#lfr { overflow-y: auto; scrollbar-width: none; } #lfr::-webkit-scrollbar { display: none; }   /* friends list scrolls instead of being cut off */
 </style>
 </head>
 <body>
@@ -474,6 +513,7 @@ const _spin = t => brandSpinnerHtml(16) + '<span>' + t + '</span>';
     <div class="row"><span>Screen shake</span><button class="pill" data-tg="shake"></button></div>
     <div class="row"><span>Damage numbers</span><button class="pill" data-tg="dmg"></button></div>
     <div class="row"><span>Account</span><span id="pacct">Guest</span></div>
+    <div class="row"><span>Performance meter</span><button id="fpsBtn" class="pill">Off</button></div>
     <div class="row"><span>Resume countdown</span><span><button class="pill cdb" data-n="3">3</button><button class="pill cdb on" data-n="5">5</button></span></div>
     <button id="resume" class="big">Resume</button>
     <button id="coachbtn" class="link">Controls guide</button><button id="toMenu" class="link">Change creature</button>
@@ -490,9 +530,8 @@ const _spin = t => brandSpinnerHtml(16) + '<span>' + t + '</span>';
   </div></div>
 <div id="coach"><div id="clg"><h3>How to play</h3><ol class="lleg"><li><i>1</i><span><b>Bite</b> attack what is in front of you</span></li><li><i>2</i><span><b>Dash</b> a short burst of speed (dash up at the surface to leap out)</span></li><li><i>3</i><span><b>Special</b> your animal’s power, also Q on a keyboard</span></li><li><i>4</i><span><b>Roar</b> let out your animal’s call</span></li><li><i>5</i><span><b>Food</b> fills as you eat; keep it up or you will starve</span></li></ol><button id="cgo">Got it</button></div><div id="cgs"><span class="cgr"></span><span><b>Swim</b><br>Touch and drag anywhere on the left side</span></div><i class="cg" style="right:14px;bottom:16px;width:54px;height:62px">1</i><i class="cg" style="right:74px;bottom:16px;width:42px;height:48px">2</i><i class="cg" style="right:64px;bottom:62px;width:42px;height:48px">3</i><i class="cg" style="right:22px;bottom:84px;width:38px;height:44px">4</i><i class="cg" style="right:124px;bottom:16px;width:46px;height:53px">5</i></div>
   <div id="lobby"><div id="lfog"></div>
-    <div id="lbar"><div class="lmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c3-5 8-7 13-4l5-3v14l-5-3c-5 3-10 1-13-4z"/><circle cx="9" cy="11" r="1" fill="currentColor"/></svg></div><div class="lttl"><span class="lm">Survival horror</span><b>nmedea</b></div><div class="lchip" id="lchip"><i>G</i><span>Guest</span></div></div>
     <div id="lbody">
-      <nav id="lnav"><button id="lplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>PLAY</button><div class="lsec lm">Menu</div>
+      <nav id="lnav"><div id="lbrand" class="lbrand"><img src="file_00000000979482089f17724d98df3382.png" alt="nmedea" onerror="this.style.display='none'"></div><button id="lplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>PLAY</button><div class="lsec lm">Menu</div>
         <button class="ln on" data-t="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</button>
         <button class="ln" data-t="how"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5M12 17v.01"/></svg>How to play</button>
         <button class="ln" data-t="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>Settings</button></nav>
@@ -508,6 +547,7 @@ const _spin = t => brandSpinnerHtml(16) + '<span>' + t + '</span>';
         <div class="lfh" id="lreqh"><span class="lm">Requests</span><span id="rcount">0</span></div><div id="lreq"></div>
         <div class="ladd" id="ladd"><input id="fin" style="display:none"><button id="laddf" style="display:none"></button><small id="fmsg"></small></div></aside>
     </div>
+    <button id="lapp" class="lapp" aria-label="Social app"><img src="favicon(6).png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'\u2193'}))"><span class="lat"><small>Our social app</small><span id="lapptx">Check in or get it now</span></span><i class="lchev">&rsaquo;</i></button>
   </div>
 </div>
 <script>
@@ -754,8 +794,17 @@ function camoOfFoe0(f) {   // an animal has two sides, so the octopus copies bot
   const p = f.pal; if (p && p.top) return [ocHex(p.top), ocHex(p.belly || '#e8eef5')];
   return [ocHex('#6f7a86'), ocHex('#e8eef5')];
 }
+function remoteAnimals() {   // real players as latch targets (any player, friend or not; not someone inside a stomach)
+  const N = window.NET, out = []; if (!N || !window.NETID || state === 'menu') return out;
+  for (const u in RPL) {
+    const q = RPL[u], P = N.srv && N.srv[u], L = N.live && N.live[u]; if (!q || !P || !L || N.now() - L.ts > 12000 || N.now() - P.ts > 50000 || !(L.h > 0) || L.w === 1) continue;
+    const k = SHARKS.find(z => z.name === P.sp); if (!k) continue; const o = q.o;
+    o.k = k.kind === 'orca' ? 'orca' : k.croc ? 'croc' : k.kind === 'sperm' ? 'sperm' : k.squid ? 'squid' : ''; o.pal = k.pal; o.remote = u; o.hp = L.h; out.push(o);
+  }
+  return out;
+}
 function findAnimal() {   // the nearest animal within reach of the arms
-  let best = null, bd = 1e9; for (const f of foes) { if (f.hp <= 0) continue; const d = Math.hypot(f.x - s.x, f.y - s.y) - f.r; if (d < Math.max(s.r * 4.2, T * 3) && d < bd) { bd = d; best = f; } } return best;
+  let best = null, bd = 1e9; for (const f of foes.concat(remoteAnimals())) { if (f.hp <= 0) continue; const d = Math.hypot(f.x - s.x, f.y - s.y) - f.r; if (d < Math.max(s.r * 4.2, T * 3) && d < bd) { bd = d; best = f; } } return best;
 }
 function findLatch() {
   const af = findAnimal(); if (af) { const dx = s.x - af.x, dy = s.y - af.y, l = Math.hypot(dx, dy) || 1; return { f: af, x: af.x, y: af.y, nx: dx / l, ny: dy / l, a: Math.atan2(-dy, -dx) }; }   // look all around for the nearest thing the octopus can hold: rock, sand, coral, kelp, wreck, ice, crystal...
@@ -788,7 +837,7 @@ function latchOff(push) {
 function latchStep(dt, ax, ay, m) {   // held fast: the body glides to the surface (or onto the animal), turns its arms toward it and stays put until the stick pulls away
   const c = s.latch; c.t += dt;
   if (c.f) {   // riding an animal: stay on the same spot of its body
-    const f = c.f; if (f.hp <= 0 || Math.hypot(f.x - c.lx, f.y - c.ly) > 220) { latchOff(false); return; } c.lx = f.x; c.ly = f.y;
+    const f = c.f; if (f.hp <= 0 || Math.hypot(f.x - c.lx, f.y - c.ly) > 220 || (f.remote && !(window.NET.live[f.remote] && window.NET.live[f.remote].w !== 1))) { latchOff(false); return; } c.lx = f.x; c.ly = f.y;
     const an = f.ang + c.rel; c.nx = Math.cos(an); c.ny = Math.sin(an); c.x = f.x + c.nx * f.r * .3; c.y = f.y + c.ny * f.r * .3;
     const d = f.r * .45 + s.r * 1.55, tx = f.x + c.nx * d, ty = f.y + c.ny * d, k = Math.min(1, (c.t < .5 ? 9 : 16) * dt);
     s.x += (tx - s.x) * k; s.y += (ty - s.y) * k; s.vx = s.vy = 0; s.w = 0;
@@ -808,6 +857,7 @@ function octoTick(dt) {   // colours drift toward whatever the octopus is holdin
   const on = !!(s.latch || s.grab || s.camoLock) && s.dead <= 0;
   s.ambWin = s.latch ? 2.5 : Math.max(0, (s.ambWin || 0) - dt); s.camoBreak = Math.max(0, (s.camoBreak || 0) - dt);
   if (s.grab) { const [ca, cb, ce] = camoOfFoe(s.grab.f); s.cTA = ca; s.cTB = cb; s.cTE = ce; }
+  if (s.latch && s.latch.f && s.latch.f.remote && s.dead <= 0 && !s.custom && !OC.shim) { const [ca, cb, ce] = camoOfFoe(s.latch.f); s.cTA = ca; s.cTB = cb; s.cTE = ce; }
   if (OC.shim && s.dead <= 0) { OC.h = (OC.h + dt * 75) % 360; s.cTA = ocHsl(OC.h, .62, .42); s.cTB = ocHsl((OC.h + 55) % 360, .55, .72); s.cTE = [ocHsl((OC.h + 130) % 360, .7, .5), ocHsl((OC.h + 220) % 360, .7, .55), ocHsl((OC.h + 300) % 360, .65, .5)]; s.camoLock = true; }   // shimmer: the colours keep changing on their own
   else if (OC.auto && !s.latch && !s.grab && !s.custom && s.dead <= 0) ocAuto(dt);
   s.cM += ((on ? 1 : 0) - s.cM) * Math.min(1, (on ? 2.4 : 1) * dt); if (!on && s.cM < .01) s.cM = 0;
@@ -943,9 +993,10 @@ function useSpecial() {
     latchOn(h); return;
   }
   if (n === 'Colossal Squid') {   // grab: seize the nearest animal in front and squeeze it; press again to let go
+    if (s.pgut) { sendTo(s.pgut.u, 0, 'Spit'); s.pgut = null; pops.push({ x: s.x, y: s.y - 44, t: 0, txt: 'Let go', c: '#ffd34d' }); return; }
     if (s.grab) { releaseGrab(); return; }
     const tg = front(300).sort((p, q) => Math.hypot(p.x - s.x, p.y - s.y) - Math.hypot(q.x - s.x, q.y - s.y))[0];
-    if (!tg) { pops.push({ x: s.x, y: s.y - 44, t: 0, txt: 'Nothing to grab', c: '#ff9a9a' }); return; }
+    if (!tg) { const pg = pvpGrab('grip', s.x + cx * s.r * 2, s.y + cy * s.r * 2, 300, myMass() * 1.5); if (pg === 1) { voice(n, 1); burst(s.x + cx * 70, s.y + cy * 70, 'rgba(200,100,110,.8)'); return; } pops.push({ x: s.x, y: s.y - 44, t: 0, txt: pg === 2 ? 'Too big to grip!' : 'Nothing to grab', c: '#ff9a9a' }); return; }
     s.grab = { f: tg, k: 0, t: 0 }; pops.push({ x: s.x, y: s.y - 44, t: 0, txt: 'Grab!', c: '#ffd34d' }); voice(n, 1); burst(s.x + cx * 70, s.y + cy * 70, 'rgba(200,100,110,.8)'); return;
   }
   if (n === 'Pelican') {   // scoop: pick an island animal up in the bill and carry it; press again to put it down
@@ -1942,7 +1993,7 @@ function foeUpdate(f, dt) {
 // ---- player vs player: the bite is judged where the jaws actually land on the other animal's body (head / body / tail),
 // then scaled by the weight gap (a small animal barely scratches a giant, a giant crushes a small one). The victim's own game applies the damage.
 function pvpBite(mx, my) {
-  const N = window.NET; if (!N || !window.ACCT || !window.nmNet || state !== 'play' || s.dead > 0) return 0; let n = 0;
+  const N = window.NET; if (!N || !window.NETID || !window.nmNet || state !== 'play' || s.dead > 0) return 0; let n = 0;
   for (const u in RPL) {
     const q = RPL[u], P = N.srv && N.srv[u], L = N.live && N.live[u]; if (!q || !P || !L || N.now() - P.ts > 50000 || N.now() - L.ts > 12000 || !(L.h > 0) || L.w) continue;
     if (inPack(u) || (window.FR.friends || []).some(f => f.uid === u)) continue;   // friends and pack mates are safe from each other
@@ -1960,7 +2011,7 @@ function pvpBite(mx, my) {
 // ---- being swallowed or carried by another player ----
 // Whole thing is driven by small messages between the two games. The captor starts it (Swallow), the prisoner's own game pins them inside/under the captor,
 // digests them (stomach only) and lets them fight back (Stomach strikes). Enough damage and the captor spits them out (Spit).
-const HELD_T = { gut: 14, carry: 9 };
+const HELD_T = { gut: 14, carry: 9, grip: 12 };
 const sendTo = (u, d, p, m) => { try { window.nmNet && window.nmNet.hit(u, d, p, s.x, s.y, m); } catch (e) {} };
 const capName = n => String(n || 'player').slice(0, 16);
 function remoteInfo(u) {
@@ -1971,7 +2022,7 @@ function remoteInfo(u) {
   return { u, q, o: q.o, P, L, k, name: capName(P.n), tm: (REAL[k.name] || { M: 300 }).M * Math.pow(q.o.r / ((k.r || 17) * 1.3), 3) };
 }
 function pvpGrab(mode, px, py, reach, cap) {   // returns 1 = grabbed, 2 = someone is there but too big, 0 = nobody
-  if (s.pgut || s.held || state !== 'play' || s.dead > 0 || !window.ACCT) return 0;
+  if (s.pgut || s.held || state !== 'play' || s.dead > 0 || !window.NETID) return 0;
   let best = null, bd = 1e9, big = false;
   for (const u in RPL) { const r = remoteInfo(u); if (!r) continue; const d = Math.hypot(r.o.x - px, r.o.y - py) - r.o.r * .5; if (d > reach) continue; if (r.tm > cap) { big = true; continue; } if (d < bd) { bd = d; best = r; } }
   if (!best) return big ? 2 : 0;
@@ -1981,7 +2032,7 @@ function pvpGrab(mode, px, py, reach, cap) {   // returns 1 = grabbed, 2 = someo
 }
 function pgutStep(dt) {   // the captor's side: keep track of who is inside, let go when they are gone
   const g = s.pgut; if (!g) return; const N = window.NET, L = N && N.live && N.live[g.u]; g.t += dt;
-  if (s.dead > 0 || state !== 'play' || g.t > (g.mode === 'gut' ? 22 : 12)) { sendTo(g.u, 0, 'Spit'); s.pgut = null; return; }
+  if (s.dead > 0 || state !== 'play' || g.t > (g.mode === 'gut' ? 22 : 14)) { sendTo(g.u, 0, 'Spit'); s.pgut = null; return; }
   if (!L || N.now() - L.ts > 12000 || !(N.srv && N.srv[g.u]) || (g.t > 2.5 && !L.w)) s.pgut = null;
 }
 function releaseHeld() { const hd = s.held; if (!hd) return; s.held = null; s.inv = Math.max(s.inv, 2.2); s.vx = Math.cos(s.ang + 2.6) * 260; s.vy = Math.sin(s.ang + 2.6) * 260; sendTo(hd.by, 0, 'Out'); pops.push({ x: s.x, y: s.y - 44, t: 0, txt: 'Free!', c: '#7dff9a' }); tone(380, 620, .25, 'sine', .08); }
@@ -1990,10 +2041,10 @@ function heldStep(dt) {   // the prisoner's side
   if (s.dead > 0) { s.held = null; return; }
   const N = window.NET, L = N && N.live && N.live[hd.by]; hd.t += dt;
   if (!L || N.now() - L.ts > 12000 || hd.t > HELD_T[hd.mode] + 1) { releaseHeld(); return; }
-  s.vx = s.vy = 0; dashReq = dashHeld = false; s.x = L.x; s.y = hd.mode === 'carry' ? L.y + (L.r || 20) * 1.5 : L.y; s.ang = L.a || s.ang;
-  if (hd.mode === 'gut') {   // stomach acid: roughly 14 seconds to live unless you fight your way out
-    s.hp -= s.max / HELD_T.gut * dt; hd.tk = (hd.tk || 0) - dt; if (hd.tk <= 0) { hd.tk = 1.2; pops.push({ x: s.x, y: s.y - 30, t: 0, txt: 'Digesting...', c: '#ff9a9a' }); flashT = Math.max(flashT, .25); }
-    if (s.hp <= 0) { s.hp = 0; s.dead = 2.4; s.held = null; msg.textContent = 'Digested by ' + hd.name + '! Respawning\u2026'; msg.style.opacity = 1; sendTo(hd.by, 0, 'Digested'); }
+  s.vx = s.vy = 0; dashReq = dashHeld = false; { const la = L.a || 0, lr = L.r || 20; s.x = hd.mode === 'grip' ? L.x + Math.cos(la) * lr * 1.7 : L.x; s.y = hd.mode === 'carry' ? L.y + lr * 1.5 : hd.mode === 'grip' ? L.y + Math.sin(la) * lr * 1.7 : L.y; s.ang = la || s.ang; }
+  if (hd.mode === 'gut' || hd.mode === 'grip') {   // stomach acid / the squeeze: about 14 or 12 seconds to live unless you fight your way out
+    s.hp -= s.max / HELD_T[hd.mode] * dt; hd.tk = (hd.tk || 0) - dt; if (hd.tk <= 0) { hd.tk = 1.2; pops.push({ x: s.x, y: s.y - 30, t: 0, txt: hd.mode === 'grip' ? 'Crushing...' : 'Digesting...', c: '#ff9a9a' }); flashT = Math.max(flashT, .25); }
+    if (s.hp <= 0) { s.hp = 0; s.dead = 2.4; s.held = null; msg.textContent = (hd.mode === 'grip' ? 'Crushed by ' : 'Digested by ') + hd.name + '! Respawning\u2026'; msg.style.opacity = 1; sendTo(hd.by, 0, 'Digested'); }
   }
 }
 function heldStrike() {   // biting from the inside: no mass penalty, stomach walls are soft
@@ -2007,8 +2058,8 @@ const heldHud = (() => { const d = document.createElement('div'); d.id = 'heldhu
 let heldHudKey = '';
 function holdHud() {
   let h = '', bar = 0, col = '#ff6b81';
-  if (s.held) { const hd = s.held; bar = clamp(s.hp / s.max, 0, 1); h = (hd.mode === 'gut' ? 'Inside ' + eh(hd.name) + '\u2019s stomach' : 'Carried by ' + eh(hd.name)) + '<br><small style="font-weight:400;opacity:.8">Tap BITE to fight your way out</small>'; }
-  else if (s.pgut) { const g = s.pgut; bar = clamp(g.taken / (s.max * (g.mode === 'gut' ? .12 : .15)), 0, 1); col = '#ffd34d'; h = (g.mode === 'gut' ? 'Digesting ' : 'Carrying ') + eh(g.name) + '<br><small style="font-weight:400;opacity:.8">They are biting back \u00b7 enough damage and they escape</small>'; }
+  if (s.held) { const hd = s.held; bar = clamp(s.hp / s.max, 0, 1); h = (hd.mode === 'gut' ? 'Inside ' + eh(hd.name) + '\u2019s stomach' : hd.mode === 'grip' ? 'Gripped by ' + eh(hd.name) : 'Carried by ' + eh(hd.name)) + '<br><small style="font-weight:400;opacity:.8">Tap BITE to fight your way out</small>'; }
+  else if (s.pgut) { const g = s.pgut; bar = clamp(g.taken / (s.max * (g.mode === 'gut' ? .12 : .15)), 0, 1); col = '#ffd34d'; h = (g.mode === 'gut' ? 'Digesting ' : g.mode === 'grip' ? 'Gripping ' : 'Carrying ') + eh(g.name) + '<br><small style="font-weight:400;opacity:.8">They are biting back \u00b7 enough damage and they escape</small>'; }
   const key = h + '|' + Math.round(bar * 50); if (key === heldHudKey) return; heldHudKey = key;
   if (!h) { heldHud.style.display = 'none'; return; }
   heldHud.style.display = 'block'; heldHud.innerHTML = h + `<div style="margin-top:5px;height:5px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden"><i style="display:block;height:100%;width:${Math.round(bar * 100)}%;background:${col}"></i></div>`;
@@ -2030,10 +2081,10 @@ window.nmOnHit = (from, h) => {
   if (p === 'Swallow') {   // the victim's own game double-checks the size rule
     if (s.held || s.dead > 0 || s.inv > .9) return;
     const L = N.live && N.live[from], P = N.srv[from], k = P && SHARKS.find(z => z.name === P.sp); if (!L || !k) return;
-    const cm = (REAL[k.name] || { M: 300 }).M * Math.pow((L.r || k.r * 1.3) / ((k.r || 17) * 1.3), 3), cap = h.m === 'carry' ? Math.max(20, cm * 8) : cm * .03;
+    const cm = (REAL[k.name] || { M: 300 }).M * Math.pow((L.r || k.r * 1.3) / ((k.r || 17) * 1.3), 3), cap = h.m === 'carry' ? Math.max(20, cm * 8) : h.m === 'grip' ? cm * 1.5 : cm * .03;
     if (myMass() > cap * 1.25) return;
-    s.held = { by: from, mode: h.m === 'carry' ? 'carry' : 'gut', name: capName(h.n), t: 0 }; s.bite = 0; biteReq = false; flashT = Math.max(flashT, .5);
-    pops.push({ x: s.x, y: s.y - 52, t: 0, txt: (s.held.mode === 'gut' ? 'Swallowed by ' : 'Grabbed by ') + s.held.name + '!', c: '#ff6b81' }); tone(120, 50, .4, 'sawtooth', .12);
+    s.held = { by: from, mode: h.m === 'carry' ? 'carry' : h.m === 'grip' ? 'grip' : 'gut', name: capName(h.n), t: 0 }; s.bite = 0; biteReq = false; flashT = Math.max(flashT, .5);
+    pops.push({ x: s.x, y: s.y - 52, t: 0, txt: (s.held.mode === 'gut' ? 'Swallowed by ' : s.held.mode === 'grip' ? 'Gripped by ' : 'Grabbed by ') + s.held.name + '!', c: '#ff6b81' }); tone(120, 50, .4, 'sawtooth', .12);
     return;
   }
   if (s.dead > 0 || s.held) return;
@@ -2353,8 +2404,10 @@ function update(dt) {
     if (s.dead <= 0 && Math.hypot(f.x - mx0, f.y - my0) < 22 + f.r) { pop(f.x, f.y, 8); Object.assign(f, newFish()); heal(2); }
   }
   if (!SET.shake) shk = 0;
-  critters(dt); bites(dt); heldStep(dt); pgutStep(dt); holdHud(); if (state === 'play') for (const f of foes) foeUpdate(f, dt);
+  critters(dt); bites(dt); heldStep(dt); pgutStep(dt); holdHud(); if (!window.ACCT) { if (state === 'play') guestPlayed = true; if (s.dead > 0 && !gateShown && guestPlayed) { gateShown = true; forcePause = true; state = 'paused'; joy.x = joy.y = 0; forceRegister('died'); } } else gateShown = false; if (state === 'play') for (const f of foes) foeUpdate(f, dt);
   for (let i = pops.length - 1; i >= 0; i--) { pops[i].t += dt * 1.3; if (pops[i].t > 1) pops.splice(i, 1); }
+  if (parts.length > 450) parts.splice(0, parts.length - 450);   // effects can never pile up and slow the game down
+  if (pops.length > 40) pops.splice(0, pops.length - 40);
   for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i]; p.vy += (p.g === undefined ? -25 : p.g) * dt; p.x += (p.vx + (p.g > 0 ? 0 : Math.sin(p.life * 12) * 10)) * dt; p.y += p.vy * dt; p.life -= dt; if (p.grow) p.r += p.grow * dt * Math.max(.15, p.life / (p.l0 || 1)); if (p.life <= 0 || (p.g > 0 && p.vy > 0 && p.y > 0)) { if (p.g > 0 && p.life > 0 && Math.random() < .15) ripples.push({ x: p.x, t: 0 }); parts.splice(i, 1); } }
   for (let i = drops.length - 1; i >= 0; i--) { const d = drops[i]; d.vy += 900 * dt; d.x += d.vx * dt; d.y += d.vy * dt; if (d.vy > 0 && d.y > 0) { if (Math.random() < .25) ripples.push({ x: d.x, t: 0 }); drops.splice(i, 1); } }
   for (let i = ripples.length - 1; i >= 0; i--) { ripples[i].t += dt * 1.2; if (ripples[i].t > 1) ripples.splice(i, 1); }
@@ -3058,16 +3111,20 @@ let nextGroan = 0;
 // ---- sperm whale echolocation: three sound lines leave the head, echoes come back coloured by what they hit ----
 let ECHO = null;
 function echoPing() {
-  const [mx, my] = mouth(s), hits = [], test = (f, kind) => { const dx = f.x - mx, dy = f.y - my, d = Math.hypot(dx, dy); if (d < 30 || d > 1600 || Math.abs(wrap(Math.atan2(dy, dx) - s.ang)) > .75) return; hits.push({ f, d, kind, a: Math.atan2(dy, dx) }); };
+  const [mx, my] = mouth(s), hits = [], test = (f, kind, name) => { const dx = f.x - mx, dy = f.y - my, d = Math.hypot(dx, dy); if (d < 30 || d > 1600 || Math.abs(wrap(Math.atan2(dy, dx) - s.ang)) > .75) return; hits.push({ f, d, kind, name, a: Math.atan2(dy, dx) }); };
   for (const f of foes) test(f, f.k === 'sperm' ? 'ally' : 'foe'); for (const f of fish) test(f, 'fish');
+  { const N = window.NET; if (N && window.NETID) for (const u in RPL) {   // real players: red = could beat you, green = smaller than you, blue = friend or pack mate
+    const q = RPL[u], P = N.srv && N.srv[u], L = N.live && N.live[u]; if (!q || !P || !L || N.now() - P.ts > 50000 || N.now() - L.ts > 12000 || !(L.h > 0) || L.w === 1) continue;
+    const k = SHARKS.find(z => z.name === P.sp); if (!k) continue; const tm = (REAL[k.name] || { M: 300 }).M * Math.pow(q.o.r / ((k.r || 17) * 1.3), 3), fr = inPack(u) || (window.FR.friends || []).some(f => f.uid === u);
+    test(q.o, fr ? 'pally' : tm > myMass() * .8 ? 'pfoe' : 'pprey', capName(P.n)); } }
   ECHO = { t0: performance.now(), x: mx, y: my, ang: s.ang, hits }; pops.push({ x: s.x, y: s.y - 70, t: 0, txt: hits.length + ' echoes', c: '#cfe9ff' });
   for (let i = 0; i < 6; i++) setTimeout(() => tone(2600 - i * 90, 2000, .05, 'square', .035), i * 90);
 }
 const WAV = [];
 function waveHit(h) {   // the wave arrives: whatever it hits trembles, spits bubbles and is nudged along, not flung
-  const f = h.f; if (!f || h.d > 900 || (h.kind !== 'fish' && !foes.includes(f))) return;
+  const f = h.f; if (!f || h.d > 900 || (h.kind !== 'fish' && h.kind[0] !== 'p' && !foes.includes(f))) return;
   const q = 1 - h.d / 900, m = h.kind === 'fish' ? 1.2 : clamp(1.15 - f.r / 70, .35, 1);
-  f.shk = .9 + 1.1 * q; f.pvx = (f.pvx || 0) + Math.cos(h.a) * 130 * (.4 + q) * m; f.pvy = (f.pvy || 0) + Math.sin(h.a) * 130 * (.4 + q) * m;
+  if (h.kind[0] !== 'p') { f.shk = .9 + 1.1 * q; f.pvx = (f.pvx || 0) + Math.cos(h.a) * 130 * (.4 + q) * m; f.pvy = (f.pvy || 0) + Math.sin(h.a) * 130 * (.4 + q) * m; }
   const n = h.kind === 'fish' ? 5 : 12 + Math.round(f.r / 4);
   for (let i = 0; i < n; i++) parts.push({ x: f.x + (Math.random() - .5) * f.r * 2.4, y: f.y + (Math.random() - .5) * f.r * 1.4, vx: (Math.random() - .5) * 50 + Math.cos(h.a) * 30, vy: -25 - Math.random() * 55, r: 1.8 + Math.random() * (f.r > 10 ? 4.5 : 2.5), life: 1.1 + Math.random() * .8 });
   WAV.push({ x: f.x, y: f.y, t0: performance.now(), R: Math.max(16, f.r * 1.6) });
@@ -3092,10 +3149,10 @@ function drawEcho(t) {
   const c = ctx, ox = ECHO.x - camX, oy = ECHO.y - camY; c.save(); c.lineCap = 'round';
   for (let k = 0; k < 3; k++) { const rad = (el - k * .12) * SP; if (rad <= 0 || rad > 1700) continue; c.strokeStyle = `rgba(190,235,255,${Math.max(0, 1 - rad / 1700) * .85})`; c.lineWidth = 3.4 - k * .8; c.beginPath(); c.arc(ox, oy, rad, ECHO.ang - .75, ECHO.ang + .75); c.stroke(); }
   const [hx, hy] = s.dead > 0 ? [ECHO.x, ECHO.y] : mouth(s);
-  for (const h of ECHO.hits) { const f = h.f, tA = h.d / SP, age = el - tA; if (age >= 0 && !h.done) { h.done = true; waveHit(h); } if (age < 0 || age > tA + 3 || (h.kind !== 'fish' && !foes.includes(f))) continue;
-    const big = h.kind === 'foe' && f.r > s.r * .9, rel = f.r / s.r, rgb = h.kind === 'fish' ? '190,230,255' : h.kind === 'ally' ? (rel <= 1.05 ? '74,222,128' : '96,165,250') : '239,68,68', R = h.kind === 'fish' ? clamp(f.r * .7, 2.5, 7) : clamp(f.r * 1.15, 7, 60), fd = 1 - age / 3.2, px = f.x - camX, py = f.y - camY;
+  for (const h of ECHO.hits) { const f = h.f, tA = h.d / SP, age = el - tA; if (age >= 0 && !h.done) { h.done = true; waveHit(h); } if (age < 0 || age > tA + 3 || (h.kind !== 'fish' && h.kind[0] !== 'p' && !foes.includes(f))) continue;
+    const big = h.kind === 'foe' && f.r > s.r * .9, rel = f.r / s.r, rgb = h.kind === 'fish' ? '190,230,255' : h.kind === 'pfoe' ? '239,68,68' : h.kind === 'pprey' ? '74,222,128' : h.kind === 'pally' ? '96,165,250' : h.kind === 'ally' ? (rel <= 1.05 ? '74,222,128' : '96,165,250') : '239,68,68', R = h.kind === 'fish' ? clamp(f.r * .7, 2.5, 7) : clamp(f.r * 1.15, 7, 60), fd = 1 - age / 3.2, px = f.x - camX, py = f.y - camY;
     const u = clamp(age / Math.max(.05, tA), 0, 1), mini = clamp(R * .3, 3, 10); if (u < 1) { c.strokeStyle = `rgba(${rgb},.35)`; c.lineWidth = 1.5; c.beginPath(); c.moveTo(px, py); c.lineTo(px + (hx - camX - px) * u, py + (hy - camY - py) * u); c.stroke(); c.fillStyle = `rgba(${rgb},.95)`; c.beginPath(); c.arc(px + (hx - camX - px) * u, py + (hy - camY - py) * u, mini, 0, 7); c.fill(); }
-    else { const fm = 1 - (age - tA) / 3, dd = 55 + 95 * h.d / 1600, mx2 = hx - camX + Math.cos(h.a) * dd, my2 = hy - camY + Math.sin(h.a) * dd, lab = h.kind === 'fish' ? '' : h.kind === 'ally' ? (rel <= 1.05 ? 'Ally' : 'Big ally') : big ? 'BIG ENEMY' : 'Enemy';   // the small echo that comes home
+    else { const fm = 1 - (age - tA) / 3, dd = 55 + 95 * h.d / 1600, mx2 = hx - camX + Math.cos(h.a) * dd, my2 = hy - camY + Math.sin(h.a) * dd, lab = h.kind === 'fish' ? '' : h.kind[0] === 'p' ? (h.kind === 'pfoe' ? 'Stronger: ' : h.kind === 'pprey' ? 'Smaller: ' : 'Friend: ') + h.name : h.kind === 'ally' ? (rel <= 1.05 ? 'Ally' : 'Big ally') : big ? 'BIG ENEMY' : 'Enemy';   // the small echo that comes home
       c.strokeStyle = `rgba(${rgb},${.3 * fm})`; c.lineWidth = 1; c.setLineDash([3, 5]); c.beginPath(); c.moveTo(hx - camX, hy - camY); c.lineTo(mx2, my2); c.stroke(); c.setLineDash([]); c.fillStyle = `rgba(${rgb},${.55 * fm})`; c.strokeStyle = `rgba(${rgb},${fm})`; c.lineWidth = 1.6; c.beginPath(); c.arc(mx2, my2, mini * (big ? 1.25 : 1), 0, 7); c.fill(); c.stroke(); if (lab) { c.font = '700 10px system-ui'; c.textAlign = 'center'; c.fillStyle = `rgba(${rgb},${fm})`; c.fillText(lab, mx2, my2 - mini - 5); } }
     if (age > 2) continue; const gr = c.createRadialGradient(px, py, 0, px, py, R * 2); gr.addColorStop(0, `rgba(${rgb},${.5 * fd})`); gr.addColorStop(1, `rgba(${rgb},0)`); c.fillStyle = gr; c.fillRect(px - R * 2, py - R * 2, R * 4, R * 4);
     c.fillStyle = `rgba(${rgb},${.4 * fd})`; c.strokeStyle = `rgba(${rgb},${.9 * fd})`; c.lineWidth = 2; c.beginPath(); c.arc(px, py, R * (1 + .06 * Math.sin(age * 9)), 0, 7); c.fill(); c.stroke();
@@ -3675,6 +3732,23 @@ SHARKS.forEach((k, i) => {
   d.addEventListener('click', () => { sel = k; [...cardsEl.children].forEach(x => x.classList.remove('sel')); d.classList.add('sel'); audio(); });
   cardsEl.appendChild(d); previews.push({ c, k });
 });
+function paintCreature(g, k, t, cw, ch) {
+    const ph = (t / 1000 + k.spd) % 2.8, o = { x: 0, y: 0, vx: 150, vy: 0, w: 0, swim: t / 180, bite: ph < BITE_T ? BITE_T - ph : 0, r: (k.r || 17) * (k.pv || .66), ang: 0, sy: 1 };
+    o.sail = k.sail; o.moso = k.moso; o.dk = k.dk; o.octo = k.octo; o.blue = k.blue; o.slp = k.tail ? (ph < .5 ? ph / .5 : -1) : -1; o.kron = k.kron;
+    if (k.bird) { o.fly = 1; (k.pel ? drawPelican : drawPuffin)(o, g, cw / 2 + 6, ch / 2 + 4); } else if (k.turtle) drawTurtle(o, g, cw / 2 + 6, ch / 2); else if (k.seal) drawSeal(o, g, cw / 2 + 6, ch / 2); else if (k.dk) drawDino(o, g, cw / 2 + 6, ch / 2 - 4); else if (k.boa) drawBoa(o, g, cw / 2 + 6, ch / 2); else if (k.octo) drawOctopus(o, g, cw / 2 + 6, ch / 2); else if (k.squid) drawSquid(o, g, cw / 2 + 6, ch / 2); else if (k.hump || k.blue) { const q = (t / 1000) % 5; o.swell = k.blue ? 0 : .45 + .3 * Math.sin(t / 900); o.feedT = k.blue ? 0 : q < 2.65 ? q : 0; drawHumpback(o, g, cw / 2 + 6, ch / 2); } else if (k.eel) drawEel(o, g, cw / 2 + 6, ch / 2); else if (k.angler) drawAngler(o, g, cw / 2 + 6, ch / 2); else if (k.dolph) drawDolphin(o, g, cw / 2 + 6, ch / 2); else if (k.croc || k.moso) drawCroc(o, g, cw / 2 + 6, ch / 2); else if (k.kind) drawWhale(o, g, cw / 2 + 6, ch / 2, k.kind); else { o.sharp = k.sharp; drawSharkObj(o, k.pal, g, cw / 2 + 6, ch / 2); }
+}
+// fit each animal inside its picture so the nose, tail and fins are never cut off (measured once per animal, then reused)
+function fitOf(k) {
+  if (k._fit) return k._fit;
+  const CW = 84, CH = 44, MW = 260, MH = 130, S = 1.5, m = document.createElement('canvas'); m.width = MW * S; m.height = MH * S;
+  const mg = m.getContext('2d', { willReadFrequently: true }), none = { f: 1, ux: 0, uy: 0 };
+  try { for (let i = 0; i < 12; i++) { mg.setTransform(S, 0, 0, S, 0, 0); paintCreature(mg, k, i * 230 + 100, MW, MH); } } catch (e) { return k._fit = none; }
+  const d = mg.getImageData(0, 0, m.width, m.height).data; let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1;
+  for (let y = 0; y < m.height; y++) for (let x = 0; x < m.width; x++) if (d[(y * m.width + x) * 4 + 3] > 60) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (x1 < 0) return k._fit = none;
+  const bw = (x1 - x0 + 1) / S, bh = (y1 - y0 + 1) / S, mx = (x0 + x1 + 1) / 2 / S, my = (y0 + y1 + 1) / 2 / S;
+  return k._fit = { f: Math.min(1, (CW - 8) / bw, (CH - 6) / bh), ux: mx - (MW / 2 + 6), uy: my - MH / 2 };
+}
 function drawPreviews(t) {
   if (t - (drawPreviews._t || 0) < 32) return; drawPreviews._t = t;   // about 30 fps is plenty for previews
   const slow = (drawPreviews._n = (drawPreviews._n || 0) + 1) % 3 !== 0, lobOn = !lobby.classList.contains('hide');
@@ -3682,9 +3756,8 @@ function drawPreviews(t) {
     if (lobOn ? c !== hc : c === hc) return;   // only draw what is on screen
     if (c._sc === undefined) { if (slow) return; const cd = c.parentNode; if (cd.parentNode === cardsEl && (cd.offsetLeft + cd.offsetWidth < cardsEl.scrollLeft || cd.offsetLeft > cardsEl.scrollLeft + cardsEl.clientWidth)) return; }
     const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); const sc = c._sc || 1, cw = c.width / sc, ch = c.height / sc; g.setTransform(sc, 0, 0, sc, 0, 0);
-    const ph = (t / 1000 + k.spd) % 2.8, o = { x: 0, y: 0, vx: 150, vy: 0, w: 0, swim: t / 180, bite: ph < BITE_T ? BITE_T - ph : 0, r: (k.r || 17) * (k.pv || .66), ang: 0, sy: 1 };
-    o.sail = k.sail; o.moso = k.moso; o.dk = k.dk; o.octo = k.octo; o.blue = k.blue; o.slp = k.tail ? (ph < .5 ? ph / .5 : -1) : -1; o.kron = k.kron;
-    if (k.bird) { o.fly = 1; (k.pel ? drawPelican : drawPuffin)(o, g, cw / 2 + 6, ch / 2 + 4); } else if (k.turtle) drawTurtle(o, g, cw / 2 + 6, ch / 2); else if (k.seal) drawSeal(o, g, cw / 2 + 6, ch / 2); else if (k.dk) drawDino(o, g, cw / 2 + 6, ch / 2 - 4); else if (k.boa) drawBoa(o, g, cw / 2 + 6, ch / 2); else if (k.octo) drawOctopus(o, g, cw / 2 + 6, ch / 2); else if (k.squid) drawSquid(o, g, cw / 2 + 6, ch / 2); else if (k.hump || k.blue) { const q = (t / 1000) % 5; o.swell = k.blue ? 0 : .45 + .3 * Math.sin(t / 900); o.feedT = k.blue ? 0 : q < 2.65 ? q : 0; drawHumpback(o, g, cw / 2 + 6, ch / 2); } else if (k.eel) drawEel(o, g, cw / 2 + 6, ch / 2); else if (k.angler) drawAngler(o, g, cw / 2 + 6, ch / 2); else if (k.dolph) drawDolphin(o, g, cw / 2 + 6, ch / 2); else if (k.croc || k.moso) drawCroc(o, g, cw / 2 + 6, ch / 2); else if (k.kind) drawWhale(o, g, cw / 2 + 6, ch / 2, k.kind); else { o.sharp = k.sharp; drawSharkObj(o, k.pal, g, cw / 2 + 6, ch / 2); }
+    const ft = fitOf(k); g.setTransform(sc * ft.f, 0, 0, sc * ft.f, sc * (cw / 2 - ft.f * (cw / 2 + 6 + ft.ux)), sc * (ch / 2 - ft.f * (ch / 2 + ft.uy)));
+    paintCreature(g, k, t, cw, ch);
   });
 }
 // ---- growth progress is saved per animal: leaving to the menu keeps it, getting knocked out wipes that animal's progress ----
@@ -3694,7 +3767,7 @@ function saveAll() { try { localStorage.setItem(PKEY, JSON.stringify(PROG)); } c
 function loadProg(n) { const p = PROG[n]; return p && p.gr > 0 ? p : null; }
 function saveProg() { if (!sel || s.dead > 0 || s.lost || (state !== 'play' && state !== 'paused')) return; if ((s.gr || 0) < .0005) delete PROG[sel.name]; else PROG[sel.name] = { gr: s.gr, food: s.food === undefined ? 100 : s.food }; saveAll(); }
 function refreshCards() { SHARKS.forEach((k, i) => { const el = cardsEl.children[i] && cardsEl.children[i].querySelector('.nm'), p = PROG[k.name]; if (el) el.textContent = p && p.gr > .005 ? `${k.name} · ${Math.round(p.gr * 100)}%` : k.name; }); }
-addEventListener('pagehide', saveProg); document.addEventListener('visibilitychange', () => { if (document.hidden) saveProg(); });
+addEventListener('pagehide', saveProg); document.addEventListener('visibilitychange', () => { if (document.hidden) { saveProg(); if (state === 'play') openSettings(); } });   // switching apps pauses the game: no battery drain, no jump when you come back
 refreshCards();
 function startGame() {
   dayT0 = performance.now();
@@ -3739,7 +3812,7 @@ document.getElementById('gear').addEventListener('pointerdown', e => { e.prevent
 document.getElementById('resume').addEventListener('click', resume);
 document.getElementById('sndBtn').addEventListener('click', e => { soundOn = !soundOn; if (soundOn) tone(520, 760, .06, 'triangle', .07); e.target.textContent = soundOn ? 'On' : 'Off'; e.target.classList.toggle('on', soundOn); });
 document.querySelectorAll('.cdb').forEach(b => b.addEventListener('click', () => { cdLen = +b.dataset.n; document.querySelectorAll('.cdb').forEach(x => x.classList.toggle('on', x === b)); }));
-document.getElementById('toMenu').addEventListener('click', () => { saveProg(); refreshCards(); setEl.classList.remove('show'); state = 'menu'; stage.classList.add('menu'); document.getElementById('menu').style.display = 'flex'; fitMenu(); });
+document.getElementById('toMenu').addEventListener('click', () => { saveProg(); refreshCards(); setEl.classList.remove('show'); state = 'menu'; setTimeout(renderFriends, 0); if (!window.ACCT && guestPlayed) setTimeout(() => forceRegister('menu'), 150); stage.classList.add('menu'); document.getElementById('menu').style.display = 'flex'; fitMenu(); });
 addEventListener('keydown', e => { if (e.target && e.target.tagName === 'INPUT') return; if (mapOpen && (e.key === 'Escape' || e.key === 'm')) { closeMap(); return; } if (e.key === 'm' && state === 'play') { openMap(); return; } if (e.key === 'Escape' || e.key === 'p') { if (state === 'play') openSettings(); else if (state === 'paused') resume(); } });
 fitMenu();
 // ---- home page: shown first, before the creature-selection page ----
@@ -3769,11 +3842,31 @@ function goSelect() { const r = getRecent(); if (r) sel = r; lobby.classList.add
 $l('lplay').addEventListener('click', goSelect); $l('lchg').addEventListener('click', goSelect);
 $l('lcont').addEventListener('click', () => { const r = getRecent(); if (!r) return; sel = r; [...cardsEl.children].forEach((x, i) => x.classList.toggle('sel', SHARKS[i] === r)); lobby.classList.add('hide'); startGame(); });
 $l('play').addEventListener('click', () => setRecent(sel));
+// ---- Get the app: opens the installed app, or sends the person to Google Play to install it ----
+const APP = { pkg: '', site: 'https://nmedea.com', live: true };   // pkg: your app's Google Play package name (e.g. com.yourcompany.nmedea). Until it is filled in, everyone is sent to the website.
+(() => {
+  const btn = document.getElementById('lapp'); if (!btn) return;
+  const inApp = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone || (document.referrer || '').startsWith('android-app://');
+  if (inApp) { btn.hidden = true; return; }   // already inside the installed app: nothing to offer
+  let tt; const toast = t => { let d = document.getElementById('appToast'); if (!d) { d = document.createElement('div'); d.id = 'appToast'; document.body.appendChild(d); } d.textContent = t; d.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => d.classList.remove('show'), 2600); };
+  const tx = document.getElementById('lapptx'), android = /Android/i.test(navigator.userAgent || '');
+  if (tx) { tx.textContent = android ? 'Check in or get it now' : 'Check it out'; }
+  // detect whether the app is installed (Chrome on Android can tell, once the app is linked to the website's manifest); otherwise the label stays neutral
+  if (tx && android && APP.pkg && navigator.getInstalledRelatedApps) navigator.getInstalledRelatedApps().then(list => { tx.textContent = list.some(a => a.id === APP.pkg) ? 'Check in now' : 'Get it now'; }).catch(() => {});
+  btn.addEventListener('click', () => {
+    if (!APP.live) { toast('Coming soon'); return; }
+    const ua = navigator.userAgent || '';
+    if (/Android/i.test(ua) && APP.pkg) {   // Android: open the installed app if it is there, otherwise go to its Google Play page
+      const store = 'https://play.google.com/store/apps/details?id=' + APP.pkg;
+      location.href = 'intent://' + APP.site.replace(/^https?:\/\//, '') + '/#Intent;scheme=https;package=' + APP.pkg + ';S.browser_fallback_url=' + encodeURIComponent(store) + ';end';
+    } else window.open(APP.site, '_blank', 'noopener');   // iPhone and everything else: the nmedea.com website
+  });
+})();
 lobby.querySelectorAll('.ln').forEach(b => b.addEventListener('click', () => { lobby.querySelectorAll('.ln').forEach(x => x.classList.toggle('on', x === b)); lobby.querySelectorAll('.ltab').forEach(t => t.classList.toggle('on', t.id === 'tab-' + b.dataset.t)); }));
 $l('lsnd').addEventListener('click', e => { $l('sndBtn').click(); e.currentTarget.classList.toggle('on', soundOn); });
 $l('vback').addEventListener('click', showLobby);
 // ---- creature viewer: one animal at a time, statistics on the right, "?" explains what makes it special ----
-const ABD = {"Charge Bite": "You surge forward with jaws wide and clamp down with far more force than a normal bite, hitting whatever is in front of you hard. Best for finishing something that is already hurt or for opening a fight.", "Speed Burst": "Your body snaps into a short, explosive sprint, letting you catch fast prey or slip away from something bigger. Stamina drains quickly while it lasts, so save it for the moment that counts.", "Head Pin": "You use the wide, flat head to pin prey against you or the seabed so it cannot twist away, then bite it while it is held. Great against fast, slippery fish.", "Crushing Bite": "You lock on with an extra heavy bite that crushes through armour and thick hide. It takes a while to recharge, so line it up on a single worthwhile target.", "Head Butt": "You ram the target head-first, knocking it back and shaking it. A good way to break up a fight, interrupt something that is feeding, or drive off a smaller attacker.", "Filter Feeding": "You open wide and strain tiny food out of the water as you glide, restoring your food and strength without needing a hunt. Drift slowly through rich water to get the most from it.", "Death Roll": "You grip your prey and spin your whole body, tearing at it from every angle. Powerful against big targets, but you are committed while you roll, so check nothing bigger is nearby first.", "Tail Slap": "You whip your tail around in a heavy slap that hurts and stuns what it hits. Use it to protect your back or to knock something dazed so you can follow up with a bite.", "Echolocation": "You send out a sonar pulse that rolls outward for about seven seconds, revealing animals around you, including ones hiding in the dark. Perfect for finding prey in deep water.", "Bone Crusher": "Your massive jaws close with enough force to crush bone and shell, hitting one target with enormous force. It recharges slowly, so make it count.", "Impale Charge": "You lower your sword and charge, driving it through the target. The faster you are moving when you hit, the worse it is for them.", "Grab": "Your tentacles lash out and seize the prey, holding it in place while you work on it with your beak. A held target cannot easily escape.", "Lunge Feed": "You surge forward with your mouth open wide and gulp in everything ahead of you. It swallows fish and krill, and also small players (up to about 3% of your own weight). A swallowed player is digested over about 14 seconds but can bite from inside your stomach, and if they hurt you enough you spit them out. Friends and pack mates can never be swallowed.", "Torpedo Leap": "You shoot forward like a torpedo and can break out of the water in a high leap. A fast way to close the gap or to escape.", "Lure Light": "You switch on the glowing lure above your head, which draws curious prey close. Wait still in the dark for them to come to you, then bite.", "Shock Wave": "You release a pulse of electricity that hurts everything near you and can stun it for a moment. Hits several targets at once.", "Pull In": "You drag nearby prey towards your jaws, so it cannot keep its distance. Use it on things that flee.", "Match": "One tap and you cling to the nearest animal or surface and copy its colours to hide. Tap while holding to let go but keep the colour, and tap twice quickly to open the colour panel.", "Swallow Whole": "You swallow smaller prey in a single gulp. Anything too big simply will not fit, so choose your target carefully.", "Tidal Slam": "You bring your huge tail down in one enormous slam that sends a shock through the water, hurting and shoving back everything close to it.", "Tail Whip": "You swing your tail in a fast whip that hits anything near your back end, ideal for chasing off attackers.", "Toxic Bite": "Your bite carries venom that keeps hurting the victim after you have let go, so even a small animal can bring down something much larger.", "Shell Mend": "You tuck in behind your shell and recover health. You cannot do much else while healing, so do it somewhere safe.", "Ambush Lunge": "You launch a sudden lunge from cover, striking before the target has time to react. It works best when you have been waiting out of sight.", "Scoop Up": "You scoop prey out of the water in your large beak pouch. Small and medium fish go down easily, and you can also lift a small or baby player (up to about 8 times your own weight). A carried player is helpless for a few seconds but can bite you to break free; press again to put them down. Players that are too big are too heavy to lift.", "Dive Bomb": "You fold your wings and plunge straight down at the target from above, hitting hard on impact. The higher you start, the better it works."};
+const ABD = {"Charge Bite": "You surge forward with jaws wide and clamp down with far more force than a normal bite, hitting whatever is in front of you hard. Best for finishing something that is already hurt or for opening a fight.", "Speed Burst": "Your body snaps into a short, explosive sprint, letting you catch fast prey or slip away from something bigger. Stamina drains quickly while it lasts, so save it for the moment that counts.", "Head Pin": "You use the wide, flat head to pin prey against you or the seabed so it cannot twist away, then bite it while it is held. Great against fast, slippery fish.", "Crushing Bite": "You lock on with an extra heavy bite that crushes through armour and thick hide. It takes a while to recharge, so line it up on a single worthwhile target.", "Head Butt": "You ram the target head-first, knocking it back and shaking it. A good way to break up a fight, interrupt something that is feeding, or drive off a smaller attacker.", "Filter Feeding": "You open wide and strain tiny food out of the water as you glide, restoring your food and strength without needing a hunt. Drift slowly through rich water to get the most from it.", "Death Roll": "You grip your prey and spin your whole body, tearing at it from every angle. Powerful against big targets, but you are committed while you roll, so check nothing bigger is nearby first.", "Tail Slap": "You whip your tail around in a heavy slap that hurts and stuns what it hits. Use it to protect your back or to knock something dazed so you can follow up with a bite.", "Echolocation": "You send out a sonar pulse that rolls outward for about seven seconds, revealing animals around you, including ones hiding in the dark. Perfect for finding prey in deep water.", "Bone Crusher": "Your massive jaws close with enough force to crush bone and shell, hitting one target with enormous force. It recharges slowly, so make it count.", "Impale Charge": "You lower your sword and charge, driving it through the target. The faster you are moving when you hit, the worse it is for them.", "Grab": "You seize the nearest animal in front of you and squeeze it. This also works on real players up to about one and a half times your weight. A gripped player is crushed over about 12 seconds, but can bite your arms from inside the grip, and if they hurt you enough you let go. Press again to let go. Friends and pack mates can never be gripped.", "Lunge Feed": "You surge forward with your mouth open wide and gulp in everything ahead of you. It swallows fish and krill, and also small players (up to about 3% of your own weight). A swallowed player is digested over about 14 seconds but can bite from inside your stomach, and if they hurt you enough you spit them out. Friends and pack mates can never be swallowed.", "Torpedo Leap": "You shoot forward like a torpedo and can break out of the water in a high leap. A fast way to close the gap or to escape.", "Lure Light": "You switch on the glowing lure above your head, which draws curious prey close. Wait still in the dark for them to come to you, then bite.", "Shock Wave": "You release a pulse of electricity that hurts everything near you and can stun it for a moment. Hits several targets at once.", "Pull In": "You drag nearby prey towards your jaws, so it cannot keep its distance. Use it on things that flee.", "Match": "One tap and you cling to the nearest animal or surface and copy its colours to hide. Tap while holding to let go but keep the colour, and tap twice quickly to open the colour panel.", "Swallow Whole": "You swallow smaller prey in a single gulp. Anything too big simply will not fit, so choose your target carefully.", "Tidal Slam": "You bring your huge tail down in one enormous slam that sends a shock through the water, hurting and shoving back everything close to it.", "Tail Whip": "You swing your tail in a fast whip that hits anything near your back end, ideal for chasing off attackers.", "Toxic Bite": "Your bite carries venom that keeps hurting the victim after you have let go, so even a small animal can bring down something much larger.", "Shell Mend": "You tuck in behind your shell and recover health. You cannot do much else while healing, so do it somewhere safe.", "Ambush Lunge": "You launch a sudden lunge from cover, striking before the target has time to react. It works best when you have been waiting out of sight.", "Scoop Up": "You scoop prey out of the water in your large beak pouch. Small and medium fish go down easily, and you can also lift a small or baby player (up to about 8 times your own weight). A carried player is helpless for a few seconds but can bite you to break free; press again to put them down. Players that are too big are too heavy to lift.", "Dive Bomb": "You fold your wings and plunge straight down at the target from above, hitting hard on impact. The higher you start, the better it works."};
 const vcan = $l('vcan'); vcan._sc = 4; vcan.width = 336; vcan.height = 176;
 const vh = { c: vcan, k: sel }; previews.push(vh);
 const vrow = (n, v, t) => `<div class="vs"><span>${n}</span><i><b style="width:${clamp(v, 12, 100)}%"></b></i><em>${t}</em></div>`;
@@ -3930,7 +4023,15 @@ try { let v = parseInt(localStorage.getItem('nmPerf2'), 10); if (!(v >= 0 && v <
 function qualityTick(raw) { if (state !== 'play' || !(raw > 0)) return; raw = Math.min(raw, 120); fpsEma += (raw - fpsEma) * .08; qCool -= raw; if (qCool > 0) return;
   if (fpsEma > (FCAP ? 40 : 21) && PL < LV.length - 1) { qSlow += raw; if (qSlow > 1200) { applyLevel(PL + 1); qCool = 2500; qSlow = 0; qFast = 0; fpsEma = 16.7; } } else qSlow = 0;
   if (!FCAP && fpsEma < 17.6 && PL > 0) { qFast += raw; if (qFast > 20000) { applyLevel(PL - 1); qCool = 4000; qFast = 0; } } else qFast = 0; }
-function loop(t) { if (FCAP && state === 'play' && t - last < FCAP - 3) { requestAnimationFrame(loop); return; } const dt = Math.min(.05, (t - last) / 1000 || 0); qualityTick(t - last); if (state === 'play') { waveTick(dt); toxTick(dt); } last = t; try { if (state === 'play') { if (s.dead <= 0 && (s.gr || 0) < 1 && (s.food === undefined || s.food > 0)) grow(dt / (s.gt || 480)); atkCd -= dt; if (atkCd <= 0) { atkWin = 20; atkCd = 200 + Math.random() * 160; } atkWin = Math.max(0, atkWin - dt); if ((autoT -= dt) <= 0) { autoT = 4; saveProg(); } } tickCount(dt); if (state === 'menu') drawPreviews(t); else { update(dt); draw(t); mapTick(t); } } catch (e) { dispatchEvent(new ErrorEvent('error', { message: e.message })); } requestAnimationFrame(loop); }
+let FRN = 0;
+// ---- performance meter (Settings > Performance meter): frames per second, frame time, quality step, players and effects ----
+const fpsBox = (() => { const d = document.createElement('div'); d.id = 'fpsbox'; d.style.cssText = 'position:absolute;left:8px;bottom:8px;z-index:7;display:none;pointer-events:none;font:600 11px ui-monospace,Menlo,monospace;color:#9bf5b8;background:rgba(0,0,0,.6);padding:5px 8px;border-radius:8px;white-space:pre;line-height:1.35'; stage.appendChild(d); return d; })();
+let fpsOn = false;
+document.getElementById('fpsBtn').addEventListener('click', e => { fpsOn = !fpsOn; e.currentTarget.textContent = fpsOn ? 'On' : 'Off'; e.currentTarget.classList.toggle('on', fpsOn); fpsBox.style.display = fpsOn ? 'block' : 'none'; FRN = 0; });
+setInterval(() => { const fps = FRN * 2; FRN = 0; if (!fpsOn || state === 'menu') return; const N = window.NET, pc = N && N.live ? Object.keys(N.live).length + 1 : 1;
+  fpsBox.style.color = fps >= 50 ? '#9bf5b8' : fps >= 30 ? '#ffd34d' : '#ff8a8a';
+  fpsBox.textContent = fps + ' fps \u00b7 ' + fpsEma.toFixed(1) + ' ms\nquality ' + (PL + 1) + '/' + LV.length + (FCAP ? ' \u00b7 30 fps cap' : '') + '\nplayers ' + pc + ' \u00b7 effects ' + parts.length; }, 500);
+function loop(t) { FRN++; if (FCAP && state === 'play' && t - last < FCAP - 3) { requestAnimationFrame(loop); return; } const dt = Math.min(.05, (t - last) / 1000 || 0); qualityTick(t - last); if (state === 'play') { waveTick(dt); toxTick(dt); } last = t; try { if (state === 'play') { if (s.dead <= 0 && (s.gr || 0) < 1 && (s.food === undefined || s.food > 0)) grow(dt / (s.gt || 480)); atkCd -= dt; if (atkCd <= 0) { atkWin = 20; atkCd = 200 + Math.random() * 160; } atkWin = Math.max(0, atkWin - dt); if ((autoT -= dt) <= 0) { autoT = 4; saveProg(); } } tickCount(dt); if (state === 'menu') drawPreviews(t); else { update(dt); draw(t); mapTick(t); } } catch (e) { dispatchEvent(new ErrorEvent('error', { message: e.message })); } requestAnimationFrame(loop); }
 requestAnimationFrame(loop);
 
 </script>
@@ -4044,17 +4145,20 @@ function acctSheet(mode) {
   gEl('acov').classList.add('show');
   if (me) {
     gEl('actitle').textContent = 'Account';
-    body.innerHTML = `<div class="frm"><div class="frw"><i>${initial(me.name)}</i><b>@${eh(me.name)}</b></div><p class="fnote">Your progress is saved to this account, so you can pick up on any device.</p><button class="fbtn g" id="acout">Sign out</button></div>`;
+    body.innerHTML = `<div class="frm"><div class="frw"><i>${initial(me.name)}</i><b>@${eh(me.name)}</b></div><p class="fnote">Your progress is saved to this account, so you can pick up on any device.</p><button class="fbtn g" id="acout">Sign out</button><button class="fbtn g" id="acdel" style="color:#ff9a9a">Delete my account</button></div>`;
+    gEl('acdel').onclick = deleteSheet;
     gEl('acout').onclick = async () => { const b = gEl('acout'); b.disabled = true; b.innerHTML = _spin('Saving…'); try { await window.nmAcct.saveProgress(PROG); } catch (e) {} await window.nmAcct.signOut(); clearLocalForSignOut(); gEl('acov').classList.remove('show'); };
     return;
   }
   const up = mode === 'up';
   gEl('actitle').textContent = up ? 'Create account' : 'Sign in';
   body.innerHTML = `<div class="frm"><input type="text" id="acu" maxlength="16" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false"><input type="password" id="acp" placeholder="Password (6+ characters)" autocomplete="${up ? 'new-password' : 'current-password'}">${up ? '<input type="password" id="acp2" placeholder="Repeat password" autocomplete="new-password">' : ''}<div class="ferr" id="acerr"></div><button class="fbtn" id="acgo">${up ? 'Create account' : 'Sign in'}</button><button class="fbtn g" id="acsw">${up ? 'I already have an account' : 'Create a new account'}</button></div>`;
+  if (regForce) body.querySelector('.frm').insertAdjacentHTML('afterbegin', '<p class="fnote">' + (regForce === 'died' ? 'You were knocked out. ' : '') + 'Guests can only play one round. Create a free account to keep playing, save your progress and add friends. Already have one? Tap Sign in.</p>');
   gEl('acsw').onclick = () => acctSheet(up ? 'in' : 'up');
   const go = async () => {
     const u = gEl('acu').value.trim(), pw = gEl('acp').value, err = gEl('acerr');
     if (!/^[A-Za-z0-9_.-]{3,16}$/.test(u)) return say(err, 'Username: 3–16 letters, numbers, _ . -');
+    if (up && /^guest/i.test(u)) return say(err, 'Usernames starting with "guest" are reserved');
     if (pw.length < 6) return say(err, 'Password needs at least 6 characters');
     if (up && pw !== gEl('acp2').value) return say(err, 'Passwords do not match');
     const b = gEl('acgo'); b.disabled = true; b.innerHTML = _spin(up ? 'Creating…' : 'Signing in…'); say(err, '');
@@ -4063,7 +4167,23 @@ function acctSheet(mode) {
   };
   gEl('acgo').onclick = go; body.querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }));
 }
-gEl('acclose').onclick = () => gEl('acov').classList.remove('show');
+function deleteSheet() {   // permanent: erases the account, its progress, friends and online data (required by Google Play)
+  const body = gEl('acbody'), me = window.ACCT; gEl('acov').classList.add('show'); if (!me) return acctSheet('in');
+  gEl('actitle').textContent = 'Delete account';
+  body.innerHTML = `<div class="frm"><p class="fnote">This permanently deletes <b>@${eh(me.name)}</b>, including your progress, friends and pack. It cannot be undone.</p><input type="password" id="adpw" placeholder="Enter your password to confirm" autocomplete="current-password"><div class="ferr" id="aderr"></div><button class="fbtn" id="adgo" style="background:#e3203c;color:#fff">Delete forever</button><button class="fbtn g" id="adno">Cancel</button></div>`;
+  gEl('adno').onclick = () => { if (location.hash === '#delete-account') history.replaceState(null, '', location.pathname + location.search); acctSheet('acct'); };
+  gEl('adgo').onclick = async () => {
+    const pw = gEl('adpw').value, err = gEl('aderr'), b = gEl('adgo'); if (!pw) return say(err, 'Enter your password');
+    b.disabled = true; b.innerHTML = _spin('Deleting…'); say(err, '');
+    try { await window.nmAcct.deleteAccount(pw); clearLocalForSignOut(); history.replaceState(null, '', location.pathname + location.search); gEl('actitle').textContent = 'Account deleted'; body.innerHTML = '<div class="frm"><p class="fnote">Your account and everything saved with it has been deleted.</p><button class="fbtn" id="addone">OK</button></div>'; gEl('addone').onclick = () => gEl('acov').classList.remove('show'); }
+    catch (e) { b.disabled = false; b.textContent = 'Delete forever'; const c = (e && e.code) || ''; say(err, c.includes('wrong-password') || c.includes('invalid-credential') ? 'Wrong password' : c.includes('network') ? 'No connection. Check your internet' : c.includes('too-many') ? 'Too many tries. Wait a minute and try again' : 'Could not delete the account. Try again'); }
+  };
+}
+gEl('acclose').onclick = () => { if (!regForce) gEl('acov').classList.remove('show'); };
+let regForce = '';
+function forceRegister(why) {   // a guest who died or went back to the menu must sign up (or sign in) to carry on: the sheet has no close button
+  if (window.ACCT) return; regForce = why; gEl('acov').classList.add('force'); acctSheet('up');
+}
 gEl('lacc').onclick = () => acctSheet('in');
 
 // friends lists (lobby sidebar and in-game panel share the same data)
@@ -4078,7 +4198,7 @@ function frInfo(r) { const p = onl(r.uid), pk = inPack(r.uid); return { p, pk, s
 window.SENT = window.SENT || new Set(); window.SENTP = window.SENTP || new Set();
 function lobbyPlayers() { const N = NF(), me = window.ACCT; if (!me) return []; const fr = new Set(window.FR.friends.map(f => f.uid));
   return Object.entries(N.srv || {}).filter(([u, x]) => u !== me.uid && x && typeof x === 'object' && N.now() - x.ts < 50000 && !fr.has(u)).map(([u, x]) => ({ uid: u, name: x.n || 'player', sp: x.sp || '' })); }
-function serverPlayers() { const N = NF(), me = window.ACCT; if (!me) return []; return Object.entries(N.srv || {}).filter(([u, x]) => u !== me.uid && x && typeof x === 'object' && N.now() - x.ts < 50000).map(([u, x]) => ({ uid: u, name: x.n || 'player', sp: x.sp || '' })).sort((a, b) => a.name.localeCompare(b.name)); }
+function serverPlayers() { const N = NF(), me = window.ACCT; if (!me) return []; return Object.entries(N.srv || {}).filter(([u, x]) => u !== me.uid && x && typeof x === 'object' && N.now() - x.ts < 50000).map(([u, x]) => ({ uid: u, name: x.n || 'player', sp: x.sp || '', g: x.g ? 1 : 0 })).sort((a, b) => a.name.localeCompare(b.name)); }
 function sortedFriends() { return [...window.FR.friends].sort((a, b) => (!!onl(b.uid) - !!onl(a.uid)) || a.name.localeCompare(b.name)); }
 const dU = (r) => `data-u="${eh(r.uid)}" data-n="${eh(r.name)}"`;
 function lobbyRow(r) { const f = frInfo(r);
@@ -4106,10 +4226,10 @@ function friendRows(guestHint) {
       + `<button class="ib" data-a="rm" ${dU(r)} aria-label="Remove friend" title="Remove friend">×</button></div>`; }).join('');
   const nreq = F.reqs.length + (F.preqs || []).length;
   const frSet = new Set(F.friends.map(f => f.uid)), pls = serverPlayers();
-  const pr = pls.map(r => { const same = !!r.sp && r.sp === mySp(), isF = frSet.has(r.uid);
-    return `<div class="frw"><i class="od">${initial(r.name)}</i><div class="fnm"><b>${eh(r.name)}</b><small>${eh(r.sp || 'Playing')}${isF ? ' \u00b7 friend' : ''}${same ? ' \u00b7 same animal' : ''}</small></div>`
-      + (isF ? '<span class="sent" title="Already friends">' + ICK + '</span>' : window.SENT.has(r.uid) ? '<span class="sent" title="Friend request sent">' + ICK + '</span>' : ib('', 'req', r, ICF, 'Send friend request', 'data-plain="1"'))
-      + (same && !inPack(r.uid) ? (window.SENTP.has(r.uid) ? '<span class="sent pp" title="Pack request sent">' + ICP + '</span>' : ib('pp', 'pk', r, ICP, 'Send pack request')) : '') + '</div>'; }).join('');
+  const pr = pls.map(r => { const same = !!r.sp && r.sp === mySp(), isF = frSet.has(r.uid), isG = !!r.g;
+    return `<div class="frw"><i class="od">${initial(r.name)}</i><div class="fnm"><b>${eh(r.name)}</b><small>${eh(r.sp || 'Playing')}${isG ? ' \u00b7 guest' : ''}${isF ? ' \u00b7 friend' : ''}${same ? ' \u00b7 same animal' : ''}</small></div>`
+      + (isG ? '' : isF ? '<span class="sent" title="Already friends">' + ICK + '</span>' : window.SENT.has(r.uid) ? '<span class="sent" title="Friend request sent">' + ICK + '</span>' : ib('', 'req', r, ICF, 'Send friend request', 'data-plain="1"'))
+      + (same && !isG && !inPack(r.uid) ? (window.SENTP.has(r.uid) ? '<span class="sent pp" title="Pack request sent">' + ICP + '</span>' : ib('pp', 'pk', r, ICP, 'Send pack request')) : '') + '</div>'; }).join('');
   const inSrv = N.me && N.me.sv, cnt = Object.values(N.srv || {}).filter(x => x && typeof x === 'object' && N.now() - x.ts < 50000).length;
   return `<div class="frm"><div class="ferr" id="gfmsg"></div>`
     + `${nreq ? '<div class="fsec">Requests</div>' + reqs : ''}`
@@ -4177,9 +4297,10 @@ gEl('frbtn').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPr
 gEl('frclose').addEventListener('click', closeFriends);
 gEl('pacct').parentElement.style.cursor = 'pointer'; gEl('pacct').parentElement.addEventListener('click', () => acctSheet(window.ACCT ? 'acct' : 'in'));
 
-addEventListener('acct-auth', () => { renderFriends(); try { renderHome(); } catch (e) {} if (window.ACCT) adoptAccount(); else cloudReady = false; });
-addEventListener('acct-friends', renderFriends); addEventListener('net-pres', renderFriends);
+addEventListener('acct-auth', () => { if (window.ACCT && location.hash === '#delete-account') setTimeout(deleteSheet, 200); if (window.ACCT) { regForce = ''; gEl('acov').classList.remove('force'); gEl('acov').classList.remove('show'); if (forcePause) { forcePause = false; if (state === 'paused') state = 'play'; } } renderFriends(); try { renderHome(); } catch (e) {} if (window.ACCT) adoptAccount(); else cloudReady = false; });
+addEventListener('acct-friends', renderFriends); let rfT = 0, rfWait = 0; addEventListener('net-pres', () => { if (state === 'play' && !frOpen) return; const n = performance.now(); if (n - rfT > 600) { rfT = n; renderFriends(); } else if (!rfWait) rfWait = setTimeout(() => { rfWait = 0; rfT = performance.now(); renderFriends(); }, 600); });
 renderFriends();
+if (location.hash === '#delete-account') setTimeout(() => { if (!window.ACCT) { acctSheet('in'); gEl('actitle').textContent = 'Sign in to delete your account'; } }, 2200);
 
 // ---- other players in the world, the pack health list and presence ----
 const RPL = {};
@@ -4189,8 +4310,11 @@ function drawAnimalAt(o, k, g, x, y) {
   else if (k.eel) drawEel(o, g, x, y); else if (k.angler) drawAngler(o, g, x, y); else if (k.dolph) drawDolphin(o, g, x, y); else if (k.croc || k.moso) drawCroc(o, g, x, y);
   else if (k.kind) drawWhale(o, g, x, y, k.kind); else drawSharkObj(o, k.pal, g, x, y);
 }
+let rplClean = 0, guestTry = false, guestPlayed = false, gateShown = false, forcePause = false;
 function drawRemotes(t) {
-  const N = window.NET; if (!N || !window.ACCT || state === 'menu') return;
+  const N = window.NET; if (!N || !window.NETID || state === 'menu') return;
+  if (t - rplClean > 4000) { rplClean = t; for (const u in RPL) if (!N.live[u]) delete RPL[u]; }   // forget players who left
+  let drawnN = 0;
   for (const u in N.live) {
     const L = N.live[u], P = N.srv && N.srv[u]; if (!L || !P || N.now() - P.ts > 50000 || N.now() - L.ts > 12000) continue;
     const k = SHARKS.find(z => z.name === P.sp); if (!k || q_bad(u) || L.w === 1) continue;
@@ -4201,10 +4325,11 @@ function drawRemotes(t) {
     o.ang += wrap(L.a - o.ang) * k1; o.sy = L.sy || 1; o.r = L.r || o.r;
     const sp = dt > 0 ? Math.hypot(o.x - px, o.y - py) / dt : 0; o.vx = dt > 0 ? (o.x - px) / dt : 0; o.vy = dt > 0 ? (o.y - py) / dt : 0; o.swim += dt * (3 + Math.min(sp, 260) / 30);
     if (o.x < camX - 300 || o.x > camX + W + 300 || o.y < camY - 300 || o.y > camY + H + 300) continue;
+    if (++drawnN > (QL > 1 ? 6 : 12)) continue;   // never draw more than 12 other animals in one frame (6 when the phone is struggling)
     const _sel = sel; sel = k; o.dk = k.dk; o.bird = k.bird; o.pel = k.pel; o.sail = k.sail; o.moso = k.moso; o.octo = k.octo; o.blue = k.blue; o.kron = k.kron;
     try { drawAnimalAt(o, k, ctx, o.x - camX, o.y - camY); } catch (e) { RPL[u].bad = 1; } finally { sel = _sel; }
     const x = o.x - camX, y = o.y - camY - o.r * 1.9 - 8, pk = inPack(u);
-    ctx.save(); ctx.font = '700 12px system-ui'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.fillStyle = pk ? '#9bf5b8' : '#e6f0ff';
+    ctx.save(); ctx.font = '700 12px system-ui'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.fillStyle = pk ? '#9bf5b8' : P.g ? '#c3c9d6' : '#e6f0ff';
     const nm = P.n || 'player'; ctx.strokeText(nm, x, y); ctx.fillText(nm, x, y);
     if (pk || (q.hitT && Date.now() - q.hitT < 4000)) { const hp = clamp(L.h, 0, 100) / 100; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(x - 24, y + 5, 48, 6); ctx.fillStyle = hp > .5 ? '#4ade80' : hp > .25 ? '#facc15' : '#ef4444'; ctx.fillRect(x - 23, y + 6, 46 * hp, 4); }
     ctx.restore();
@@ -4219,23 +4344,29 @@ function q_bad(u) { return RPL[u] && RPL[u].bad; }
     if (hh !== lastH) { ph.innerHTML = hh; lastH = hh; }
   }, 350);
   setInterval(() => {   // tell friends where I am and how healthy I am (a few times a second, only when something changed)
-    if (!window.nmNet || !window.ACCT || state === 'menu') return;
+    if (!window.nmNet || !window.NETID || state === 'menu') return;
     const o = { x: s.x, y: s.y, a: s.ang, h: s.dead > 0 ? 0 : s.hp / s.max * 100, r: s.r, sy: s.sy, w: s.held ? (s.held.mode === 'gut' ? 1 : 2) : 0 }, k = (o.x | 0) + '|' + (o.y | 0) + '|' + o.a.toFixed(1) + '|' + (o.h | 0) + '|' + o.w;
     if (k !== lastK || ++idle > 8) { lastK = k; idle = 0; window.nmNet.pub(o); }
   }, 380);
-  setInterval(() => { if (!window.nmNet || !window.ACCT) return; const m = state === 'menu' ? 'lobby' : 'play'; window.nmNet.setState(mySp(), m); }, 1200);
+  setInterval(() => {
+    if (!window.nmNet) return;
+    if (!window.NETID) { if (state === 'play' && !guestTry && window.nmAcct && window.nmAcct.guest) { guestTry = true; window.nmAcct.guest().catch(() => {}); } return; }   // not signed in: join the world as a guest
+    const m = state === 'menu' ? 'lobby' : 'play'; window.nmNet.setState(mySp(), m);
+  }, 1200);
 }
 </script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile,signOut}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile,signOut,signInAnonymously,reauthenticateWithCredential,EmailAuthProvider,deleteUser}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import{getDatabase,ref,get,set,remove,onValue,onDisconnect,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 const app=initializeApp({apiKey:"AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ",authDomain:"globalchat-2d669.firebaseapp.com",databaseURL:"https://globalchat-2d669-default-rtdb.firebaseio.com",projectId:"globalchat-2d669",storageBucket:"globalchat-2d669.firebasestorage.app",messagingSenderId:"178714711978",appId:"1:178714711978:web:e0d5888ae48170bd4bbdd3"});
 const auth=getAuth(app),db=getDatabase(app),B="globalchat/sharkGame";
 const email=u=>u.trim().toLowerCase().replace(/[^a-z0-9_.-]/g,"")+"@nmedea.local";
 const low=u=>String(u||"").trim().toLowerCase();
 const me=()=>{const u=auth.currentUser;return u&&!u.isAnonymous?u:null};
-const myName=()=>{const u=me();return u?(u.displayName||(u.email||"").split("@")[0]||"player"):""};
+const pu=()=>auth.currentUser;   // whoever is playing: a real account or a guest
+const gname=u=>"Guest "+(((parseInt(String(u.uid).slice(0,7),36)||12345)%90000)+10000);
+const myName=()=>{const u=pu();if(!u)return"";if(u.isAnonymous)return gname(u);return u.displayName||(u.email||"").split("@")[0]||"player"};
 const fire=n=>window.dispatchEvent(new Event(n));
 let offs=[];
 const watch=(path,key)=>{offs.push(onValue(ref(db,path),s=>{const v=s.val()||{};window.FR[key]=Object.entries(v).map(([uid,x])=>({uid,name:(x&&x.name)||"player",ts:(x&&x.ts)||0,pk:(x&&x.pk)?1:0,sp:(x&&x.sp)||""})).sort((a,b)=>a.name.localeCompare(b.name));fire("acct-friends")},()=>{window.FR[key]=[];fire("acct-friends")}))};
@@ -4244,8 +4375,10 @@ onAuthStateChanged(auth,u=>{
   offs.forEach(f=>f());offs=[];window.FR={friends:[],reqs:[],pack:[],preqs:[]};
   window.nmNet&&window.nmNet.stop();
   const real=u&&!u.isAnonymous?u:null;
+  window.NETID=u?u.uid:null;window.GUEST=!!(u&&u.isAnonymous);
   window.ACCT=real?{uid:real.uid,name:real.displayName||(real.email||"").split("@")[0]||"player"}:null;
   if(real){ensureProfile(real);watch(`${B}/friends/${real.uid}`,"friends");watch(`${B}/requests/${real.uid}`,"reqs");watch(`${B}/pack/${real.uid}`,"pack");watch(`${B}/packreq/${real.uid}`,"preqs");offs.push(onValue(ref(db,`${B}/hits/${real.uid}`),sn=>{const v=sn.val()||{};for(const f of Object.keys(v)){remove(ref(db,`${B}/hits/${real.uid}/${f}`)).catch(()=>{});try{if(window.nmOnHit)window.nmOnHit(f,v[f])}catch(e){}}},()=>{}));window.nmNet.start()}
+  else if(u){offs.push(onValue(ref(db,`${B}/hits/${u.uid}`),sn=>{const v=sn.val()||{};for(const f of Object.keys(v)){remove(ref(db,`${B}/hits/${u.uid}/${f}`)).catch(()=>{});try{if(window.nmOnHit)window.nmOnHit(f,v[f])}catch(e){}}},()=>{}));window.nmNet.start();if(NET.me.m==="play"&&!NET.me.sv&&!joinBusy)enterServer(0).catch(()=>{})}
   fire("acct-auth");fire("acct-friends");
 });
 const errText=(e,up)=>{const c=(e&&e.code)||"";
@@ -4260,6 +4393,17 @@ window.nmAcct={
   signIn:(u,p)=>signInWithEmailAndPassword(auth,email(u),p),
   signUp:async(u,p)=>{const c=await createUserWithEmailAndPassword(auth,email(u),p);await updateProfile(c.user,{displayName:u.trim()});await ensureProfile(c.user);window.ACCT={uid:c.user.uid,name:u.trim()};fire("acct-auth")},
   signOut:()=>signOut(auth),
+  guest:()=>signInAnonymously(auth),
+  deleteAccount:async pw=>{   // asks for the password again, erases everything stored about the player, then deletes the login itself
+    const u=me();if(!u)throw new Error("Sign in first");const uid=u.uid,name=low(u.displayName||(u.email||"").split("@")[0]);
+    await reauthenticateWithCredential(u,EmailAuthProvider.credential(u.email,pw));
+    const rm=async p=>{try{await remove(ref(db,`${B}/${p}`))}catch(e){}};
+    for(const k of ["friends","pack"]){try{const v=(await get(ref(db,`${B}/${k}/${uid}`))).val()||{};for(const o of Object.keys(v))await rm(`${k}/${o}/${uid}`)}catch(e){}}
+    try{if((await get(ref(db,`${B}/names/${name}`))).val()===uid)await rm(`names/${name}`)}catch(e){}
+    for(const p of ["progress","users","friends","pack","requests","packreq","presence","live","hits"])await rm(`${p}/${uid}`);
+    if(NET.me.sv){try{await remove(sref(NET.me.sv,uid))}catch(e){}}
+    await deleteUser(u);
+  },
   loadProgress:async()=>{const u=me();if(!u)return null;const s=await get(ref(db,`${B}/progress/${u.uid}`));return s.val()||{}},
   saveProgress:async o=>{const u=me();if(!u)return;await set(ref(db,`${B}/progress/${u.uid}`),JSON.parse(JSON.stringify(o||{})))},
   sendRequest:async name=>{
@@ -4288,7 +4432,7 @@ const pl=new Map(),ll=new Map();let hb=0,srvOff=null,joinBusy=false;
 const fresh=x=>!!x&&typeof x==="object"&&NET.now()-x.ts<STALE;
 const ONL=u=>{const p=NET.pres[u];return fresh(p)?p:null};
 const pref=u=>ref(db,`${B}/presence/${u}`),lref=u=>ref(db,`${B}/live/${u}`),sref=(sv,u)=>ref(db,`${B}/srv/${sv}${u?"/"+u:""}`);
-function others(){const o={},m=me();for(const [u,x] of Object.entries(NET.srv||{}))if(fresh(x)&&(!m||u!==m.uid))o[u]=x;return o}
+function others(){const o={},m=pu();for(const [u,x] of Object.entries(NET.srv||{}))if(fresh(x)&&(!m||u!==m.uid))o[u]=x;return o}
 function syncLive(){
   const want=NET.me.m==="play"&&NET.me.sv?Object.keys(others()):[];
   for(const u of want)if(!ll.has(u))ll.set(u,onValue(lref(u),s=>{const x=s.val();if(x)NET.live[u]=x;else delete NET.live[u]},()=>{}));
@@ -4303,13 +4447,13 @@ function trackFriends(){
     if(sig(o)!==sig(v))fire("net-pres")},()=>{}));
 }
 addEventListener("acct-friends",trackFriends);
-function pubPres(){const u=me();if(!u)return;const sv=NET.me.sv||0;
-  set(pref(u.uid),{n:myName(),sp:NET.me.sp||"",m:NET.me.m,sv,ts:serverTimestamp()}).catch(()=>{});
-  if(sv)set(sref(sv,u.uid),{n:myName(),sp:NET.me.sp||"",ts:serverTimestamp(),j:NET.me.j||NET.now()}).catch(()=>{})}
+function pubPres(){const u=pu();if(!u)return;const sv=NET.me.sv||0,g=u.isAnonymous?1:0;
+  set(pref(u.uid),{n:myName(),g,sp:NET.me.sp||"",m:NET.me.m,sv,ts:serverTimestamp()}).catch(()=>{});
+  if(sv)set(sref(sv,u.uid),{n:myName(),g,sp:NET.me.sp||"",ts:serverTimestamp(),j:NET.me.j||NET.now()}).catch(()=>{})}
 const inPack=u=>(window.FR.pack||[]).some(p=>p.uid===u);
 // pick a server: the one asked for (if it has room), else the lowest-numbered one with room, else a brand new one
 async function pick(want,strict){
-  const snap=(await get(ref(db,`${B}/srv`))).val()||{},m=me();
+  const snap=(await get(ref(db,`${B}/srv`))).val()||{},m=pu();
   const cnt=sv=>Object.entries(snap[sv]||{}).filter(([u,x])=>fresh(x)&&u!==m.uid).length;
   if(want){if(cnt(want)<MAXS)return want;if(strict)throw new Error("That server is full ("+MAXS+" players)")}
   const ids=Object.keys(snap).map(Number).filter(n=>n>0).sort((a,b)=>a-b);
@@ -4318,17 +4462,17 @@ async function pick(want,strict){
 }
 async function leaveServer(){
   if(srvOff){srvOff();srvOff=null}
-  const u=me(),sv=NET.me.sv;NET.srv={};NET.me.sv=0;syncLive();
+  const u=pu(),sv=NET.me.sv;NET.srv={};NET.me.sv=0;syncLive();
   if(u&&sv){try{await remove(sref(sv,u.uid))}catch(e){}}
 }
 async function enterServer(want,strict){
-  const u=me();if(!u||joinBusy)return;joinBusy=true;
+  const u=pu();if(!u||joinBusy)return;joinBusy=true;
   try{for(let tries=0;tries<3;tries++){
     const sv=await pick(tries?0:want,strict&&!tries);
     if(NET.me.sv===sv&&srvOff)return;
     await leaveServer();
     NET.me.sv=sv;NET.me.j=NET.now();
-    await set(sref(sv,u.uid),{n:myName(),sp:NET.me.sp||"",ts:serverTimestamp(),j:NET.me.j});
+    await set(sref(sv,u.uid),{n:myName(),g:u.isAnonymous?1:0,sp:NET.me.sp||"",ts:serverTimestamp(),j:NET.me.j});
     try{onDisconnect(sref(sv,u.uid)).remove()}catch(e){}
     const all=(await get(sref(sv))).val()||{};   // two players may have grabbed the last seat at once: the later one moves on
     const list=Object.entries(all).filter(([k,x])=>fresh(x)).sort((p,q)=>((p[1].j||0)-(q[1].j||0))||(p[0]<q[0]?-1:1));
@@ -4337,13 +4481,13 @@ async function enterServer(want,strict){
   }}finally{joinBusy=false}
 }
 window.nmNet={
-  start(){const u=me();if(!u)return;try{onDisconnect(pref(u.uid)).remove();onDisconnect(lref(u.uid)).remove()}catch(e){}pubPres();clearInterval(hb);hb=setInterval(pubPres,15000)},
+  start(){const u=pu();if(!u)return;try{onDisconnect(pref(u.uid)).remove();onDisconnect(lref(u.uid)).remove()}catch(e){}pubPres();clearInterval(hb);hb=setInterval(pubPres,15000)},
   stop(){clearInterval(hb);for(const f of pl.values())f();for(const f of ll.values())f();pl.clear();ll.clear();if(srvOff){srvOff();srvOff=null}NET.pres={};NET.live={};NET.srv={};NET.me.sv=0},
   setState(sp,m){const ch=NET.me.sp!==sp||NET.me.m!==m;NET.me.sp=sp;NET.me.m=m;
     if(m==="play"){if(!NET.me.sv&&!joinBusy){const pv=window.PENDSV||0;window.PENDSV=0;enterServer(pv).catch(()=>{})}else if(ch)pubPres()}
-    else if(NET.me.sv||ch){const u=me();leaveServer().then(pubPres);if(u)remove(lref(u.uid)).catch(()=>{})}},
-  hit(uid,d,part,x,y,m){const u=me();if(!u||NET.me.m!=="play")return;set(ref(db,`${B}/hits/${uid}/${u.uid}`),{d:Math.round(d),p:part,m:m||"",n:myName(),x:Math.round(x||0),y:Math.round(y||0),ts:NET.now()}).catch(()=>{})},
-  pub(o){const u=me();if(!u||NET.me.m!=="play"||!NET.me.sv)return;set(lref(u.uid),{x:Math.round(o.x),y:Math.round(o.y),a:Math.round(o.a*100)/100,h:Math.round(o.h),r:Math.round(o.r),sy:o.sy>=0?1:-1,w:o.w||0,ts:serverTimestamp()}).catch(()=>{})},
+    else if(NET.me.sv||ch){const u=pu();leaveServer().then(pubPres);if(u)remove(lref(u.uid)).catch(()=>{})}},
+  hit(uid,d,part,x,y,m){const u=pu();if(!u||NET.me.m!=="play")return;set(ref(db,`${B}/hits/${uid}/${u.uid}`),{d:Math.round(d),p:part,m:m||"",n:myName(),x:Math.round(x||0),y:Math.round(y||0),ts:NET.now()}).catch(()=>{})},
+  pub(o){const u=pu();if(!u||NET.me.m!=="play"||!NET.me.sv)return;set(lref(u.uid),{x:Math.round(o.x),y:Math.round(o.y),a:Math.round(o.a*100)/100,h:Math.round(o.h),r:Math.round(o.r),sy:o.sy>=0?1:-1,w:o.w||0,ts:serverTimestamp()}).catch(()=>{})},
   async join(uid){const p=ONL(uid);if(!p)throw new Error("They are offline");if(p.m!=="play"||!p.sv)throw new Error("They are not in a game yet");
     if(NET.me.m==="play"){if(NET.me.sv!==p.sv){await enterServer(p.sv,true);if(NET.me.sv!==p.sv)throw new Error("Could not join their server")}}
     else{const c=Object.values((await get(sref(p.sv))).val()||{}).filter(fresh).length;if(c>=MAXS)throw new Error("Their server is full ("+MAXS+" players)")}
