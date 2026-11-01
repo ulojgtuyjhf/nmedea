@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nmedea – Privacy Policy and Account Deletion</title>
+<style>
+  :root { color-scheme: light dark; --bg: #f6f8fc; --fg: #14213d; --mu: #51607f; --ac: #1a56db; --card: #fff; --bd: #dbe2f0; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0c1224; --fg: #e8eefc; --mu: #9fb0d8; --ac: #7aa7ff; --card: #131b33; --bd: #26314f; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 18px 60px; }
+  h1 { font-size: 28px; margin: 0 0 4px; } h2 { font-size: 20px; margin: 32px 0 8px; } p, li { color: var(--fg); } .mu { color: var(--mu); font-size: 14px; }
+  .card { background: var(--card); border: 1px solid var(--bd); border-radius: 14px; padding: 6px 18px; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; } th, td { text-align: left; padding: 9px 6px; border-bottom: 1px solid var(--bd); vertical-align: top; } th { color: var(--mu); font-weight: 600; font-size: 13px; }
+  a { color: var(--ac); }
+</style>
+</head>
+<body>
+<main>
+  <h1>nmedea – Privacy Policy</h1>
+  <p class="mu">Last updated: 1 November 2026 · Applies to the nmedea online animal game (website and Android app)</p>
+
+  <p>nmedea is a free online game where you play as a sea or land animal in a shared world with other real players. This page explains what information the game stores, why, and how you can have it deleted. The game has no advertising and no analytics or tracking tools, and we never sell your information.</p>
+
+  <h2>What we store</h2>
+  <div class="card">
+    <table>
+      <tr><th>Information</th><th>Why</th><th>When</th></tr>
+      <tr><td><b>Username and password</b> (handled by Google Firebase Authentication; we never see your password)</td><td>To let you sign in and keep your progress</td><td>Only if you create an account</td></tr>
+      <tr><td><b>Game progress</b> (which animals you unlocked, growth and similar game data)</td><td>To save your game and carry it to other devices</td><td>Only if you create an account</td></tr>
+      <tr><td><b>Friends, pack, and friend/pack requests</b></td><td>To provide the friends and pack features</td><td>Only if you create an account</td></tr>
+      <tr><td><b>Online status</b> (online or not, which animal you play, which server you are on)</td><td>So friends can see and join you</td><td>While you are online</td></tr>
+      <tr><td><b>Live game data</b> (your position in the world, health, size and bite or grab events between players)</td><td>To show you to other players on the same server and make fighting work</td><td>Only while you are playing; removed when you leave</td></tr>
+      <tr><td><b>Guest ID</b> (a random anonymous ID and a random name such as "Guest 48213")</td><td>So guests can play in the shared world without an account</td><td>When you play without an account</td></tr>
+      <tr><td><b>Settings and progress stored on your device</b> (sound, quality level, local progress)</td><td>To remember your preferences</td><td>Always, on your own device</td></tr>
+    </table>
+  </div>
+  <p>We do not collect your real name, email address, phone number, contacts, photos, microphone or precise location. The game does not use your GPS. Chat bubbles you type in the game are shown on your own screen and are not sent to other players.</p>
+
+  <h2>Who processes the data</h2>
+  <p>Your data is stored with Google Firebase (Authentication and Realtime Database) on Google's servers. The game also loads fonts from Google Fonts. Google's own privacy policy applies to their services: <a href="https://policies.google.com/privacy" rel="noopener">policies.google.com/privacy</a>. We do not share your data with anyone else.</p>
+
+  <h2>How long we keep it</h2>
+  <p>Live game data and online status are removed when you leave a game or go offline. Account data (username, progress, friends) is kept until you delete your account. Guest data is temporary and is removed when the guest leaves.</p>
+
+  <h2 id="delete">Delete your account and data</h2>
+  <p>You can delete your account at any time. Deleting it permanently removes your username, game progress, friends and pack, requests, and online data.</p>
+  <ol>
+    <li><b>In the game:</b> open <i>Settings → Account</i> (tap your name), then tap <b>Delete my account</b> and enter your password to confirm.</li>
+    <li><b>From the web:</b> open <a href="./#delete-account" id="dellink">the game with the delete-account link</a> (add <code>#delete-account</code> to the game's address), sign in, and confirm the deletion.</li>
+    <li><b>Forgot your password or cannot sign in?</b> Contact us at <b>[visit our play store nmedea page]</b> from where you can ask for the account to be deleted. Include your username.</li>
+  </ol>
+  <p>Guests do not have an account to delete. Their temporary data is removed automatically when they leave the game.</p>
+
+  <h2>Children</h2>
+  <p>nmedea is not directed at children under 13, and we do not knowingly collect information from them. If you believe a child has created an account, contact us and we will delete it.</p>
+
+  <h2>Your rights</h2>
+  <p>Depending on where you live, you may have the right to access, correct or delete your information. You can delete it yourself as described above, or contact us and we will help.</p>
+
+  <h2>Changes</h2>
+  <p>If we change how the game uses data, we will update this page and its date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about privacy or deleting your data: <b>[visit our play store nmedea page]</b></p>
+</main>
+<script>
+  // make the "delete" link point at the actual game page (edit GAME_URL to your game's address)
+  var GAME_URL = "";
+  if (GAME_URL) document.getElementById("dellink").href = GAME_URL.replace(/#.*$/, "") + "#delete-account";
+</script>
+</body>
+</html>
