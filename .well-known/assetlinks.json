@@ -1,1 +1,8 @@
-{}
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "dev.pages.nmedea.ngd",
+        "sha256_cert_fingerprints": ["BE:E9:48:9B:F5:21:13:BC:78:80:4E:8D:0B:55:3F:85:2A:C7:2E:2A:9F:23:E1:1A:92:8D:36:4D:FD:CD:2C:BE"]
+      }
+    }]
