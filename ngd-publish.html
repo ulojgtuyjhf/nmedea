@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>NGD – Publish a game</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b12;--s:#10111c;--s2:#181926;--bd:rgba(255,255,255,.13);--tx:#e2e4ee;--mu:#8b8ea8;--ac:#2172ff;--ac2:#6d4aff}
+*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--tx);font:15px/1.5 Outfit,system-ui,sans-serif;padding:20px 16px 50px}
+main{max-width:520px;margin:0 auto}h1{font-size:24px}p.s{color:var(--mu);font-size:13px;margin-bottom:16px}
+.box{background:var(--s);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:12px;color:var(--mu);margin:10px 0 4px;letter-spacing:.04em}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:12px;color:var(--tx);font:inherit;padding:10px 12px}
+input[type=file]{padding:8px}button{font:inherit;cursor:pointer}
+.go{width:100%;margin-top:14px;padding:12px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700}
+.go:disabled{opacity:.5}#msg{min-height:20px;margin-top:10px;font-size:13px}.ok{color:#3ddc97}.er{color:#ff6b6b}
+.g{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(255,255,255,.06)}.g:first-child{border:0}.g b{flex:1}.g button{background:none;border:1px solid var(--bd);color:#ff8a8a;border-radius:10px;padding:5px 10px}
+</style></head><body><main>
+<h1>Publish a game</h1><p class="s">Keep this page private. Players see a new game straight away.</p>
+<div class="box">
+<label>Game id (small letters, numbers, dashes – e.g. shark-game)</label><input id="id" maxlength="40">
+<label>Game title</label><input id="ti" maxlength="60">
+<label>Tagline (one line shown on the card)</label><input id="de" maxlength="140">
+<label>About this game (what it is, how to play, controls)</label><textarea id="ab" rows="5" maxlength="1200"></textarea>
+<label>Category</label><select id="ca"><option>Survival</option><option>Action</option><option>Adventure</option><option>Puzzle</option><option>Casual</option><option>Other</option></select>
+<label>Age rating</label><select id="ag"><option>Everyone</option><option>10+</option><option>Teen</option><option>Mature 17+</option></select>
+<label>Screen direction</label><select id="or"><option value="landscape">Landscape</option><option value="portrait">Portrait</option><option value="any">Any</option></select>
+<label>Publisher name</label><input id="dv" value="nmedea" maxlength="40"><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input id="vf" type="checkbox" checked style="width:auto"> Show the blue verified check</label><label>Version</label><input id="vr" value="1.0" maxlength="12">
+<label>Game file (one .html file, up to 5 MB)</label><input id="gf" type="file" accept=".html,.htm,text/html">
+<label>Card picture (optional, up to 1 MB)</label><input id="cf" type="file" accept="image/*">
+<button class="go" id="go">Publish</button><div id="msg"></div></div>
+<div class="box"><b>Published games</b><div id="ls"><p class="s">Loading…</p></div></div>
+<script>
+const R2 = 'https://r2-upload.katlegomashilwane0691.workers.dev', BASE = 'https://pub-48c36c7bd2c440f7bae17c4f339a5c91.r2.dev';
+const FB = 'https://globalchat-2d669-default-rtdb.firebaseio.com', FBKEY = 'AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ';   // your chat's Firebase (the games list is saved under globalchat/ngdGames)
+const FBP = FB.replace(/\/$/, '') + '/globalchat/ngdGames', fbOn = /^https:/.test(FB);
+let _t = null, _te = 0;
+async function fb(p, o) {   // signs in anonymously (same as your chat) then talks to the database
+  if (!_t || Date.now() > _te) { const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + FBKEY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"returnSecureToken":true}' }); if (!r.ok) throw new Error('sign-in failed (HTTP ' + r.status + ')'); const j = await r.json(); _t = j.idToken; _te = Date.now() + 3000000; }
+  return fetch(FBP + p + '?auth=' + _t, o); }
+const $ = s => document.getElementById(s), say = (t, c) => { $('msg').textContent = t; $('msg').className = c || ''; };
+const up = async (file, name) => { const f = new FormData(); f.append('file', file); f.append('fileName', name); const r = await fetch(R2 + '/upload', { method: 'POST', body: f }); if (!r.ok) throw new Error('Upload failed (' + r.status + ')'); return (await r.json()).url; };
+const keep = l => { try { localStorage.ngdLocal = JSON.stringify(l); } catch (e) {} return l; };
+const kept = () => { try { return JSON.parse(localStorage.ngdLocal || '[]'); } catch (e) { return []; } };
+const putCat = async l => { keep(l); const u = await up(new File([JSON.stringify(l)], 'ngd_catalog.json', { type: 'application/json' }), 'ngd_catalog.json'); try { localStorage.ngdCat = u; } catch (e) {} return u; };
+let cur = [];
+async function getCat() {   // returns {l, why}
+  let why = '';
+  if (fbOn) { try { const r = await fb('.json', { cache: 'no-store' }); if (!r.ok) return { l: kept(), why: 'server said HTTP ' + r.status }; const o = await r.json(); return { l: keep(o ? Object.values(o) : []), why: '' }; } catch (e) { return { l: kept(), why: 'server unreachable' }; } }
+  const urls = [...new Set([(() => { try { return localStorage.ngdCat; } catch (e) {} })(), BASE.replace(/\/$/, '') + '/ngd_catalog.json'].filter(Boolean))];
+  for (const u of urls) { try { const r = await fetch(u + '?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) { const g = await r.json(); if (Array.isArray(g)) return { l: keep(g), why: '' }; why = 'not a games list'; } else why = 'HTTP ' + r.status; } catch (e) { why = 'blocked or offline (check the bucket CORS rule)'; } }
+  return { l: kept(), why };
+}
+async function list(known) {
+  let why = ''; if (known) cur = known; else { const r = await getCat(); cur = r.l; why = r.why; }
+  $('ls').innerHTML = (why ? '<p class="s er">Couldn\u2019t read the online list (' + why + '). Showing what this device published.</p>' : '') + (cur.length ? '' : '<p class="s">Nothing published yet.</p>');
+  cur.forEach(x => { const d = document.createElement('div'); d.className = 'g'; d.innerHTML = '<b></b><button>Hide</button>'; d.firstChild.textContent = x.title + ' (' + x.id + ')';
+    d.lastChild.onclick = async () => { if (!confirm('Hide ' + x.title + ' from players?')) return; try { const n = cur.filter(y => y.id !== x.id); if (fbOn) { const r = await fb('/' + x.id + '.json', { method: 'DELETE' }); if (!r.ok) throw new Error('Server said HTTP ' + r.status); keep(n); } else await putCat(n); list(n); } catch (e) { say(e.message, 'er'); } }; $('ls').appendChild(d); }); }
+list();
+$('go').onclick = async () => {
+  const id = $('id').value.trim(), gf = $('gf').files[0], cf = $('cf').files[0];
+  if (!/^[a-z0-9-]{2,40}$/.test(id)) return say('Game id: 2-40 small letters, numbers or dashes', 'er');
+  if (!gf) return say('Choose the game .html file', 'er'); if (gf.size > 5e6) return say('Game file is over 5 MB', 'er');
+  $('go').disabled = true; say('Uploading\u2026');
+  try { const v = Date.now(), gurl = await up(gf, 'ngd_g_' + id + '_' + v + '.html'); let curl = '';
+    if (cf) curl = await up(cf, 'ngd_i_' + id + '_' + v + '.' + ((cf.type.split('/')[1] || 'png').replace('jpeg', 'jpg')));
+    const r = await getCat(), l = r.l, old = l.find(x => x.id === id);
+    const game = { id, title: $('ti').value.trim() || id, desc: $('de').value.trim(), about: $('ab').value.trim(), cat: $('ca').value, age: $('ag').value, ori: $('or').value, ver: $('vr').value || '1.0', dev: $('dv').value.trim() || 'nmedea', vf: $('vf').checked, gurl, curl: curl || (old && old.curl) || '', v }, n = [...l.filter(x => x.id !== id), game];
+    if (fbOn) { const r = await fb('/' + id + '.json', { method: 'PUT', body: JSON.stringify(game) }); if (!r.ok) throw new Error('Server said HTTP ' + r.status + ' (the database may not allow writing here)'); keep(n); } else await putCat(n); say('Published! Players can see it now.', 'ok'); list(n); } catch (e) { say(e.message || 'Something went wrong', 'er'); }
+  $('go').disabled = false; };
+</script></main></body></html>
