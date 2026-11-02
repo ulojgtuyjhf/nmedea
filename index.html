@@ -361,13 +361,54 @@ nav button.on #pnav .ava{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--hl)}
 .mn-i:active,.mn-i:hover{background:var(--s2)}
 .mn-i.dng,.mn-i.dng svg{color:#e5484d;stroke:#e5484d}.mn-i.dng{stroke:none}
 @media (prefers-reduced-motion:reduce){#mnu,#mnu.on,.hdr button#gear svg{transition:none}}
+#fs{position:fixed;left:0;top:0;width:100%;height:100vh;height:100dvh;z-index:9;background:var(--bg);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}#fs.on{display:flex}
+.fs-h{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--bd);flex:none}.fs-h b{flex:1;font-size:17px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-ic{position:relative;width:40px;height:40px;border-radius:50%;border:0;background:var(--s2);display:grid;place-items:center;flex:none;padding:0;color:var(--tx)}
+.fs-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fs-b{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:12px 16px calc(24px + env(safe-area-inset-bottom))}
+.fs-t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin:22px 0 8px}.fs-t:first-child{margin-top:4px}
+.fs-add{display:flex;gap:8px;align-items:center}.fs-add .fi{margin:0;flex:1;min-width:0;font-size:16px}
+.fs-go{flex:none;padding:11px 16px;border:0;border-radius:12px;background:var(--gr);color:#fff;font-weight:700}.fs-go:disabled{opacity:.5}
+.fs-r{display:flex;align-items:center;gap:12px;padding:10px;border-radius:14px;background:var(--s);border:1px solid var(--bd);margin-bottom:8px;width:100%;text-align:left}
+.fs-r .fs-i{flex:1;min-width:0;display:block}.fs-r .fs-i b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fs-r .fs-i span{display:block;font-size:12.5px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-r .fs-i span.on{color:#2fd06b}.fs-r .fs-i span.pl2{color:var(--hl);font-weight:600}
+.fs-av{position:relative;display:block;width:46px;height:46px;min-width:46px;max-width:46px;flex:none}.fs-av.lg{width:96px;height:96px;min-width:96px;max-width:96px;margin:6px auto 10px}.onl-i .fs-av{width:54px;height:54px;min-width:54px;max-width:54px}.fs-av .ava,.fs-av svg.ava{display:block;position:absolute;left:0;top:0;width:100%;height:100%;max-width:100%;max-height:100%;border-radius:50%}
+.fs-dot{position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-radius:50%;background:#6b7088;border:3px solid var(--bg)}.fs-dot.on{background:#2fd06b}.fs-av.lg .fs-dot{width:22px;height:22px;right:4px;bottom:4px}
+.fs-un{width:10px;height:10px;border-radius:50%;background:#2172ff;flex:none}
+.fs-mini{flex:none;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--s2);color:var(--tx);font-weight:600;font-size:13px}.fs-mini.ok{background:var(--gr);color:#fff;border:0}.fs-mini.no{color:#e5484d}
+.fs-pc{text-align:center}.fs-pc h1{font-size:22px;margin:0}.fs-pc .st{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:99px;background:var(--s2);font-size:13px;font-weight:600;color:var(--mu)}.fs-pc .st.on{color:#2fd06b}.fs-pc .st.pl2{color:var(--hl)}
+.fs-ac{display:flex;flex-direction:column;gap:10px;margin-top:20px}.fs-ac .pl{width:100%}.fs-ac .fs-mini{padding:12px;font-size:14px;width:100%}
+.fs-ro{display:flex;align-items:center;gap:10px;width:100%;padding:13px 12px;border:0;border-bottom:1px solid var(--bd);background:none;text-align:left;font-weight:600;font-size:14.5px;color:var(--tx)}.fs-ro em{margin-left:auto;font-style:normal;color:var(--mu);font-weight:500;font-size:13px}
+.fs-sw{width:42px;height:24px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);position:relative;flex:none;margin-left:auto}.fs-sw::after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:var(--mu);transition:transform .2s}.fs-sw.on{background:#2fd06b;border-color:#2fd06b}.fs-sw.on::after{transform:translateX(18px);background:#fff}
+.fs-e{color:var(--mu);font-size:13.5px;padding:6px 2px}.fs-er{color:#ff8a8a;font-size:13px;min-height:18px;margin:6px 2px 0}
+#fsm{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.fs-m{max-width:80%;padding:8px 12px;border-radius:16px;font-size:15px;line-height:1.35;word-break:break-word;white-space:pre-wrap;align-self:flex-end;background:var(--gr);color:#fff;border-bottom-right-radius:5px}
+.fs-m.o{align-self:flex-start;background:var(--s2);color:var(--tx);border-bottom-right-radius:16px;border-bottom-left-radius:5px}
+.fs-m small{display:block;font-size:10.5px;opacity:.65;margin-top:2px;white-space:normal}.fs-m .fl{background:none;border:0;color:inherit;opacity:.7;font-size:10.5px;padding:0 0 0 8px;text-decoration:underline}
+.fs-in{display:flex;gap:8px;align-items:center;padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--bd);flex:none;background:var(--bg)}.fs-in .fi{margin:0;flex:1;min-width:0;font-size:16px;border-radius:20px}
+.fs-nt{font-size:11.5px;color:var(--mu);text-align:center;padding:6px 12px 2px;flex:none}
+#fc,#rp{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:24px}#fc.on,#rp.on{display:flex}
+#fc .cb,#rp .cb{border-color:var(--bd);box-shadow:none;max-height:100%;overflow:auto}#rp .fi{margin:0 0 8px;font-size:16px}#rp textarea.fi{resize:none}#rp .er{text-align:left;margin:0 0 10px}
+.fs-ck{display:flex;align-items:center;gap:8px;text-align:left;font-size:14px;margin:0 0 10px;color:var(--tx)}
+#fcn,#rpc{background:var(--s2);color:var(--tx)}#fcy,#rpg{background:#e5484d;color:#fff}#fcy.ok{background:var(--gr)}
+.pf-fr{display:flex;align-items:center;gap:12px;width:100%;margin-top:16px;padding:13px 14px;border-radius:14px;background:var(--s);border:1px solid var(--bd);font-weight:700;font-size:15px;text-align:left}.pf-fr svg{width:22px;height:22px;fill:none;stroke:var(--hl);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.pf-fr em{margin-left:auto;font-style:normal;min-width:22px;padding:1px 7px;border-radius:99px;background:#e5484d;color:#fff;font-size:12px;text-align:center}.pf-fr em[hidden]{display:none}
+#onl{display:flex;gap:14px;overflow-x:auto;padding:4px 16px 10px;scrollbar-width:none;border-bottom:1px solid var(--bd)}#onl::-webkit-scrollbar{display:none}#onl[hidden]{display:none}
+.onl-i{flex:none;width:62px;border:0;background:none;padding:0;text-align:center;color:var(--tx)}.onl-i .fs-av{width:54px;height:54px;display:block;margin:0 auto 4px}.onl-i .fs-av .ava{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #2fd06b}.onl-i span.n{display:block;font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-av img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+nav button[data-t=profile]{position:relative}body.hasrq nav button[data-t=profile]::after{content:"";position:absolute;top:6px;left:calc(50% + 8px);width:10px;height:10px;border-radius:50%;background:#e5484d;border:2px solid var(--bg)}
+.mn-bd{margin-left:auto;min-width:20px;padding:1px 6px;border-radius:99px;background:#e5484d;color:#fff;font-size:12px;font-weight:700;text-align:center}.mn-bd+em{margin-left:8px}
+.fs-rq{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:14px;border:1px solid var(--bd);background:var(--s);font-weight:700;font-size:15px;text-align:left;margin:4px 0 6px}.fs-rq svg{width:22px;height:22px;fill:none;stroke:var(--hl);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.fs-rq em{margin-left:auto;font-style:normal;min-width:24px;padding:2px 8px;border-radius:99px;background:var(--s2);color:var(--mu);font-size:12.5px;text-align:center}.fs-rq em.hot{background:#e5484d;color:#fff}
 </style><script>try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||4)<=2)document.documentElement.classList.add('lite')}catch(e){}try{document.documentElement.dataset.theme=localStorage.ngdTheme==='light'?'light':'dark'}catch(e){}</script></head><body>
 <header class="hdr"><img src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><b>NGD</b><button id="gear" aria-label="Settings" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header>
+<div id="onl" hidden aria-label="Friends online"></div>
 <div id="home" class="tab on"></div><div id="search" class="tab"></div><div id="profile" class="tab"></div>
 <nav><button data-t="home" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Games</button><button data-t="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search</button><button data-t="profile"><span id="pnav"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 3.9 3.1l.9 4A2.6 2.6 0 0 1 20 18.3a2.7 2.7 0 0 1-2-1l-1.2-1.6H7.2L6 17.3a2.7 2.7 0 0 1-2 1A2.6 2.6 0 0 1 1.2 15.1l.9-4A4 4 0 0 1 6 8z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/></svg></span>Profile<i class="bd" id="nbd" hidden></i></button></nav>
 <div id="mbk"></div><div id="mnu" role="menu"></div>
 <div id="sh"><div id="sc"></div></div>
 <div id="au"></div>
+<div id="fs" role="dialog" aria-label="Friends and chat"></div>
+<div id="fc"><div class="cb"><h2 id="fct"></h2><p id="fcx"></p><div class="r"><button id="fcn">Cancel</button><button id="fcy"></button></div></div></div>
+<div id="rp"><div class="cb"><h2 id="rpt">Report</h2><p>Tell us what is wrong. Our team reviews every report.</p><select class="fi" id="rpr"><option>Harassment or bullying</option><option>Hate speech</option><option>Sexual content</option><option>Threats or violence</option><option>Spam or scam</option><option>Child safety concern</option><option>Impersonation</option><option>Other</option></select><textarea class="fi" id="rpn" maxlength="300" rows="3" placeholder="Add details (optional)"></textarea><label class="fs-ck"><input type="checkbox" id="rpb" checked> Also block this player</label><div class="er" id="rpe"></div><div class="r"><button id="rpc">Cancel</button><button id="rpg">Send report</button></div></div></div>
 <div id="pv"><div class="pv-h"><button id="pvb" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><b id="pvt"></b></div><div class="pv-b" id="pvx"></div></div>
 <div id="dm"><div class="cb"><h2>Delete account?</h2><p id="dmt"></p><input class="fi" id="dpw" type="password" placeholder="Enter your password to confirm" autocomplete="current-password"><div class="er" id="der"></div><div class="r"><button id="dcn">Cancel</button><button id="dgo">Delete forever</button></div></div></div>
 <div id="lc"><div class="cb"><h2>Log out?</h2><p>Are you sure you want to log out?</p><div class="r"><button id="lcn">Cancel</button><button id="lcy">Log out</button></div></div></div>
@@ -417,7 +458,7 @@ const SOCIAL = [];   // add your links like: { n: 'Instagram', u: 'https://insta
 const mcard = x => `<button class="card" data-id="${esc(x.id)}">${cv(x)}<div class="ci"><h3>${esc(x.title)}</h3>${dv(x)}</div></button>`;
 const CTRL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 3.9 3.1l.9 4A2.6 2.6 0 0 1 20 18.3a2.7 2.7 0 0 1-2-1l-1.2-1.6H7.2L6 17.3a2.7 2.7 0 0 1-2 1A2.6 2.6 0 0 1 1.2 15.1l.9-4A4 4 0 0 1 6 8z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/></svg>';
 // NGD player avatar: every NGD account gets its own colourful gaming badge (emblem + colours come from the username)
-const NGD_USE_CHAT_PHOTO = false;   // false = always show the NGD avatar; set true to show the nmedea chat photo when an account has one
+const NGD_USE_CHAT_PHOTO = true;   // false = always show the NGD avatar; set true to show the nmedea chat photo when an account has one
 const AVP = [['#ff5f6d','#ffc371'],['#2172ff','#6d4aff'],['#00c9a7','#2172ff'],['#ff4d9d','#7c4dff'],['#f7b733','#fc4a1a'],['#11998e','#38ef7d'],['#ee0979','#ff6a00'],['#4facfe','#00c6ff']];
 const AVE = [
  '<path d="M17 24h30a9 9 0 0 1 8.8 7.2l2 10A6.2 6.2 0 0 1 46 44.5l-3-4H21l-3 4A6.2 6.2 0 0 1 6.2 41.2l2-10A9 9 0 0 1 17 24z"/><path d="M20 29v8M16 33h8" stroke="#141735" stroke-opacity=".85" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="43" cy="31" r="2.2" fill="#141735" fill-opacity=".85"/><circle cx="47.5" cy="35.5" r="2.2" fill="#141735" fill-opacity=".85"/>',
@@ -459,7 +500,7 @@ function menuHTML() { const th = localStorage.ngdTheme === 'light' ? 'light' : '
    + (U ? '' : '<button class="mn-b" id="pli">Log in or create account</button>')
    + `<div class="mn-lbl">Appearance</div><div class="seg"><button class="th2${th === 'dark' ? ' on' : ''}" data-th="dark">${MI.moon}Dark</button><button class="th2${th === 'light' ? ' on' : ''}" data-th="light">${MI.sun}Light</button></div>`
    + `<div class="mn-dv"></div><button class="mn-i soc" role="menuitem">${MI.users}Follow nmedea${ch}</button><button class="mn-i pol" data-p="terms" role="menuitem">${MI.doc}Terms of Service${ch}</button><button class="mn-i pol" data-p="privacy" role="menuitem">${MI.shield}Privacy Policy${ch}</button>`
-   + (U ? `<div class="mn-dv"></div><button class="mn-i" id="lgo" role="menuitem">${MI.out}Log out</button><button class="mn-i dng" id="dlt" role="menuitem">${MI.trash}Delete account</button>` : ''); }
+   + (U ? `<div class="mn-dv"></div><button class="mn-i fr-open" role="menuitem">${MI.users}Friends and chat${Object.keys(FS.rq || {}).length ? '<b class="mn-bd">' + Object.keys(FS.rq).length + '</b>' : ''}${ch}</button><button class="mn-i" id="lgo" role="menuitem">${MI.out}Log out</button><button class="mn-i dng" id="dlt" role="menuitem">${MI.trash}Delete account</button>` : ''); }
 const menuOn = () => $('#mnu').classList.contains('on');
 function hideMenu() { $('#mnu').classList.remove('on'); $('#mbk').classList.remove('on'); $('#gear').classList.remove('on'); $('#gear').setAttribute('aria-expanded', 'false'); }
 function openMenu() { const m = $('#mnu'), r = $('#gear').getBoundingClientRect(); m.innerHTML = menuHTML();
@@ -485,19 +526,20 @@ const POL = {
 <h3>1. Agreement</h3><p>By creating an account or using NGD (nmedea Gaming Dex) and the games on it, you agree to these Terms. You must be at least 13 years old, or the minimum age to use online services in your country if that is higher. If you do not agree, please do not use NGD.</p>
 <h3>2. Your account</h3><p>Choose a username and password and keep your password private. You are responsible for everything that happens on your account. Do not use a name that impersonates someone else or is offensive, hateful or misleading.</p>
 <h3>3. Fair play and conduct</h3><p>Do not cheat, use exploits or bots, hack or disrupt our servers, harass other players, or try to access accounts or data that are not yours. We may warn, suspend or remove accounts that break these rules.</p>
-<h3>4. Our games and content</h3><p>NGD, its games, artwork, names and code belong to nmedea or their respective creators. We give you a personal, non-transferable, revocable licence to play them for your own enjoyment. You may not copy, sell, reverse-engineer or redistribute them.</p>
-<h3>5. Availability and progress</h3><p>NGD and its games are provided as they are. They need an internet connection, may change, pause or stop at any time, and may contain bugs. Progress and stats can be lost, so do not rely on them for anything important.</p>
-<h3>6. Ending your account</h3><p>You can delete your account at any time in Settings &gt; Delete account. We may suspend or end accounts that break these Terms.</p>
-<h3>7. Liability</h3><p>To the fullest extent allowed by law, nmedea is not liable for indirect or consequential loss arising from your use of NGD, and our total liability is limited to the amount you paid us (which is nothing, as NGD is free). Nothing here limits rights you have by law.</p>
-<h3>8. Changes</h3><p>We may update these Terms. If the changes are important, we will tell you in the app. Continuing to use NGD means you accept the new Terms.</p>
-<h3>9. Contact</h3><p>Questions about these Terms? Reach us through ${CT()}.</p>`],
+<h3>4. Chat, friends, blocking and reporting</h3><p>You can send friend requests and, once someone accepts, chat privately with them. Private chats are meant only for the two people in them. Do not send anything that is hateful, harassing, threatening, sexually explicit, illegal, or that exploits or endangers children, and do not spam, scam, share other people's private information or impersonate anyone. Do not share personal details such as your address, school or phone number with people you do not know.</p><p>You can block any player at any time. Blocking removes them from your friends and stops their requests and messages reaching you. You can report any player or message from their profile or chat. Reports are reviewed, and we may remove content and warn, suspend or ban accounts that break these Terms. Messages you report, and the messages around them, are shared with us so we can review them. You can hide your online status in Friends &gt; Show my online status.</p>
+<h3>5. Our games and content</h3><p>NGD, its games, artwork, names and code belong to nmedea or their respective creators. We give you a personal, non-transferable, revocable licence to play them for your own enjoyment. You may not copy, sell, reverse-engineer or redistribute them.</p>
+<h3>6. Availability and progress</h3><p>NGD and its games are provided as they are. They need an internet connection, may change, pause or stop at any time, and may contain bugs. Progress and stats can be lost, so do not rely on them for anything important.</p>
+<h3>7. Ending your account</h3><p>You can delete your account at any time in Settings &gt; Delete account. We may suspend or end accounts that break these Terms.</p>
+<h3>8. Liability</h3><p>To the fullest extent allowed by law, nmedea is not liable for indirect or consequential loss arising from your use of NGD, and our total liability is limited to the amount you paid us (which is nothing, as NGD is free). Nothing here limits rights you have by law.</p>
+<h3>9. Changes</h3><p>We may update these Terms. If the changes are important, we will tell you in the app. Continuing to use NGD means you accept the new Terms.</p>
+<h3>10. Contact</h3><p>Questions about these Terms? Reach us through ${CT()}.</p>`],
   privacy: ['Privacy Policy', () => `<p class="pv-d">Last updated: 2 November 2026</p>
 <h3>1. Overview</h3><p>NGD (nmedea Gaming Dex) is a games platform made by nmedea. This policy explains what information we collect, why we collect it and the choices you have.</p>
-<h3>2. What we collect</h3><p><b>Account:</b> the username and password you choose. Your password is handled by Google Firebase Authentication and we cannot read it. We do not ask for your email address, phone number, real name, location, contacts or photos.</p><p><b>Game data:</b> your progress, stats, friends and pack lists, online status and the in-game activity needed for multiplayer features.</p><p><b>On your device:</b> your login session, theme choice and play-time statistics are stored on your device.</p><p><b>Technical data:</b> our service providers may process your IP address and basic device and connection information to deliver the service and prevent abuse.</p>
+<h3>2. What we collect</h3><p><b>Account:</b> the username and password you choose. Your password is handled by Google Firebase Authentication and we cannot read it. We do not ask for your email address, phone number, real name, location, contacts or photos.</p><p><b>Game and social data:</b> your progress, stats, friends and pack lists, friend requests, the private messages you send to friends, the players you block, your online status and which game you are playing, and the in-game activity needed for multiplayer features.</p><p><b>Reports:</b> if you report a player or message, we keep the report, the details you add and the nearby messages so we can review it and keep players safe.</p><p><b>On your device:</b> your login session, theme choice and play-time statistics are stored on your device.</p><p><b>Technical data:</b> our service providers may process your IP address and basic device and connection information to deliver the service and prevent abuse.</p>
 <h3>3. How we use it</h3><p>To run your account, save your progress, show your friends and online status, make the games work, keep the service secure, and fix bugs and improve performance.</p>
-<h3>4. Who can see it</h3><p>Other players can see your username, online status and in-game stats where a feature needs it (for example friends lists). We do not sell your personal information. We use Google Firebase (login and database) and Cloudflare (game file hosting) as service providers.</p>
+<h3>4. Who can see it</h3><p>Other players can see your username and in-game stats where a feature needs it. Your friends can see whether you are online and which game you are playing unless you turn this off in Friends &gt; Show my online status. Private messages are visible only to you and the friend you send them to. We do not sell your personal information. We use Google Firebase (login and database) and Cloudflare (game file hosting) as service providers.</p>
 <h3>5. Children</h3><p>NGD is not meant for children under 13. We do not knowingly collect information from them. If you believe a child has made an account, contact us and we will delete it.</p>
-<h3>6. Keeping and deleting your data</h3><p>We keep your data until you delete your account. In Settings &gt; Delete account you can permanently delete your login and your game data. You can clear data stored on your device by uninstalling the app.</p>
+<h3>6. Keeping and deleting your data</h3><p>We keep your data until you delete your account. In Settings &gt; Delete account you can permanently delete your login, your game data, your friends, your private chats, your blocked list and your online status. Reports about other players may be kept for as long as needed to keep players safe. You can clear data stored on your device by uninstalling the app.</p>
 <h3>7. Security</h3><p>We use reasonable measures to protect your information, but no online service is completely secure.</p>
 <h3>8. Changes</h3><p>We may update this policy and will show the new date above. If the changes are important, we will tell you in the app.</p>
 <h3>9. Contact</h3><p>Questions or requests about your data? Reach us through ${CT()}.</p>`]
@@ -579,7 +621,7 @@ document.body.addEventListener('click', e => {
   else if (t.closest('#pli')) showAuth('in');
   else if (t.closest('.pol')) openPolicy(t.closest('.pol').dataset.p);
   else if (t.closest('#lgo')) openModal('#lc');
-  else if (t.closest('#dlt')) { $('#dmt').textContent = 'This permanently deletes ' + U.name + ', including your progress, friends and pack in the games. It cannot be undone.'; $('#dpw').value = ''; $('#der').textContent = ''; $('#dgo').disabled = false; $('#dgo').textContent = 'Delete forever'; openModal('#dm'); }
+  else if (t.closest('#dlt')) { $('#dmt').textContent = 'This permanently deletes ' + U.name + ', including your progress, friends, private chats, blocked list and pack in the games. It cannot be undone.'; $('#dpw').value = ''; $('#der').textContent = ''; $('#dgo').disabled = false; $('#dgo').textContent = 'Delete forever'; openModal('#dm'); }
   else if (t.closest('.th2')) setTheme(t.closest('.th2').dataset.th);
   else if (t.closest('.soc')) social();
   else if (t.closest('.sc2')) { scat = t.closest('.sc2').dataset.v; drawS(); }
@@ -655,13 +697,252 @@ $('#dgo').onclick = async () => { const pw = $('#dpw').value, er = $('#der'), b 
     const rm = p => fetch(BD + '/' + p + '.json?auth=' + tk, { method: 'DELETE' }).catch(() => {});
     for (const k of ['friends', 'pack']) { try { const v = (await (await fetch(BD + '/' + k + '/' + uid + '.json?auth=' + tk)).json()) || {}; for (const o of Object.keys(v)) await rm(k + '/' + o + '/' + uid); } catch (e) {} }
     try { if ((await (await fetch(BD + '/names/' + encodeURIComponent(nm) + '.json?auth=' + tk)).json()) === uid) await rm('names/' + encodeURIComponent(nm)); } catch (e) {}
-    for (const p of ['progress', 'users', 'friends', 'pack', 'requests', 'packreq', 'presence', 'live', 'hits']) await rm(p + '/' + uid);
+    try { const fl = Object.keys((await (await fetch(BD + '/friends/' + uid + '.json?auth=' + tk)).json()) || {}), bl = Object.keys((await (await fetch(BD + '/blocks/' + uid + '.json?auth=' + tk)).json()) || {}); for (const o of [...fl, ...bl]) await rm('dm/' + (uid < o ? uid + '_' + o : o + '_' + uid)); } catch (e) {}   // private chats are deleted with the account
+    for (const p of ['progress', 'users', 'friends', 'pack', 'requests', 'packreq', 'presence', 'live', 'hits', 'hubpres', 'blocks']) await rm(p + '/' + uid);
     const d = await fetch(IT + 'delete?key=' + FBKEY, { method: 'POST', headers: hd, body: JSON.stringify({ idToken: tk }) }); if (!d.ok) throw new Error('Could not delete the account. Try again');
-    dropLy(); closeSheet(); U = null; saveU(); try { localStorage.removeItem('ngdGuest'); localStorage.removeItem('ngdStats'); } catch (e) {} drawPf(); showAuth('up');
+    dropLy(); closeSheet(); socOut(); U = null; saveU(); try { localStorage.removeItem('ngdGuest'); localStorage.removeItem('ngdStats'); } catch (e) {} drawPf(); showAuth('up');
   } catch (e) { er.textContent = e.message || 'Something went wrong'; b.disabled = false; b.textContent = 'Delete forever'; } };
 $('#lcn').onclick = () => dropLy();
 $('#lc').onclick = e => { if (e.target.id === 'lc') dropLy(); };
-$('#lcy').onclick = () => { dropLy(); closeSheet(); U = null; saveU(); try { localStorage.removeItem('ngdGuest'); } catch (e) {} drawPf(); showAuth('in'); };
+$('#lcy').onclick = () => { dropLy(); closeSheet(); socOut(); U = null; saveU(); try { localStorage.removeItem('ngdGuest'); } catch (e) {} drawPf(); showAuth('in'); };
 drawPf();
 if (!U) showAuth('up');
+// ===== Friends, private chat, blocking, reporting and online status =====
+// Uses the same friends / requests data as the shark game (globalchat/sharkGame) so friends are shared everywhere.
+const SB = FB.replace(/\/$/, '') + '/globalchat/sharkGame', MAXF = 20, STALE = 50000, SV = { '.sv': 'timestamp' };
+const FS = { on: false, stack: [], fr: {}, rq: {}, bl: {}, pres: {}, prev: {}, off: 0, n: 0, tmr: 0, hb: 0, up: '', sent: 0, lastReq: 0, msgs: [], sig: '', err: '' };
+const pairKey = (a, b) => a < b ? a + '_' + b : b + '_' + a;
+const KEYQ = 'orderBy=%22%24key%22&limitToLast=';
+async function sb(p, method, body, qs) {
+  const r = await fetch(SB + '/' + p + '.json?auth=' + await tok() + (qs ? '&' + qs : ''), { method: method || 'GET', headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined, body: body !== undefined ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; console.warn('NGD social:', method || 'GET', p, r.status); throw e; }
+  return r.json();
+}
+const fsMsg = e => e && e.message && !/^HTTP/.test(e.message) ? e.message : e && (e.status === 401 || e.status === 403) ? 'The server did not allow that. Please try again later.' : 'Could not reach the server. Check your connection and try again.';
+const FSBAD = /\b(f+u+c+k+\w*|sh[i1]t\w*|cunt\w*|b[i1]tch\w*|asshole|bastard|whore|slut|n[i1]gg\w*|f[a4]gg?[o0]t\w*)\b/gi;
+const fsClean = t => localStorage.ngdFilter === '0' ? t : t.replace(FSBAD, m => '*'.repeat(m.length));
+const fsFresh = x => !!x && typeof x.ts === 'number' && (Date.now() + FS.off - x.ts) < STALE;
+function fsStat(u) {
+  const p = FS.pres[u] || {}, h = p.h, s = p.s, hon = fsFresh(h), son = fsFresh(s);
+  let g = null;
+  if (hon && h.g) g = (G || []).find(x => x.id === h.g) || null;
+  else if (son && s.m === 'play') g = (G || []).find(x => /shark/i.test(x.title || '')) || null;
+  const on = hon || son;
+  return { on, g, txt: g ? 'Playing ' + g.title : on ? 'Online' : 'Offline' };
+}
+// --- online status (heartbeat) ---
+const fsHide = () => localStorage.ngdInvisible === '1';
+async function fsBeat() {
+  if (!U || document.hidden) return;
+  try {
+    if (fsHide()) { await sb('hubpres/' + U.uid, 'DELETE'); return; }
+    const g = curG ? (G || []).find(x => x.id === curG.id) : null;
+    await sb('hubpres/' + U.uid, 'PUT', { n: U.name, g: g ? g.id : '', p: /^https:\/\//.test(U.photo || '') ? U.photo : '', ts: SV });
+    if (!FS.off) { const t = await sb('hubpres/' + U.uid + '/ts'); if (typeof t === 'number') FS.off = t - Date.now(); }
+  } catch (e) {}
+}
+async function fsProfileInit() {   // makes this account findable by username (same record the games use)
+  const low = String(U.name).toLowerCase();
+  try { const cur = await sb('names/' + encodeURIComponent(low)); if (!cur) await sb('names/' + encodeURIComponent(low), 'PUT', U.uid); } catch (e) {}
+  try { await sb('users/' + U.uid + '/name', 'PUT', U.name); } catch (e) {}
+}
+function socOut() {   // on log out / delete account: go offline and stop
+  const u = U; clearInterval(FS.hb); FS.hb = 0; FS.up = ''; FS.off = 0;
+  if (u) { try { fetch(SB + '/hubpres/' + u.uid + '.json?auth=' + u.it, { method: 'DELETE', keepalive: true }).catch(() => {}); } catch (e) {} }
+  FS.fr = {}; FS.rq = {}; FS.bl = {}; FS.pres = {}; FS.prev = {}; fsBadge();
+  if (FS.on) { while (['fs', 'fsv'].includes(topLy())) dropLy(); }
+}
+addEventListener('pagehide', () => { if (U) { try { fetch(SB + '/hubpres/' + U.uid + '.json?auth=' + U.it, { method: 'DELETE', keepalive: true }).catch(() => {}); } catch (e) {} } });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && U) { fsBeat(); fsLoad(true).then(fsPres).catch(() => {}); } });
+setInterval(() => {   // starts / stops with login, keeps the friend-request badge fresh
+  if (U && FS.up !== U.uid) { FS.up = U.uid; clearInterval(FS.hb); fsBeat(); FS.hb = setInterval(fsBeat, 15000); fsProfileInit(); fsLoad(true).then(fsPres).catch(() => {}); }
+  else if (!U && FS.up) { FS.up = ''; clearInterval(FS.hb); FS.hb = 0; fsBadge(); }
+  if (U && !FS.on && !document.hidden) { FS.n++; if (FS.n % 20 === 0) fsLoad(true).then(fsPres).catch(() => {}); else if (FS.n % 6 === 0) fsPres().catch(() => {}); }
+}, 3000);
+// --- loading ---
+const fsReadKey = u => 'ngdRead_' + pairKey(U.uid, u), fsClrKey = u => 'ngdClr_' + pairKey(U.uid, u);
+async function fsLoad(light) {
+  if (!U) return;
+  const me = U.uid, [f, r, b] = await Promise.all([sb('friends/' + me), sb('requests/' + me), sb('blocks/' + me).catch(() => FS.bl)]);
+  FS.bl = b || {}; FS.fr = {}; FS.rq = {};
+  for (const [u, o] of Object.entries(f || {})) if (!FS.bl[u] && o) FS.fr[u] = o;
+  for (const [u, o] of Object.entries(r || {})) if (!FS.bl[u] && o) FS.rq[u] = o;   // requests from blocked players never show
+  fsBadge();
+  if (light) return;
+  await Promise.all(Object.keys(FS.rq).map(async u => { const h = await sb('hubpres/' + u).catch(() => null); FS.pres[u] = { h, s: null }; }));
+  await Promise.all(Object.keys(FS.fr).map(async u => {
+    const [h, s, m] = await Promise.all([sb('hubpres/' + u).catch(() => null), sb('presence/' + u).catch(() => null), sb('dm/' + pairKey(me, u), 'GET', undefined, KEYQ + '1').catch(() => null)]);
+    FS.pres[u] = { h, s };
+    const k = m && Object.keys(m)[0]; FS.prev[u] = k ? Object.assign({ k }, m[k]) : null;
+  }));
+  fsStrip();
+}
+function fsBadge() { const n = Object.keys(FS.rq).length, e = document.getElementById('fsbd'); if (e) { e.textContent = n; e.hidden = !n || !U; } document.body.classList.toggle('hasrq', !!n && !!U); try { fsStrip(); } catch (x) {} }
+function fsStrip() {   // row of friends who are online right now, at the top of the page
+  const el = document.getElementById('onl'); if (!el) return;
+  const on = U ? Object.entries(FS.fr).filter(([u]) => fsStat(u).on) : [];
+  el.hidden = !on.length;
+  el.innerHTML = on.map(([u, o]) => `<button class="onl-i" data-u="${esc(u)}" data-n="${esc(o.name)}" aria-label="${esc(o.name)} is online">${fsAv(o.name, true, false, fsPhoto(u))}<span class="n">${esc(o.name)}</span></button>`).join('');
+}
+async function fsPres() {   // light refresh of who is online (also feeds the top row)
+  if (!U || document.hidden) return;
+  await Promise.all(Object.keys(FS.fr).map(async u => { const [h, s] = await Promise.all([sb('hubpres/' + u).catch(() => null), sb('presence/' + u).catch(() => null)]); FS.pres[u] = { h, s }; }));
+  fsStrip();
+}
+// --- actions ---
+async function fsAdd(raw) {
+  const nm = String(raw || '').trim(); if (!/^[A-Za-z0-9_.-]{3,16}$/.test(nm)) throw new Error('Enter a valid username (3–16 letters, numbers, _ . -)');
+  if (nm.toLowerCase() === String(U.name).toLowerCase()) throw new Error('That is you');
+  if (Date.now() - FS.lastReq < 3000) throw new Error('Please wait a moment');
+  FS.lastReq = Date.now();
+  const uid = await sb('names/' + encodeURIComponent(nm.toLowerCase()));
+  if (!uid || typeof uid !== 'string' || uid === U.uid) throw new Error('No player found with that username');
+  if (FS.bl[uid]) throw new Error('You blocked this player. Unblock them first');
+  if (await sb('blocks/' + uid + '/' + U.uid)) throw new Error('No player found with that username');   // they blocked you: look like it does not exist
+  if (FS.fr[uid]) throw new Error('You are already friends');
+  if (Object.keys(FS.fr).length >= MAXF) throw new Error('Your friend list is full (' + MAXF + ')');
+  if (FS.rq[uid]) { await fsAccept(uid, FS.rq[uid].name || nm); return 'You are now friends with ' + nm; }
+  await sb('requests/' + uid + '/' + U.uid, 'PUT', { name: U.name, ts: Date.now() });
+  return 'Friend request sent to ' + nm;
+}
+async function fsAccept(u, name) {
+  if (!FS.fr[u] && Object.keys(FS.fr).length >= MAXF) throw new Error('Your friend list is full (' + MAXF + ')');
+  if (await sb('blocks/' + u + '/' + U.uid)) { await sb('requests/' + U.uid + '/' + u, 'DELETE'); throw new Error('This request is no longer available'); }
+  await sb('friends/' + U.uid + '/' + u, 'PUT', { name, ts: Date.now() });
+  await sb('friends/' + u + '/' + U.uid, 'PUT', { name: U.name, ts: Date.now() });
+  await sb('requests/' + U.uid + '/' + u, 'DELETE');
+}
+async function fsUnfriend(u) {
+  await Promise.all([sb('friends/' + U.uid + '/' + u, 'DELETE'), sb('friends/' + u + '/' + U.uid, 'DELETE').catch(() => {}), sb('pack/' + U.uid + '/' + u, 'DELETE').catch(() => {}), sb('pack/' + u + '/' + U.uid, 'DELETE').catch(() => {})]);
+}
+async function fsBlock(u, name) {
+  await sb('blocks/' + U.uid + '/' + u, 'PUT', { name, ts: SV });
+  FS.bl[u] = { name }; delete FS.fr[u]; delete FS.rq[u];
+  await Promise.all([sb('friends/' + U.uid + '/' + u, 'DELETE'), sb('friends/' + u + '/' + U.uid, 'DELETE'), sb('requests/' + U.uid + '/' + u, 'DELETE'), sb('requests/' + u + '/' + U.uid, 'DELETE'), sb('pack/' + U.uid + '/' + u, 'DELETE'), sb('pack/' + u + '/' + U.uid, 'DELETE')].map(p => p.catch(() => {})));
+  fsBadge();
+}
+async function fsUnblock(u) { await sb('blocks/' + U.uid + '/' + u, 'DELETE'); delete FS.bl[u]; }
+async function fsReport(u, name, reason, note, ctx) {
+  await sb('reports', 'POST', { by: U.uid, byName: U.name, t: u, tn: name, r: reason, note: String(note || '').slice(0, 300), ctx: (ctx || []).slice(-10), ts: SV });
+}
+async function fsSend(u, text) {
+  const t = String(text || '').trim().slice(0, 500); if (!t) return;
+  if (!FS.fr[u]) throw new Error('You can only message friends');
+  if (Date.now() - FS.sent < 1200) throw new Error('Slow down a little');
+  if (await sb('blocks/' + u + '/' + U.uid)) throw new Error('You can no longer message this player');
+  FS.sent = Date.now();
+  await sb('dm/' + pairKey(U.uid, u), 'POST', { f: U.uid, n: U.name, t, ts: SV });
+}
+async function fsMsgs(u) {
+  const o = (await sb('dm/' + pairKey(U.uid, u), 'GET', undefined, KEYQ + '80')) || {}, clr = +(localStorage[fsClrKey(u)] || 0);
+  return Object.entries(o).sort((a, b) => a[0] < b[0] ? -1 : 1).map(([k, m]) => Object.assign({ k }, m)).filter(m => m && typeof m.t === 'string' && !FS.bl[m.f] && (!m.ts || m.ts > clr) && (m.f === U.uid || m.f === u));
+}
+// --- screens ---
+const FI = { back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', chat: '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.7 7L3 21l2-5.6A8 8 0 1 1 21 12z"/></svg>', add: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2M19 8v6M16 11h6"/></svg>', more: '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>', fr: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>' };
+const fsPhoto = u => { const h = (FS.pres[u] || {}).h; return h && /^https:\/\//.test(h.p || '') ? h.p : ''; };
+const fsAv = (n, on, lg, p) => `<span class="fs-av${lg ? ' lg' : ''}">${avatar(n)}${p ? `<img class="ph" src="${esc(p)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}<i class="fs-dot${on ? ' on' : ''}"></i></span>`;
+const fsHead = (t, r) => `<div class="fs-h"><button class="fs-ic" data-a="back" aria-label="Back">${FI.back}</button><b>${esc(t)}</b>${r || ''}</div>`;
+const fsTop = () => FS.stack[FS.stack.length - 1] || { v: 'list' };
+function fsRender() {
+  if (!FS.on) return; const t = fsTop(), el = $('#fs'), a = document.activeElement, aid = a && a.id, av = a && a.value;
+  if (t.v === 'chat') { fsChat(t); return; }
+  el.innerHTML = t.v === 'profile' ? fsProfile(t) : t.v === 'blocked' ? fsBlocked() : t.v === 'requests' ? fsReqs() : fsList();
+  if (aid && aid === 'fsn' && $('#fsn')) { $('#fsn').value = av; $('#fsn').focus(); }
+}
+function fsRow(u, o) {
+  const s = fsStat(u), pv = FS.prev[u], unread = pv && pv.f !== U.uid && pv.ts && pv.ts > +(localStorage[fsReadKey(u)] || 0) && pv.ts > +(localStorage[fsClrKey(u)] || 0);
+  return `<button class="fs-r" data-a="prof" data-u="${esc(u)}" data-n="${esc(o.name)}">${fsAv(o.name, s.on, false, fsPhoto(u))}<span class="fs-i"><b>${esc(o.name)}</b><span class="${s.g ? 'pl2' : s.on ? 'on' : ''}">${esc(s.txt)}</span></span>${unread ? '<i class="fs-un"></i>' : ''}</button>`;
+}
+function fsList() {
+  const fr = Object.entries(FS.fr).sort((a, b) => (fsStat(b[0]).on - fsStat(a[0]).on) || String(a[1].name).localeCompare(b[1].name)), rq = Object.entries(FS.rq), nb = Object.keys(FS.bl).length;
+  return fsHead('Friends') + `<div class="fs-b"><button class="fs-rq" data-a="reqs">${FI.add}Friend requests<em class="${rq.length ? 'hot' : ''}">${rq.length ? rq.length + ' new' : 'None'}</em></button><div class="fs-t">Add a friend</div><div class="fs-add"><input class="fi" id="fsn" placeholder="Their username" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="fs-go" id="fsa" data-a="add">Send request</button></div><div class="fs-er" id="fse">${esc(FS.err)}</div>`
+   + `<div class="fs-t">Your friends (${fr.length}/${MAXF})</div>` + (fr.length ? fr.map(([u, o]) => fsRow(u, o)).join('') : '<p class="fs-e">No friends yet. Add someone by their exact username.</p>')
+   + `<div class="fs-t">Privacy and safety</div><button class="fs-ro" data-a="vis">Show my online status<span class="fs-sw${fsHide() ? '' : ' on'}"></span></button><button class="fs-ro" data-a="flt">Hide offensive words in chats<span class="fs-sw${localStorage.ngdFilter === '0' ? '' : ' on'}"></span></button><button class="fs-ro" data-a="blocked">Blocked players<em>${nb}</em></button><button class="fs-ro" data-a="rules">Community rules and Terms<em>&rsaquo;</em></button></div>`;
+}
+function fsProfile(t) {
+  const u = t.u, f = FS.fr[u], name = (f && f.name) || t.n || 'Player', s = fsStat(u), rq = FS.rq[u];
+  return fsHead('Profile') + `<div class="fs-b fs-pc">${fsAv(name, s.on, true, fsPhoto(u))}<h1>${esc(name)}</h1><span class="st ${s.g ? 'pl2' : s.on ? 'on' : ''}">${s.on ? '● ' : '○ '}${esc(s.txt)}</span><div class="fs-ac">`
+   + (f ? `<button class="pl" data-a="chat" data-u="${esc(u)}" data-n="${esc(name)}">Message</button>` + (s.g ? `<button class="pl" data-a="join" data-u="${esc(u)}" data-n="${esc(name)}">Join ${esc(s.g.title)}</button>` : '') + `<button class="fs-mini" data-a="rm" data-u="${esc(u)}" data-n="${esc(name)}">Remove friend</button>` : rq ? `<button class="pl" data-a="acc" data-u="${esc(u)}" data-n="${esc(name)}">Accept request</button><button class="fs-mini" data-a="dec" data-u="${esc(u)}">Decline</button>` : '')
+   + `<button class="fs-mini no" data-a="rep" data-u="${esc(u)}" data-n="${esc(name)}">Report player</button><button class="fs-mini no" data-a="blk" data-u="${esc(u)}" data-n="${esc(name)}">Block player</button></div></div>`;
+}
+function fsReqs() {
+  const rq = Object.entries(FS.rq);
+  return fsHead('Friend requests') + `<div class="fs-b"><p class="fs-e">People who want to be your friend. Nobody is told if you decline, and you can block anyone who bothers you.</p>` + (rq.length ? rq.map(([u, o]) => `<div class="fs-r">${fsAv(o.name || 'Player', false, false, fsPhoto(u))}<span class="fs-i" data-a="prof" data-u="${esc(u)}" data-n="${esc(o.name || 'Player')}"><b>${esc(o.name || 'Player')}</b><span>wants to be friends</span></span><button class="fs-mini ok" data-a="acc" data-u="${esc(u)}" data-n="${esc(o.name || 'Player')}">Accept</button><button class="fs-mini" data-a="dec" data-u="${esc(u)}">Decline</button></div>`).join('') : '<p class="fs-e" style="text-align:center;padding:30px 0">No friend requests right now.</p>') + '</div>';
+}
+function fsBlocked() {
+  const b = Object.entries(FS.bl);
+  return fsHead('Blocked players') + `<div class="fs-b"><p class="fs-e">Blocked players cannot send you friend requests or messages, and you will not see anything from them.</p>` + (b.length ? b.map(([u, o]) => `<div class="fs-r">${fsAv((o && o.name) || 'Player', false)}<span class="fs-i"><b>${esc((o && o.name) || 'Player')}</b></span><button class="fs-mini" data-a="unb" data-u="${esc(u)}">Unblock</button></div>`).join('') : '<p class="fs-e">You have not blocked anyone.</p>') + '</div>';
+}
+function fsChat(t) {
+  const u = t.u, f = FS.fr[u], name = (f && f.name) || t.n || 'Player', s = fsStat(u);
+  $('#fs').innerHTML = fsHead(name, `<button class="fs-ic" data-a="chmenu" data-u="${esc(u)}" data-n="${esc(name)}" aria-label="More">${FI.more}</button>`)
+   + `<div class="fs-nt">${esc(s.txt)} · Private chat. Be kind. You can report or block anyone.</div><div id="fsm"></div><div class="fs-in"><input class="fi" id="fsi" maxlength="500" placeholder="Message" autocomplete="off" enterkeyhint="send"><button class="fs-go" data-a="send" data-u="${esc(u)}">Send</button></div>`;
+  FS.sig = ''; fsPaint(u, true); fsPoll(u);
+  $('#fsi').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); fsSendNow(u); } });
+}
+function fsPaint(u, force) {
+  const box = $('#fsm'); if (!box) return;
+  const sig = FS.msgs.map(m => m.k).join(',') + '|' + (localStorage.ngdFilter || '');
+  if (sig === FS.sig && !force) return; FS.sig = sig;
+  const near = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+  box.innerHTML = FS.msgs.length ? FS.msgs.map(m => { const me = m.f === U.uid; return `<div class="fs-m${me ? '' : ' o'}">${esc(fsClean(m.t))}${me ? '' : `<small><button class="fl" data-a="repm" data-k="${esc(m.k)}" data-u="${esc(u)}">Report</button></small>`}</div>`; }).join('') : '<p class="fs-e" style="text-align:center">Say hello 👋</p>';
+  if (near || force) box.scrollTop = box.scrollHeight;
+}
+async function fsPoll(u) {
+  try { const m = await fsMsgs(u); if (fsTop().v !== 'chat' || fsTop().u !== u) return; FS.msgs = m; fsPaint(u); const last = m.length ? m[m.length - 1].ts : 0; if (last) localStorage[fsReadKey(u)] = last; } catch (e) {}
+}
+async function fsSendNow(u) {
+  const i = $('#fsi'); if (!i || !i.value.trim()) return; const v = i.value; i.value = '';
+  try { await fsSend(u, v); await fsPoll(u); } catch (e) { i.value = v; toast(fsMsg(e)); }
+}
+function fsFit() { const v = window.visualViewport, el = $('#fs'); if (!v || !FS.on) return; el.style.height = v.height + 'px'; el.style.top = v.offsetTop + 'px'; }
+if (window.visualViewport) { visualViewport.addEventListener('resize', fsFit); visualViewport.addEventListener('scroll', fsFit); }
+function fsOpen() {
+  if (!U) { showAuth('in', 'Log in to use friends and chat.'); return; }
+  if (FS.on) return; FS.on = true; FS.stack = [{ v: 'list' }]; FS.err = ''; $('#fs').classList.add('on'); fsFit();
+  pushLy('fs', fsShut); fsRender(); fsLoad().then(() => { if (fsTop().v === 'list') fsRender(); }).catch(e => { FS.err = fsMsg(e); if (fsTop().v === 'list') fsRender(); });
+  FS.tmr = setInterval(() => { if (document.hidden) return; const t = fsTop(); FS.n++;
+    if (t.v === 'chat') fsPoll(t.u); else if (FS.n % 5 === 0) fsLoad().then(() => { if (fsTop().v !== 'chat') fsRender(); }).catch(() => {}); }, 3000);
+}
+function fsShut() { FS.on = false; FS.stack = []; clearInterval(FS.tmr); const el = $('#fs'); el.classList.remove('on'); el.style.height = ''; el.style.top = ''; el.innerHTML = ''; fsBadge(); try { drawP(); } catch (e) {} }
+function fsGo(v, o) { FS.stack.push(Object.assign({ v }, o || {})); FS.msgs = []; fsRender(); pushLy('fsv', () => { FS.stack.pop(); FS.msgs = []; fsRender(); }); }
+function fsConfirm(title, text, label, fn, ok) {
+  $('#fct').textContent = title; $('#fcx').textContent = text; const y = $('#fcy'); y.textContent = label; y.classList.toggle('ok', !!ok);
+  y.onclick = async () => { dropLy(); try { await fn(); } catch (e) { toast(fsMsg(e)); } }; openModal('#fc');
+}
+function fsReportOpen(u, name, ctx) {
+  $('#rpt').textContent = 'Report ' + name; $('#rpn').value = ''; $('#rpe').textContent = ''; $('#rpb').checked = true; $('#rpg').disabled = false; $('#rpg').textContent = 'Send report';
+  $('#rpg').onclick = async () => { const g = $('#rpg'); g.disabled = true; g.textContent = 'Sending…';
+    try { await fsReport(u, name, $('#rpr').value, $('#rpn').value, ctx); const b = $('#rpb').checked; dropLy(); if (b) { try { await fsBlock(u, name); } catch (e) {} while (['fsv'].includes(topLy())) dropLy(); toast('Report sent. ' + name + ' is blocked'); } else toast('Report sent. Thank you'); if (FS.on) { await fsLoad().catch(() => {}); fsRender(); } }
+    catch (e) { $('#rpe').textContent = fsMsg(e); g.disabled = false; g.textContent = 'Send report'; } }; openModal('#rp');
+}
+async function fsAct(a, u, n, el) {
+  try {
+    if (a === 'back') dropLy();
+    else if (a === 'add') { const b = $('#fsa'), i = $('#fsn'); b.disabled = true; FS.err = ''; $('#fse').textContent = ''; try { const m = await fsAdd(i.value); i.value = ''; toast(m); await fsLoad().catch(() => {}); fsRender(); } catch (e) { FS.err = fsMsg(e); $('#fse').textContent = FS.err; } b.disabled = false; }
+    else if (a === 'prof') fsGo('profile', { u, n });
+    else if (a === 'chat') fsGo('chat', { u, n });
+    else if (a === 'acc') { await fsAccept(u, n); toast('You are now friends with ' + n); await fsLoad().catch(() => {}); fsRender(); }
+    else if (a === 'dec') { await sb('requests/' + U.uid + '/' + u, 'DELETE'); delete FS.rq[u]; fsBadge(); if (fsTop().v === 'profile') dropLy(); else fsRender(); }
+    else if (a === 'join') { const s = fsStat(u); if (!s.g) { toast('They are not in a game right now'); return; } const g = s.g; while (['fs', 'fsv'].includes(topLy())) dropLy(); setTimeout(() => play(g), 250); }
+    else if (a === 'rm') fsConfirm('Remove ' + n + '?', 'You will no longer be friends. You can add each other again later.', 'Remove', async () => { await fsUnfriend(u); delete FS.fr[u]; toast(n + ' removed'); if (fsTop().v !== 'list') dropLy(); fsRender(); });
+    else if (a === 'blk') fsConfirm('Block ' + n + '?', 'They will be removed from your friends and will not be able to send you requests or messages. They are not told that you blocked them.', 'Block', async () => { await fsBlock(u, n); toast(n + ' blocked'); while (['fsv'].includes(topLy())) dropLy(); fsRender(); });
+    else if (a === 'unb') { await fsUnblock(u); toast('Unblocked'); fsRender(); }
+    else if (a === 'rep') fsReportOpen(u, n, []);
+    else if (a === 'repm') { const m = FS.msgs.find(x => x.k === el.dataset.k), nm = (FS.fr[u] || {}).name || 'Player'; fsReportOpen(u, nm, FS.msgs.slice(-10).map(x => ({ f: x.f, t: x.t, ts: x.ts || 0, rep: x === m ? 1 : 0 }))); }
+    else if (a === 'chmenu') fsGo('profile', { u, n });
+    else if (a === 'send') fsSendNow(u);
+    else if (a === 'blocked') fsGo('blocked');
+    else if (a === 'reqs') fsGo('requests');
+    else if (a === 'vis') { localStorage.ngdInvisible = fsHide() ? '0' : '1'; fsBeat(); fsRender(); toast(fsHide() ? 'You appear offline' : 'Friends can see when you are online'); }
+    else if (a === 'flt') { localStorage.ngdFilter = localStorage.ngdFilter === '0' ? '1' : '0'; fsRender(); }
+    else if (a === 'rules') openPolicy('terms');
+  } catch (e) { toast(fsMsg(e)); }
+}
+$('#fs').addEventListener('click', e => { const b = e.target.closest('[data-a]'); if (b) fsAct(b.dataset.a, b.dataset.u, b.dataset.n, b); });
+$('#fcn').onclick = () => dropLy(); $('#fc').onclick = e => { if (e.target.id === 'fc') dropLy(); };
+$('#rpc').onclick = () => dropLy(); $('#rp').onclick = e => { if (e.target.id === 'rp') dropLy(); };
+$('#onl').addEventListener('click', e => { const b = e.target.closest('.onl-i'); if (b) { fsOpen(); if (FS.on) fsGo('profile', { u: b.dataset.u, n: b.dataset.n }); } });
+document.body.addEventListener('click', e => { if (e.target.closest('.fr-open')) { if (menuOn()) closeMenu(); setTimeout(fsOpen, 60); } });
+{ const _dp = drawP; drawP = function () { _dp.apply(this, arguments); if (U) { const p = $('#profile .pf'); if (p) { const b = document.createElement('button'); b.className = 'pf-fr fr-open'; b.innerHTML = FI.fr + 'Friends and chat<em id="fsbd" hidden></em>'; const st = p.querySelector('.pf-st'); st ? st.after(b) : p.appendChild(b); fsBadge(); } } }; }
 </script></body></html>
