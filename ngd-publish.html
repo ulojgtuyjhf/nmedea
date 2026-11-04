@@ -1,47 +1,120 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex"><title>NGD – Publish a game</title>
+<meta name="robots" content="noindex"><title>NGD – Publisher</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0b12;--s:#10111c;--s2:#181926;--bd:rgba(255,255,255,.13);--tx:#e2e4ee;--mu:#8b8ea8;--ac:#2172ff;--ac2:#6d4aff}
-*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--tx);font:15px/1.5 Outfit,system-ui,sans-serif;padding:20px 16px 50px}
-main{max-width:520px;margin:0 auto}h1{font-size:24px}p.s{color:var(--mu);font-size:13px;margin-bottom:16px}
-.box{background:var(--s);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;margin-bottom:14px}
-label{display:block;font-size:12px;color:var(--mu);margin:10px 0 4px;letter-spacing:.04em}
-input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:12px;color:var(--tx);font:inherit;padding:10px 12px}
-input[type=file]{padding:8px}button{font:inherit;cursor:pointer}
-.go{width:100%;margin-top:14px;padding:12px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700}
-.go:disabled{opacity:.5}#msg{min-height:20px;margin-top:10px;font-size:13px}.ok{color:#3ddc97}.er{color:#ff6b6b}
-.g{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(255,255,255,.06)}.g:first-child{border:0}.g b{flex:1}.g button{background:none;border:1px solid var(--bd);color:#ff8a8a;border-radius:10px;padding:5px 10px}
+:root{--bg:#0a0b12;--s2:#181926;--bd:rgba(255,255,255,.13);--tx:#e2e4ee;--mu:#8b8ea8;--ac:#2172ff;--ac2:#6d4aff;--ok:#3ddc97;--er:#ff6b6b}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.5 Outfit,system-ui,sans-serif;padding:24px 16px 60px}
+main{max-width:640px;margin:0 auto}
+header{margin-bottom:18px}
+h1{font-size:26px;letter-spacing:-.01em}
+p.s{color:var(--mu);font-size:13px}
+h2{font-size:15px;font-weight:700;margin:28px 0 2px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)}
+h2.first{margin-top:0;padding-top:0;border:0}
+h2+p.s{margin-bottom:4px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.row{grid-template-columns:1fr}}
+label{display:block;font-size:12px;color:var(--mu);margin:12px 0 4px;letter-spacing:.04em}
+.hint{font-size:11px;color:var(--mu);margin-top:4px;opacity:.85}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:12px;color:var(--tx);font:inherit;padding:10px 12px;outline:none;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--ac)}
+input[type=file]{padding:8px}
+textarea{resize:vertical}
+button{font:inherit;cursor:pointer}
+.chk{display:flex;gap:8px;align-items:center;color:var(--tx);font-size:14px;margin-top:14px}
+.chk input{width:auto}
+.go{width:100%;margin-top:20px;padding:13px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:700;font-size:15px}
+.go:disabled{opacity:.5;cursor:default}
+.ghost{background:none;border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:6px 12px;font-size:13px}
+.back{background:none;border:0;color:var(--ac);font-size:14px;padding:0;margin-bottom:14px}
+.msg{min-height:20px;margin-top:12px;font-size:13px}
+.ok{color:var(--ok)}.er{color:var(--er)}
+.idline{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--mu)}
+.idline code{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:2px 8px;color:var(--tx)}
+.cur{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12px;color:var(--mu)}
+.cur img{width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid var(--bd)}
+.shots{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.shot{position:relative;width:76px;height:76px}
+.shot img{width:100%;height:100%;object-fit:cover;border-radius:10px;border:1px solid var(--bd)}
+.shot button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:1px solid var(--bd);background:var(--s2);color:var(--er);font-size:13px;line-height:1;padding:0}
+.g{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.06)}
+.g:first-child{border:0}
+.g img,.g .ph{width:44px;height:44px;border-radius:10px;object-fit:cover;background:var(--s2);flex:none}
+.g .t{flex:1;min-width:0}.g .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g .t span{font-size:12px;color:var(--mu)}
+.g .hide{background:none;border:1px solid var(--bd);color:#ff8a8a;border-radius:10px;padding:5px 10px;font-size:13px}
+.dz{position:relative;margin-top:6px;border:2px dashed rgba(255,255,255,.2);border-radius:18px;background:linear-gradient(180deg,rgba(33,114,255,.06),rgba(109,74,255,.04));padding:26px 16px;text-align:center;transition:border-color .15s,background .15s}
+.dz:hover,.dz.over{border-color:var(--ac);background:rgba(33,114,255,.12)}
+.dz.has{border-style:solid;border-color:rgba(61,220,151,.45);padding:16px}
+.dz input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;padding:0;border:0}
+.dzb{pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+.dzi{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;margin-bottom:6px}
+.dzb b{font-size:15px}.dzb span{font-size:12px;color:var(--mu)}
+.dzf{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:6px}
+.dzit{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:150px}
+.dzit img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid var(--bd)}
+.dzit .dzi{width:56px;height:56px;margin:0}
+.dzit span{font-size:11px;color:var(--tx);word-break:break-all}
+.dzb .dzc{color:var(--ok);font-size:12px;font-weight:600}
 </style></head><body><main>
-<h1>Publish a game</h1><p class="s">Keep this page private. Players see a new game straight away.</p>
-<div class="box">
-<label>Game id (small letters, numbers, dashes – e.g. shark-game)</label><input id="id" maxlength="40">
-<label>Game title</label><input id="ti" maxlength="60">
-<label>Tagline (one line shown on the card)</label><input id="de" maxlength="140">
-<label>About this game (what it is, how to play, controls)</label><textarea id="ab" rows="5" maxlength="1200"></textarea>
-<label>Category</label><select id="ca"><option>Survival</option><option>Action</option><option>Adventure</option><option>Puzzle</option><option>Casual</option><option>Other</option></select>
-<label>Age rating</label><select id="ag"><option>Everyone</option><option>10+</option><option>Teen</option><option>Mature 17+</option></select>
-<label>Screen direction</label><select id="or"><option value="landscape">Landscape</option><option value="portrait">Portrait</option><option value="any">Any</option></select>
-<label>Publisher name</label><input id="dv" value="nmedea" maxlength="40"><label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input id="vf" type="checkbox" checked style="width:auto"> Show the blue verified check</label><label>Version</label><input id="vr" value="1.0" maxlength="12">
-<label>Game file (one .html file, up to 5 MB)</label><input id="gf" type="file" accept=".html,.htm,text/html">
-<label>Card picture (optional, up to 1 MB)</label><input id="cf" type="file" accept="image/*">
-<button class="go" id="go">Publish</button><div id="msg"></div></div>
-<div class="box"><b>Published games</b><div id="ls"><p class="s">Loading…</p></div></div>
+
+<!-- ================= PAGE 1: publish + list ================= -->
+<div id="home">
+<header><h1>Publish a new game</h1><p class="s">Keep this page private. Players see a new game straight away.</p></header>
+<div id="flash" class="msg ok" style="margin:0 0 14px"></div>
+<h2 class="first">Game details</h2><p class="s">How your game appears to players.</p>
+<div id="pDetails"></div>
+<h2>Game file</h2>
+<label>Game file (required, .html up to 5 MB)</label><input id="p_gf" type="file" accept=".html,.htm,text/html">
+<h2>Media</h2><p class="s">Optional.</p>
+<label>Card picture (up to 1 MB)</label><input id="p_cf" type="file" accept="image/*">
+<label>Screenshots (up to 3, each up to 1 MB)</label><input id="p_sf" type="file" accept="image/*" multiple>
+<button class="go" id="p_go" type="button">Publish</button><div class="msg" id="p_msg"></div>
+
+<h2>Published games</h2><p class="s">Tap Edit to open that game's own page and release an update.</p>
+<div id="ls"><p class="s">Loading…</p></div>
+</div>
+
+<!-- ================= PAGE 2: edit one game ================= -->
+<div id="edit" style="display:none">
+<button class="back" id="e_back" type="button">← Back to all games</button>
+<header><h1 id="e_h">Edit game</h1><p class="s">Change anything, replace the game file, then press Update. The new release replaces the previous one.</p></header>
+<div id="e_body" style="display:none">
+<div class="idline">Game id <code id="e_idv"></code></div>
+<h2 class="first">Game details</h2>
+<div id="eDetails"></div>
+<h2>What's new</h2><p class="s">Version and notes for this release.</p>
+<div class="row"><div><label>Version</label><input id="e_vr" maxlength="12"></div><div></div></div>
+<label>What's new in this release (optional)</label><textarea id="e_nt" rows="3" maxlength="600" placeholder="Bug fixes, new levels, improved controls…"></textarea>
+<h2>Game file</h2><p class="s">Choose a file only if you want to replace the current game. Leave empty to keep it.</p>
+<label>New game file (.html up to 5 MB)</label><input id="e_gf" type="file" accept=".html,.htm,text/html">
+<h2>Media</h2><p class="s">All optional. Leave empty to keep what is already there.</p>
+<label>Card picture (up to 1 MB)</label><input id="e_cf" type="file" accept="image/*">
+<div class="cur" id="e_curPic" style="display:none"><img id="e_curImg" alt=""><span>Current picture is kept unless you choose a new one.</span></div>
+<label>Screenshots (up to 3, each up to 1 MB)</label><input id="e_sf" type="file" accept="image/*" multiple>
+<div class="shots" id="e_shots"></div><p class="hint" id="e_shotHint"></p>
+<button class="go" id="e_go" type="button">Update</button><div class="msg" id="e_msg"></div>
+</div>
+<div class="msg" id="e_load"></div>
+</div>
+
 <script>
 const R2 = 'https://r2-upload.katlegomashilwane0691.workers.dev', BASE = 'https://pub-48c36c7bd2c440f7bae17c4f339a5c91.r2.dev';
 const FB = 'https://globalchat-2d669-default-rtdb.firebaseio.com', FBKEY = 'AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ';   // your chat's Firebase (the games list is saved under globalchat/ngdGames)
 const FBP = FB.replace(/\/$/, '') + '/globalchat/ngdGames', fbOn = /^https:/.test(FB);
+const MAXSHOTS = 3;
 let _t = null, _te = 0;
 async function fb(p, o) {   // signs in anonymously (same as your chat) then talks to the database
   if (!_t || Date.now() > _te) { const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + FBKEY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"returnSecureToken":true}' }); if (!r.ok) throw new Error('sign-in failed (HTTP ' + r.status + ')'); const j = await r.json(); _t = j.idToken; _te = Date.now() + 3000000; }
   return fetch(FBP + p + '?auth=' + _t, o); }
-const $ = s => document.getElementById(s), say = (t, c) => { $('msg').textContent = t; $('msg').className = c || ''; };
+const $ = s => document.getElementById(s), say = (el, t, c) => { $(el).textContent = t; $(el).className = 'msg ' + (c || ''); };
 const up = async (file, name) => { const f = new FormData(); f.append('file', file); f.append('fileName', name); const r = await fetch(R2 + '/upload', { method: 'POST', body: f }); if (!r.ok) throw new Error('Upload failed (' + r.status + ')'); return (await r.json()).url; };
+const ext = f => (f.type.split('/')[1] || 'png').replace('jpeg', 'jpg').replace('svg+xml', 'svg');
 const keep = l => { try { localStorage.ngdLocal = JSON.stringify(l); } catch (e) {} return l; };
 const kept = () => { try { return JSON.parse(localStorage.ngdLocal || '[]'); } catch (e) { return []; } };
 const putCat = async l => { keep(l); const u = await up(new File([JSON.stringify(l)], 'ngd_catalog.json', { type: 'application/json' }), 'ngd_catalog.json'); try { localStorage.ngdCat = u; } catch (e) {} return u; };
-let cur = [];
+let cur = [], shots = [], editId = null;
 async function getCat() {   // returns {l, why}
   let why = '';
   if (fbOn) { try { const r = await fb('.json', { cache: 'no-store' }); if (!r.ok) return { l: kept(), why: 'server said HTTP ' + r.status }; const o = await r.json(); return { l: keep(o ? Object.values(o) : []), why: '' }; } catch (e) { return { l: kept(), why: 'server unreachable' }; } }
@@ -49,21 +122,124 @@ async function getCat() {   // returns {l, why}
   for (const u of urls) { try { const r = await fetch(u + '?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) { const g = await r.json(); if (Array.isArray(g)) return { l: keep(g), why: '' }; why = 'not a games list'; } else why = 'HTTP ' + r.status; } catch (e) { why = 'blocked or offline (check the bucket CORS rule)'; } }
   return { l: kept(), why };
 }
+
+/* ---------- shared details fields (same wiring, two prefixes) ---------- */
+const details = (p, withId) => (withId ? '<label>Game id (small letters, numbers, dashes – e.g. shark-game)</label><input id="' + p + 'id" maxlength="40" autocapitalize="none" spellcheck="false">' : '') +
+ '<label>Game title</label><input id="' + p + 'ti" maxlength="60">' +
+ '<label>Tagline (one line shown on the card)</label><input id="' + p + 'de" maxlength="140">' +
+ '<label>About this game (what it is, how to play, controls)</label><textarea id="' + p + 'ab" rows="5" maxlength="1200"></textarea>' +
+ '<div class="row"><div><label>Category</label><select id="' + p + 'ca"><option>Survival</option><option>Action</option><option>Adventure</option><option>Puzzle</option><option>Casual</option><option>Other</option></select></div>' +
+ '<div><label>Age rating</label><select id="' + p + 'ag"><option>Everyone</option><option>10+</option><option>Teen</option><option>Mature 17+</option></select></div></div>' +
+ '<div class="row"><div><label>Screen direction</label><select id="' + p + 'or"><option value="landscape">Landscape</option><option value="portrait">Portrait</option><option value="any">Any</option></select></div>' +
+ '<div><label>Publisher name</label><input id="' + p + 'dv" value="nmedea" maxlength="40"></div></div>' +
+ '<label class="chk"><input id="' + p + 'vf" type="checkbox" checked> Show the blue verified check</label>';
+$('pDetails').innerHTML = details('p_', true);
+$('eDetails').innerHTML = details('e_', false);
+const read = p => ({ title: $(p + 'ti').value.trim(), desc: $(p + 'de').value.trim(), about: $(p + 'ab').value.trim(), cat: $(p + 'ca').value, age: $(p + 'ag').value, ori: $(p + 'or').value, dev: $(p + 'dv').value.trim() || 'nmedea', vf: $(p + 'vf').checked });
+
+/* ---------- list (page 1) ---------- */
 async function list(known) {
   let why = ''; if (known) cur = known; else { const r = await getCat(); cur = r.l; why = r.why; }
   $('ls').innerHTML = (why ? '<p class="s er">Couldn\u2019t read the online list (' + why + '). Showing what this device published.</p>' : '') + (cur.length ? '' : '<p class="s">Nothing published yet.</p>');
-  cur.forEach(x => { const d = document.createElement('div'); d.className = 'g'; d.innerHTML = '<b></b><button>Hide</button>'; d.firstChild.textContent = x.title + ' (' + x.id + ')';
-    d.lastChild.onclick = async () => { if (!confirm('Hide ' + x.title + ' from players?')) return; try { const n = cur.filter(y => y.id !== x.id); if (fbOn) { const r = await fb('/' + x.id + '.json', { method: 'DELETE' }); if (!r.ok) throw new Error('Server said HTTP ' + r.status); keep(n); } else await putCat(n); list(n); } catch (e) { say(e.message, 'er'); } }; $('ls').appendChild(d); }); }
-list();
-$('go').onclick = async () => {
-  const id = $('id').value.trim(), gf = $('gf').files[0], cf = $('cf').files[0];
-  if (!/^[a-z0-9-]{2,40}$/.test(id)) return say('Game id: 2-40 small letters, numbers or dashes', 'er');
-  if (!gf) return say('Choose the game .html file', 'er'); if (gf.size > 5e6) return say('Game file is over 5 MB', 'er');
-  $('go').disabled = true; say('Uploading\u2026');
-  try { const v = Date.now(), gurl = await up(gf, 'ngd_g_' + id + '_' + v + '.html'); let curl = '';
-    if (cf) curl = await up(cf, 'ngd_i_' + id + '_' + v + '.' + ((cf.type.split('/')[1] || 'png').replace('jpeg', 'jpg')));
+  cur.forEach(x => {
+    const d = document.createElement('div'); d.className = 'g';
+    const pic = x.curl ? document.createElement('img') : document.createElement('div'); if (x.curl) { pic.src = x.curl; pic.alt = ''; } else pic.className = 'ph';
+    const t = document.createElement('div'); t.className = 't'; const b = document.createElement('b'); b.textContent = x.title; const sp = document.createElement('span'); sp.textContent = x.id + ' \u00b7 v' + (x.ver || '1.0') + (x.rel > 1 ? ' \u00b7 release ' + x.rel : ''); t.append(b, sp);
+    const ed = document.createElement('button'); ed.className = 'ghost'; ed.type = 'button'; ed.textContent = 'Edit'; ed.onclick = () => { location.hash = 'edit-' + x.id; };
+    const hd = document.createElement('button'); hd.className = 'hide'; hd.type = 'button'; hd.textContent = 'Hide';
+    hd.onclick = async () => { if (!confirm('Hide ' + x.title + ' from players?')) return; try { const n = cur.filter(y => y.id !== x.id); if (fbOn) { const r = await fb('/' + x.id + '.json', { method: 'DELETE' }); if (!r.ok) throw new Error('Server said HTTP ' + r.status); keep(n); } else await putCat(n); list(n); } catch (e) { say('p_msg', e.message, 'er'); } };
+    d.append(pic, t, ed, hd); $('ls').appendChild(d); });
+}
+
+/* ---------- publish (page 1) ---------- */
+$('p_go').onclick = async () => {
+  const id = $('p_id').value.trim(), gf = $('p_gf').files[0], cf = $('p_cf').files[0], sf = [...$('p_sf').files];
+  if (!/^[a-z0-9-]{2,40}$/.test(id)) return say('p_msg', 'Game id: 2-40 small letters, numbers or dashes', 'er');
+  if (!gf) return say('p_msg', 'Choose the game .html file', 'er'); if (gf.size > 5e6) return say('p_msg', 'Game file is over 5 MB', 'er');
+  if (cf && cf.size > 1e6) return say('p_msg', 'Card picture is over 1 MB', 'er');
+  if (sf.length > MAXSHOTS) return say('p_msg', 'Maximum ' + MAXSHOTS + ' screenshots', 'er');
+  if (sf.some(f => f.size > 1e6)) return say('p_msg', 'Each screenshot must be under 1 MB', 'er');
+  $('p_go').disabled = true; say('p_msg', 'Uploading\u2026');
+  try {
     const r = await getCat(), l = r.l, old = l.find(x => x.id === id);
-    const game = { id, title: $('ti').value.trim() || id, desc: $('de').value.trim(), about: $('ab').value.trim(), cat: $('ca').value, age: $('ag').value, ori: $('or').value, ver: $('vr').value || '1.0', dev: $('dv').value.trim() || 'nmedea', vf: $('vf').checked, gurl, curl: curl || (old && old.curl) || '', v }, n = [...l.filter(x => x.id !== id), game];
-    if (fbOn) { const r = await fb('/' + id + '.json', { method: 'PUT', body: JSON.stringify(game) }); if (!r.ok) throw new Error('Server said HTTP ' + r.status + ' (the database may not allow writing here)'); keep(n); } else await putCat(n); say('Published! Players can see it now.', 'ok'); list(n); } catch (e) { say(e.message || 'Something went wrong', 'er'); }
-  $('go').disabled = false; };
+    if (old && !confirm('A game with id \u201c' + id + '\u201d already exists. Replace it with this new release? (To change an existing game, use Edit instead.)')) { $('p_go').disabled = false; say('p_msg', ''); return; }
+    const v = Date.now(), gurl = await up(gf, 'ngd_g_' + id + '_' + v + '.html');
+    const curl = cf ? await up(cf, 'ngd_i_' + id + '_' + v + '.' + ext(cf)) : (old && old.curl) || '';
+    const ns = []; for (let i = 0; i < sf.length; i++) { say('p_msg', 'Uploading screenshot ' + (i + 1) + ' of ' + sf.length + '\u2026'); ns.push(await up(sf[i], 'ngd_s_' + id + '_' + v + '_' + i + '.' + ext(sf[i]))); }
+    const game = { id, ...read('p_'), title: $('p_ti').value.trim() || id, ver: '1.0', gurl, curl, v, shots: ns, notes: '', rel: 1, pub: v, upd: v }, n = [...l.filter(x => x.id !== id), game];
+    if (fbOn) { const w = await fb('/' + id + '.json', { method: 'PUT', body: JSON.stringify(game) }); if (!w.ok) throw new Error('Server said HTTP ' + w.status + ' (the database may not allow writing here)'); keep(n); } else await putCat(n);
+    ['id', 'ti', 'de', 'ab'].forEach(k => $('p_' + k).value = ''); ['gf', 'cf', 'sf'].forEach(k => $('p_' + k).value = ''); refreshDz();
+    say('p_msg', 'Published! Players can see it now.', 'ok'); list(n);
+  } catch (e) { say('p_msg', e.message || 'Something went wrong', 'er'); }
+  $('p_go').disabled = false; };
+
+/* ---------- edit page (page 2) ---------- */
+function drawShots() {
+  const box = $('e_shots'); box.innerHTML = '';
+  shots.forEach((u, i) => { const d = document.createElement('div'); d.className = 'shot'; const im = document.createElement('img'); im.src = u; im.alt = 'Screenshot ' + (i + 1); const b = document.createElement('button'); b.type = 'button'; b.textContent = '\u00d7'; b.title = 'Remove'; b.onclick = () => { shots.splice(i, 1); drawShots(); }; d.append(im, b); box.appendChild(d); });
+  $('e_shotHint').textContent = shots.length ? shots.length + ' of ' + MAXSHOTS + ' screenshots kept. New ones you choose are added to these.' : '';
+}
+async function openEdit(id) {
+  editId = id; $('e_body').style.display = 'none'; say('e_msg', ''); say('e_load', 'Loading\u2026');
+  const r = await getCat(), x = r.l.find(y => y.id === id);
+  if (editId !== id) return;
+  if (!x) return say('e_load', 'This game was not found.' + (r.why ? ' (' + r.why + ')' : ''), 'er');
+  say('e_load', ''); $('e_h').textContent = 'Edit \u201c' + x.title + '\u201d'; $('e_idv').textContent = x.id;
+  $('e_ti').value = x.title || ''; $('e_de').value = x.desc || ''; $('e_ab').value = x.about || ''; $('e_ca').value = x.cat || 'Other'; $('e_ag').value = x.age || 'Everyone'; $('e_or').value = x.ori || 'landscape'; $('e_dv').value = x.dev || 'nmedea'; $('e_vf').checked = !!x.vf;
+  $('e_vr').value = x.ver || '1.0'; $('e_nt').value = ''; ['e_gf', 'e_cf', 'e_sf'].forEach(k => $(k).value = ''); refreshDz();
+  $('e_curPic').style.display = x.curl ? 'flex' : 'none'; if (x.curl) $('e_curImg').src = x.curl;
+  shots = Array.isArray(x.shots) ? x.shots.slice() : []; drawShots(); $('e_body').style.display = 'block'; window.scrollTo(0, 0);
+}
+$('e_back').onclick = () => { location.hash = ''; };
+$('e_go').onclick = async () => {
+  const id = editId, gf = $('e_gf').files[0], cf = $('e_cf').files[0], sf = [...$('e_sf').files];
+  if (gf && gf.size > 5e6) return say('e_msg', 'Game file is over 5 MB', 'er');
+  if (cf && cf.size > 1e6) return say('e_msg', 'Card picture is over 1 MB', 'er');
+  if (shots.length + sf.length > MAXSHOTS) return say('e_msg', 'Maximum ' + MAXSHOTS + ' screenshots (remove some first)', 'er');
+  if (sf.some(f => f.size > 1e6)) return say('e_msg', 'Each screenshot must be under 1 MB', 'er');
+  $('e_go').disabled = true; say('e_msg', 'Uploading\u2026');
+  try {
+    const r = await getCat(), l = r.l, old = l.find(x => x.id === id);
+    if (!old) throw new Error('This game is no longer in the list.');
+    const ver = $('e_vr').value.trim() || '1.0';
+    if (ver === (old.ver || '1.0') && !confirm('Version is still ' + ver + '. Update anyway?')) { $('e_go').disabled = false; say('e_msg', ''); return; }
+    const v = Date.now();
+    const gurl = gf ? await up(gf, 'ngd_g_' + id + '_' + v + '.html') : old.gurl || '';
+    if (!gurl) throw new Error('This game has no game file. Choose one.');
+    const curl = cf ? await up(cf, 'ngd_i_' + id + '_' + v + '.' + ext(cf)) : old.curl || '';
+    const ns = []; for (let i = 0; i < sf.length; i++) { say('e_msg', 'Uploading screenshot ' + (i + 1) + ' of ' + sf.length + '\u2026'); ns.push(await up(sf[i], 'ngd_s_' + id + '_' + v + '_' + i + '.' + ext(sf[i]))); }
+    const game = { id, ...read('e_'), title: $('e_ti').value.trim() || id, ver, gurl, curl, v, shots: [...shots, ...ns], notes: $('e_nt').value.trim(), rel: (old.rel || 1) + 1, pub: old.pub || old.v || v, upd: v }, n = [...l.filter(x => x.id !== id), game];
+    if (fbOn) { const w = await fb('/' + id + '.json', { method: 'PUT', body: JSON.stringify(game) }); if (!w.ok) throw new Error('Server said HTTP ' + w.status + ' (the database may not allow writing here)'); keep(n); } else await putCat(n);
+    cur = n; say('flash', '\u201c' + game.title + '\u201d updated to v' + ver + '. It is now the latest release.', 'ok'); location.hash = '';
+  } catch (e) { say('e_msg', e.message || 'Something went wrong', 'er'); }
+  $('e_go').disabled = false; };
+
+/* ---------- nicer upload areas (same inputs underneath, so nothing else changes) ---------- */
+const svg = d => '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>',
+  IC = { file: svg('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 14l2 2 4-4"/>'), img: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/>'), imgs: svg('<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/><path d="M17 16l-4-4-7 7"/>') };
+const fmt = n => n > 1e6 ? (n / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1e3)) + ' KB', dzs = [];
+function dz(id, icon, title, hint) {
+  const i = $(id), w = document.createElement('div'); w.className = 'dz'; i.parentNode.insertBefore(w, i); w.appendChild(i);
+  const b = document.createElement('div'); b.className = 'dzb'; w.appendChild(b);
+  const draw = () => { b.innerHTML = ''; const fs = [...i.files];
+    if (!fs.length) { w.classList.remove('has'); const a = document.createElement('div'); a.className = 'dzi'; a.innerHTML = icon; const t = document.createElement('b'); t.textContent = title; const h = document.createElement('span'); h.textContent = hint; b.append(a, t, h); return; }
+    w.classList.add('has'); const row = document.createElement('div'); row.className = 'dzf';
+    fs.slice(0, 8).forEach(f => { const it = document.createElement('div'); it.className = 'dzit';
+      if (/^image\//.test(f.type)) { const im = document.createElement('img'); im.src = URL.createObjectURL(f); im.alt = ''; it.appendChild(im); } else { const a = document.createElement('div'); a.className = 'dzi'; a.innerHTML = IC.file; it.appendChild(a); }
+      const n = document.createElement('span'); n.textContent = f.name + ' \u00b7 ' + fmt(f.size); it.appendChild(n); row.appendChild(it); });
+    const c = document.createElement('span'); c.className = 'dzc'; c.textContent = (fs.length > 1 ? fs.length + ' files selected' : 'File ready') + ' \u00b7 tap to change'; b.append(row, c); };
+  i.addEventListener('change', draw);
+  ['dragenter', 'dragover'].forEach(e => i.addEventListener(e, () => w.classList.add('over')));
+  ['dragleave', 'drop'].forEach(e => i.addEventListener(e, () => w.classList.remove('over')));
+  dzs.push(draw); draw(); }
+const refreshDz = () => dzs.forEach(f => f());
+['p_', 'e_'].forEach(p => { dz(p + 'gf', IC.file, 'Tap to choose the game file', '.html file \u00b7 up to 5 MB'); dz(p + 'cf', IC.img, 'Tap to choose a card picture', 'Image \u00b7 up to 1 MB'); dz(p + 'sf', IC.imgs, 'Tap to add screenshots', 'Up to 3 images \u00b7 1 MB each'); });
+
+/* ---------- simple page switching ---------- */
+function route() {
+  const m = /^#edit-([a-z0-9-]+)$/.exec(location.hash);
+  $('home').style.display = m ? 'none' : 'block'; $('edit').style.display = m ? 'block' : 'none';
+  if (m) openEdit(m[1]); else { editId = null; list(cur.length ? cur : undefined); window.scrollTo(0, 0); }
+}
+window.addEventListener('hashchange', route); route();
 </script></main></body></html>

@@ -398,6 +398,119 @@ nav button.on #pnav .ava{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--hl)}
 nav button[data-t=profile]{position:relative}body.hasrq nav button[data-t=profile]::after{content:"";position:absolute;top:6px;left:calc(50% + 8px);width:10px;height:10px;border-radius:50%;background:#e5484d;border:2px solid var(--bg)}
 .mn-bd{margin-left:auto;min-width:20px;padding:1px 6px;border-radius:99px;background:#e5484d;color:#fff;font-size:12px;font-weight:700;text-align:center}.mn-bd+em{margin-left:8px}
 .fs-rq{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:14px;border:1px solid var(--bd);background:var(--s);font-weight:700;font-size:15px;text-align:left;margin:4px 0 6px}.fs-rq svg{width:22px;height:22px;fill:none;stroke:var(--hl);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.fs-rq em{margin-left:auto;font-style:normal;min-width:24px;padding:2px 8px;border-radius:99px;background:var(--s2);color:var(--mu);font-size:12.5px;text-align:center}.fs-rq em.hot{background:#e5484d;color:#fff}
+
+/* ===== v2: no scrollbars, scroll lock, flat category lines, flat profile, screenshots ===== */
+html,body{overflow-x:hidden}
+*{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}
+html.lk,html.lk body{overflow:hidden;overscroll-behavior:none}
+#sh{touch-action:none;overscroll-behavior:contain}#sc{touch-action:pan-y}
+.chips{gap:0;padding:0 12px;margin:0;border-bottom:1px solid var(--bd);overflow-x:auto}
+.chip{padding:10px 12px;border:0;border-bottom:2px solid transparent;border-radius:0;background:none;margin-bottom:-1px;font-size:13px;font-weight:500;color:var(--mu);white-space:nowrap}
+.chip.on{background:none;color:var(--tx);font-weight:600;border-bottom-color:var(--ac);box-shadow:none}
+.chips.sub{border-bottom:0;padding-top:2px}.chips.sub .chip{font-size:12.5px;padding:8px 12px}
+.chip.rc{padding:6px 0;margin:0 16px 8px 0;border-bottom:1px solid var(--bd);color:var(--tx)}
+.tag{border-radius:0;border:0;padding:0}
+.ns #onl{display:none}
+.pf{padding:6px 16px 0}
+.pf-h{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:18px 0;margin:0;border:0;border-radius:0;background:none}
+.pf-av{width:92px;height:92px;margin-bottom:6px}
+.pf-h>div:last-child{max-width:100%}
+.pf-h h1{font-size:23px;white-space:normal}
+.pf-h p{display:block;margin:2px 0 0;padding:0;border-radius:0;background:none;color:var(--mu);font-weight:500;font-size:13px}
+.pf-st{border:0;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);border-radius:0;background:none}
+.pf-st b{font-size:20px}
+.pf-fr{margin-top:0;padding:15px 0;border:0;border-bottom:1px solid var(--bd);border-radius:0;background:none}
+.pf-fr .pf-fl{flex:1}.pf-fr em{margin-left:0}.pf-fr::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;margin-left:4px}
+.pf-t{margin:26px 0 4px;text-transform:uppercase;letter-spacing:.08em;font-size:11.5px}
+.pf-e{margin-top:18px}
+.list.flat .card{padding:12px 0}
+.shots{display:flex;gap:10px;overflow-x:auto;margin:14px -18px 0;padding:0 18px}
+.shot{flex:none;height:168px;min-width:96px;padding:0;border:0;border-radius:10px;overflow:hidden;background:var(--s2)}
+.shot img{display:block;height:100%;width:auto;min-width:96px;object-fit:cover}
+.wn-m{font-size:12.5px;color:var(--mu);margin-top:6px}
+#ss{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;padding:16px}#ss.on{display:flex}
+#ss img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+
+/* ===== v3: friends, requests, add-friends search and chat: flat rows, no cards ===== */
+.fs-r{background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0;padding:12px 0;margin:0}
+button.fs-r::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;margin-left:4px;flex:none}
+.fs-rq{background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0;padding:14px 0;margin:0}
+.fs-rq::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;margin-left:4px}
+.fs-rq .fs-i2{flex:1}.fs-rq em{margin-left:0}
+.fs-t{margin:26px 0 4px}.fs-t:first-child{margin-top:4px}
+.fs-ro{padding:15px 0}
+.fs-mini{padding:8px 14px;border-radius:8px}
+.fs-lk{display:inline-block;background:none;border:0;padding:8px 0;color:var(--hl);font-weight:600;font-size:14px}
+.fs-sent{margin-left:auto;font-style:normal;font-size:13px;color:var(--mu);flex:none}
+.fs-b .sbar{margin:4px 0 6px}
+.fs-ac{gap:0;margin-top:22px}
+.fs-ac .fs-mini{background:none;border:0;border-top:1px solid var(--bd);border-radius:0;text-align:left;padding:15px 0;font-size:15px}
+.fs-ac .pl{margin-bottom:12px}
+.fs-in{gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.fs-in .fi{height:44px;padding:0 18px;border-radius:22px;background:var(--s2)}
+.fs-send{flex:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--gr);color:#fff;display:grid;place-items:center;padding:0;transition:opacity .15s,transform .1s}
+.fs-send svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-right:2px}
+.fs-send:active{transform:scale(.92)}.fs-send.off{opacity:.4}
+.mn-i .fs-sw{margin-left:auto}
+
+/* ===== v4: login / sign up: clean and professional (flat, follows light or dark theme) ===== */
+#au{padding:0;color:var(--tx);background:var(--bg)}
+.ax{max-width:400px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:calc(env(safe-area-inset-top) + 28px) 24px calc(env(safe-area-inset-bottom) + 28px)}
+.ax-h{text-align:center;margin-bottom:30px}
+.ax-lg{width:60px;height:60px;border-radius:16px;display:block;margin:0 auto 14px;background:var(--gr);object-fit:cover}
+.ax-t{font-size:26px;font-weight:700;letter-spacing:.14em;padding-left:.14em;line-height:1}
+.ax-sub{font-size:11px;letter-spacing:.3em;padding-left:.3em;text-transform:uppercase;color:var(--mu);margin-top:8px}
+.ax-h2{font-size:22px;font-weight:700;letter-spacing:-.2px}
+.ax-s{color:var(--mu);font-size:14px;margin:4px 0 22px}
+.lf{margin-bottom:16px}
+.lf label{display:block;font-size:13px;font-weight:600;margin:0 0 6px}
+.lf-i{display:flex;align-items:center;height:50px;border:1px solid var(--bd);border:1px solid color-mix(in srgb,var(--tx) 22%,transparent);border-radius:10px;background:var(--s2);transition:border-color .15s,box-shadow .15s}
+.lf-i:focus-within{border-color:var(--ac);box-shadow:0 0 0 3px rgba(33,114,255,.22)}
+.lf-i input{flex:1;min-width:0;height:100%;background:none;border:0;outline:0;color:var(--tx);font:inherit;font-size:16px;padding:0 14px}
+.lf-i input::placeholder{color:var(--mu)}
+.lf-i input:-webkit-autofill{-webkit-text-fill-color:var(--tx);transition:background-color 9999s}
+.lf-eye{flex:none;height:100%;padding:0 14px;border:0;background:none;color:var(--hl);font-size:13px;font-weight:600}
+.lf-h{display:block;font-size:12px;color:var(--mu);margin-top:5px}
+.lf-ag{display:flex;align-items:flex-start;gap:10px;margin:4px 0 18px;font-size:13.5px;line-height:1.5;color:var(--tp)}
+.lf-ck{flex:none;width:22px;height:22px;margin-top:1px;border-radius:6px;border:1.5px solid var(--mu);background:none;display:grid;place-items:center;padding:0}
+.lf-ck svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.lf-ck.on{background:var(--ac);border-color:var(--ac)}.lf-ck.on svg{opacity:1}
+.lf-a{background:none;border:0;padding:0;color:var(--hl);font:inherit;font-weight:600}
+.ax-go{display:block;width:100%;height:52px;border:0;border-radius:10px;background:var(--ac);color:#fff;font:inherit;font-size:16px;font-weight:700}
+.ax-go:active{background:#1a5fd6}.ax-go:disabled{opacity:.4}
+.ax-sw{text-align:center;font-size:14px;color:var(--mu);margin-top:22px}
+.ax-ft{text-align:center;font-size:12px;color:var(--mu);margin-top:28px}
+#au .er{min-height:0;margin:0 0 14px;font-size:14px;text-align:left}
+#au .er:not(:empty){padding:10px 12px;border-radius:8px;background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.4);color:#ff8a93}
+:root[data-theme=light] #au .er:not(:empty){color:#c4343b}
+@media (max-height:700px){.ax{justify-content:flex-start}.ax-h{margin-bottom:18px}.ax-lg{width:48px;height:48px;border-radius:13px;margin-bottom:10px}.ax-s{margin-bottom:16px}.lf{margin-bottom:12px}}
+
+/* ===== v5: chat: nicer bubbles, times, typing indicator ===== */
+.fs-m{padding:9px 13px;border-radius:18px;border-bottom-right-radius:6px}
+.fs-m.o{border-bottom-right-radius:18px;border-bottom-left-radius:6px}
+.fs-m .tm{display:block;font-size:10.5px;opacity:.6;margin-top:3px;text-align:right}
+.fs-ty{display:flex;gap:5px;align-items:center;padding:13px 15px;width:fit-content}
+.fs-ty i{width:7px;height:7px;border-radius:50%;background:var(--mu);animation:tyb 1.2s infinite ease-in-out}
+.fs-ty i:nth-child(2){animation-delay:.15s}.fs-ty i:nth-child(3){animation-delay:.3s}
+@keyframes tyb{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.fs-ty i{animation:none}}
+
+/* ===== v6: login background: retro arcade horizon (moving grid, sunset, drifting game symbols) ===== */
+#au{--bg:#0a0b12;--s:#10111c;--s2:#181926;--bd:rgba(255,255,255,.1);--tx:#e2e4ee;--mu:#a3a7c4;--hl:#9db8ff;--tp:#c3c6da;background:#0a0b12}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#06071c 0,#17114f 40%,#2a1259 58%,#0a0b12 58.2%)}
+.bg-st{position:absolute;inset:0 0 42%;background-image:radial-gradient(1.2px 1.2px at 10% 14%,#fff,transparent),radial-gradient(1px 1px at 24% 30%,#cfd8ff,transparent),radial-gradient(1.4px 1.4px at 38% 10%,#fff,transparent),radial-gradient(1px 1px at 52% 24%,#cfd8ff,transparent),radial-gradient(1.2px 1.2px at 66% 12%,#fff,transparent),radial-gradient(1px 1px at 80% 28%,#cfd8ff,transparent),radial-gradient(1.4px 1.4px at 92% 16%,#fff,transparent),radial-gradient(1px 1px at 18% 40%,#cfd8ff,transparent),radial-gradient(1.2px 1.2px at 74% 42%,#fff,transparent);animation:tw 4s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.55}to{opacity:1}}
+.bg-sun{position:absolute;left:50%;top:calc(58% - 120px);width:240px;height:120px;margin-left:-120px;border-radius:120px 120px 0 0;background:linear-gradient(180deg,#ffd27a 0,#ff5fa2 55%,#7c4dff 100%);-webkit-mask-image:linear-gradient(#000 0 52%,transparent 52% 58%,#000 58% 70%,transparent 70% 77%,#000 77% 88%,transparent 88% 95%,#000 95%);mask-image:linear-gradient(#000 0 52%,transparent 52% 58%,#000 58% 70%,transparent 70% 77%,#000 77% 88%,transparent 88% 95%,#000 95%);box-shadow:0 0 80px rgba(255,95,162,.5)}
+.bg-grid{position:absolute;left:-70%;right:-70%;top:58%;height:75%;background-image:linear-gradient(rgba(124,77,255,.7) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(33,114,255,.7) 1.5px,transparent 1.5px);background-size:54px 54px;transform:perspective(420px) rotateX(62deg);transform-origin:50% 0;animation:gr 2.4s linear infinite;-webkit-mask-image:linear-gradient(transparent,#000 40%);mask-image:linear-gradient(transparent,#000 40%)}
+@keyframes gr{to{background-position:0 54px}}
+.bg-sh span{position:absolute;top:100%;display:block;opacity:.5;animation:fl linear infinite}
+.bg-sh svg{display:block;width:100%;height:auto}
+@keyframes fl{from{transform:translateY(0) rotate(0)}to{transform:translateY(-125vh) rotate(360deg)}}
+.bg-dim{position:absolute;inset:0;background:radial-gradient(75% 60% at 50% 48%,rgba(6,7,28,.78),rgba(6,7,28,.3) 100%)}
+.lite .bg-grid,.lite .bg-sh span,.lite .bg-st{animation:none}
+@media (prefers-reduced-motion:reduce){.bg-grid,.bg-sh span,.bg-st{animation:none}}
+.ax{position:relative;z-index:1}
+:root[data-theme=light] #au .er:not(:empty){color:#ff8a93}
 </style><script>try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||4)<=2)document.documentElement.classList.add('lite')}catch(e){}try{document.documentElement.dataset.theme=localStorage.ngdTheme==='light'?'light':'dark'}catch(e){}</script></head><body>
 <header class="hdr"><img src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><b>NGD</b><button id="gear" aria-label="Settings" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header>
 <div id="onl" hidden aria-label="Friends online"></div>
@@ -407,6 +520,7 @@ nav button[data-t=profile]{position:relative}body.hasrq nav button[data-t=profil
 <div id="sh"><div id="sc"></div></div>
 <div id="au"></div>
 <div id="fs" role="dialog" aria-label="Friends and chat"></div>
+<div id="ss"><img id="ssi" alt=""></div>
 <div id="fc"><div class="cb"><h2 id="fct"></h2><p id="fcx"></p><div class="r"><button id="fcn">Cancel</button><button id="fcy"></button></div></div></div>
 <div id="rp"><div class="cb"><h2 id="rpt">Report</h2><p>Tell us what is wrong. Our team reviews every report.</p><select class="fi" id="rpr"><option>Harassment or bullying</option><option>Hate speech</option><option>Sexual content</option><option>Threats or violence</option><option>Spam or scam</option><option>Child safety concern</option><option>Impersonation</option><option>Other</option></select><textarea class="fi" id="rpn" maxlength="300" rows="3" placeholder="Add details (optional)"></textarea><label class="fs-ck"><input type="checkbox" id="rpb" checked> Also block this player</label><div class="er" id="rpe"></div><div class="r"><button id="rpc">Cancel</button><button id="rpg">Send report</button></div></div></div>
 <div id="pv"><div class="pv-h"><button id="pvb" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><b id="pvt"></b></div><div class="pv-b" id="pvx"></div></div>
@@ -495,12 +609,13 @@ const MI = { sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path
   shield: '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
   out: '<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>',
   trash: '<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>' };
+MI.eye = '<svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 function menuHTML() { const th = localStorage.ngdTheme === 'light' ? 'light' : 'dark', ch = '<em>&rsaquo;</em>';
   return `<i class="mn-arw"></i><div class="mn-h"><div class="mn-av">${pic()}</div><div class="mn-n"><b>${esc(avName())}</b><span>${U ? 'nmedea account' : 'Not signed in'}</span></div></div>`
    + (U ? '' : '<button class="mn-b" id="pli">Log in or create account</button>')
    + `<div class="mn-lbl">Appearance</div><div class="seg"><button class="th2${th === 'dark' ? ' on' : ''}" data-th="dark">${MI.moon}Dark</button><button class="th2${th === 'light' ? ' on' : ''}" data-th="light">${MI.sun}Light</button></div>`
    + `<div class="mn-dv"></div><button class="mn-i soc" role="menuitem">${MI.users}Follow nmedea${ch}</button><button class="mn-i pol" data-p="terms" role="menuitem">${MI.doc}Terms of Service${ch}</button><button class="mn-i pol" data-p="privacy" role="menuitem">${MI.shield}Privacy Policy${ch}</button>`
-   + (U ? `<div class="mn-dv"></div><button class="mn-i fr-open" role="menuitem">${MI.users}Friends and chat${Object.keys(FS.rq || {}).length ? '<b class="mn-bd">' + Object.keys(FS.rq).length + '</b>' : ''}${ch}</button><button class="mn-i" id="lgo" role="menuitem">${MI.out}Log out</button><button class="mn-i dng" id="dlt" role="menuitem">${MI.trash}Delete account</button>` : ''); }
+   + (U ? `<div class="mn-dv"></div><button class="mn-i fr-open" role="menuitem">${MI.users}Friends and chat${Object.keys(FS.rq || {}).length ? '<b class="mn-bd">' + Object.keys(FS.rq).length + '</b>' : ''}${ch}</button><div class="mn-dv"></div><div class="mn-lbl">Privacy and safety</div><button class="mn-i mn-vis" role="menuitem">${MI.eye}Show my online status<span class="fs-sw${fsHide() ? '' : ' on'}"></span></button><button class="mn-i mn-flt" role="menuitem">${MI.shield}Hide offensive words<span class="fs-sw${localStorage.ngdFilter === '0' ? '' : ' on'}"></span></button><button class="mn-i mn-blk" role="menuitem">${MI.users}Blocked players${ch}</button><div class="mn-dv"></div><button class="mn-i" id="lgo" role="menuitem">${MI.out}Log out</button><button class="mn-i dng" id="dlt" role="menuitem">${MI.trash}Delete account</button>` : ''); }
 const menuOn = () => $('#mnu').classList.contains('on');
 function hideMenu() { $('#mnu').classList.remove('on'); $('#mbk').classList.remove('on'); $('#gear').classList.remove('on'); $('#gear').setAttribute('aria-expanded', 'false'); }
 function openMenu() { const m = $('#mnu'), r = $('#gear').getBoundingClientRect(); m.innerHTML = menuHTML();
@@ -510,6 +625,10 @@ function openMenu() { const m = $('#mnu'), r = $('#gear').getBoundingClientRect(
 function closeMenu() { if (topLy() === 'menu') dropLy(); else hideMenu(); }
 function settings() { menuOn() ? closeMenu() : openMenu(); }
 $('#mbk').addEventListener('click', closeMenu);
+$('#mnu').addEventListener('click', e => { const b = e.target.closest('.mn-vis,.mn-flt,.mn-blk'); if (!b) return;
+  if (b.classList.contains('mn-vis')) { localStorage.ngdInvisible = fsHide() ? '0' : '1'; fsBeat(); b.querySelector('.fs-sw').classList.toggle('on', !fsHide()); toast(fsHide() ? 'You appear offline' : 'Friends can see when you are online'); }
+  else if (b.classList.contains('mn-flt')) { localStorage.ngdFilter = localStorage.ngdFilter === '0' ? '1' : '0'; b.querySelector('.fs-sw').classList.toggle('on', localStorage.ngdFilter !== '0'); }
+  else { closeMenu(); setTimeout(() => { fsOpen(); if (FS.on) fsGo('blocked'); }, 60); } });
 addEventListener('keydown', e => { if (e.key === 'Escape' && menuOn()) closeMenu(); });
 function drawP() { const st = stats(), pl = G.filter(g => st[g.id]).map(g => ({ g, e: st[g.id] })),
   secs = pl.reduce((a, o) => a + (o.e.t || 0), 0), ses = pl.reduce((a, o) => a + (o.e.n || 0), 0), rcn = [...pl].sort((a, b) => (b.e.l || 0) - (a.e.l || 0)).slice(0, 8);
@@ -550,19 +669,24 @@ let auMode = 'up', auNote = '', pend = null, agree = false;
 function showAuth(m, note) { if (m) auMode = m; auNote = note || ''; $('#au').classList.add('on'); drawAu(); }
 const ICU = '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>', ICKY = '<svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg>';
 const STARS = [[28,44,1.3],[64,96,1],[112,30,1.1],[150,78,.9],[196,40,1.3],[236,86,1],[330,52,1.2],[362,100,1],[88,150,.9],[22,170,1],[372,170,.9],[306,28,1]].map(o => `<circle cx="${o[0]}" cy="${o[1]}" r="${o[2]}"/>`).join('');
-const EMO = ['🎮','👾','🦈','🏆','🚀','⭐','🎯','💎','🔥','🕹️','👑','⚡','🎲','🧩','🐉','⚔️','🛡️','🎧','🤖','👻','🪙','🏎️','🎪','🧙'];
-const SCENE = `<div class="gz-em" aria-hidden="true">${Array.from({ length: 24 }, (_, i) => { const c = i % 4, r = (i / 4) | 0, x = 4 + c * 24 + (i * 37) % 14, y = 3 + r * 16 + (i * 53) % 9, sz = 26 + (i * 11) % 20; return `<span style="left:${x}%;top:${y}%;font-size:${sz}px;animation-duration:${5 + (i * 3) % 6}s;animation-delay:-${(i * 7) % 9}s">${EMO[(i * 5 + (i >> 2)) % EMO.length]}</span>`; }).join('')}</div><div class="gz-dim" aria-hidden="true"></div>`;
 function pvFill() { const e = $('#au-pv'); if (!e) return; const l = (G || []).slice(0, 8);
-  const t = l.length ? l.map(x => `<div class="gz-tile">${cv(x)}<span>${esc(x.title)}</span></div>`).join('') : Array.from({ length: 6 }, () => '<div class="gz-tile"><div class="cv">🎮</div><span>&nbsp;</span></div>').join('');
+  const t = l.length ? l.map(x => `<div class="gz-tile">${cv(x)}<span>${esc(x.title)}</span></div>`).join('') : Array.from({ length: 6 }, () => '<div class="gz-tile"><div class="cv">N</div><span>&nbsp;</span></div>').join('');
   e.innerHTML = t + t; e.classList.toggle('mv', l.length > 3); }
-function drawAu() { const up = auMode === 'up';
-  $('#au').innerHTML = `${SCENE}<div class="gz"><div class="gz-hero"><img class="gz-lg" src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><h1 class="gz-t">NGD</h1><p class="gz-sub">nmedea gaming dex</p><p class="gz-hook">${up ? 'Play free games. No email needed.' : 'Welcome back. Your games are waiting.'}</p><div class="gz-pv"><div class="gz-trk" id="au-pv"></div></div></div><div class="gz-form"><div class="gz-tabs"><button data-m="in"${up ? '' : ' class="on"'}>Log in</button><button data-m="up"${up ? ' class="on"' : ''}>Sign up</button></div>${auNote ? `<p class="gz-note">${esc(auNote)}</p>` : ''}<div class="gz-fw"><span class="gz-l">Username</span><label class="gz-f"><input id="au-u" placeholder="Username" maxlength="16" autocapitalize="none" autocomplete="username" spellcheck="false"></label></div><div class="gz-fw"><span class="gz-l">Password</span><label class="gz-f"><input id="au-p" type="password" placeholder="Password" autocomplete="${up ? 'new-password' : 'current-password'}"><button type="button" class="gz-eye" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></label></div>${up ? `<div class="gz-fw"><span class="gz-l">Repeat password</span><label class="gz-f"><input id="au-p2" type="password" placeholder="Repeat password" autocomplete="new-password"><button type="button" class="gz-eye" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></label></div><div class="gz-ag"><button type="button" class="gz-ck${agree ? ' on' : ''}" id="au-ck" role="checkbox" aria-checked="${agree}" aria-label="Accept terms"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><span>I am 13 or older and agree to the <button type="button" class="gz-lk pol" data-p="terms">Terms of Service</button> and <button type="button" class="gz-lk pol" data-p="privacy">Privacy Policy</button>.</span></div>` : ''}<div class="er" id="au-e"></div><button class="gz-go" id="au-go"${up && !agree ? ' disabled' : ''}><svg class="gz-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>${up ? 'Create account' : 'Log in'}</span></button></div></div>`;
-  $('#au').querySelectorAll('.gz-tabs button').forEach(b => b.onclick = () => { auMode = b.dataset.m; drawAu(); });
+const BGS = (() => { const P = ['<path d="M12 4l9 16H3z"/>', '<circle cx="12" cy="12" r="8"/>', '<path d="M5 5l14 14M19 5L5 19"/>', '<rect x="5" y="5" width="14" height="14" rx="1"/>'], C = ['#ff4d9d', '#4facfe', '#9b7bff', '#38ef7d'];
+  const sh = Array.from({ length: 12 }, (_, i) => `<span style="left:${(i * 83 + 7) % 92}%;width:${26 + (i * 13) % 26}px;color:${C[i % 4]};animation-duration:${16 + (i * 5) % 14}s;animation-delay:-${(i * 7) % 20}s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${P[i % 4]}</svg></span>`).join('');
+  return `<div class="bg" aria-hidden="true"><div class="bg-st"></div><div class="bg-sun"></div><div class="bg-grid"></div><div class="bg-sh">${sh}</div><div class="bg-dim"></div></div>`; })();
+function drawAu() { const up = auMode === 'up', eye = '<button type="button" class="lf-eye" aria-label="Show or hide password">Show</button>';
+  $('#au').innerHTML = BGS + `<div class="ax"><div class="ax-h"><img class="ax-lg" src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><h1 class="ax-t">NGD</h1><p class="ax-sub">nmedea gaming dex</p></div>`
+    + `<h2 class="ax-h2">${up ? 'Create your account' : 'Welcome back'}</h2><p class="ax-s">${auNote ? esc(auNote) : up ? 'Free to play. No email needed.' : 'Log in to continue to your games.'}</p>`
+    + `<div class="lf"><label for="au-u">Username</label><div class="lf-i"><input id="au-u" placeholder="Choose a username" maxlength="16" autocapitalize="none" autocomplete="username" spellcheck="false"></div>${up ? '<span class="lf-h">3 to 16 characters: letters, numbers, _ . -</span>' : ''}</div>`
+    + `<div class="lf"><label for="au-p">Password</label><div class="lf-i"><input id="au-p" type="password" placeholder="${up ? 'Create a password' : 'Your password'}" autocomplete="${up ? 'new-password' : 'current-password'}">${eye}</div>${up ? '<span class="lf-h">At least 6 characters</span>' : ''}</div>`
+    + (up ? `<div class="lf"><label for="au-p2">Confirm password</label><div class="lf-i"><input id="au-p2" type="password" placeholder="Repeat your password" autocomplete="new-password">${eye}</div></div><div class="lf-ag"><button type="button" class="lf-ck${agree ? ' on' : ''}" id="au-ck" role="checkbox" aria-checked="${agree}" aria-label="Accept terms"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><span>I am 13 or older and agree to the <button type="button" class="lf-a pol" data-p="terms">Terms of Service</button> and <button type="button" class="lf-a pol" data-p="privacy">Privacy Policy</button>.</span></div>` : '')
+    + `<div class="er" id="au-e"></div><button class="ax-go" id="au-go"${up && !agree ? ' disabled' : ''}>${up ? 'Create account' : 'Log in'}</button>`
+    + `<p class="ax-sw">${up ? 'Already have an account?' : 'New to NGD?'} <button type="button" class="lf-a" data-m="${up ? 'in' : 'up'}">${up ? 'Log in' : 'Create an account'}</button></p><p class="ax-ft">One account for NGD and every nmedea game.</p></div>`;
+  $('#au').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { auMode = b.dataset.m; drawAu(); });
   $('#au').querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); }));
-  const ck = $('#au-ck'); if (ck) ck.onclick = () => { agree = !agree; ck.classList.toggle('on', agree); ck.setAttribute('aria-checked', agree); const go = $('#au-go'); go.disabled = !agree;
-    ck.classList.remove('pop'); void ck.offsetWidth; ck.classList.add('pop');   // pop + ring, then the button unlocks with a light sweep and a small buzz
-    if (agree) { go.classList.remove('unl'); void go.offsetWidth; go.classList.add('unl'); } try { navigator.vibrate && navigator.vibrate(agree ? 18 : 8); } catch (e) {} };
-  $('#au').querySelectorAll('.gz-eye').forEach(b => b.onclick = e => { e.preventDefault(); const i = b.parentNode.querySelector('input'); i.type = i.type === 'password' ? 'text' : 'password'; b.classList.toggle('on', i.type === 'text'); });
+  const ck = $('#au-ck'); if (ck) ck.onclick = () => { agree = !agree; ck.classList.toggle('on', agree); ck.setAttribute('aria-checked', agree); $('#au-go').disabled = !agree; };
+  $('#au').querySelectorAll('.lf-eye').forEach(b => b.onclick = e => { e.preventDefault(); const i = b.parentNode.querySelector('input'); i.type = i.type === 'password' ? 'text' : 'password'; b.textContent = i.type === 'password' ? 'Show' : 'Hide'; });
   $('#au-go').onclick = doAuth; pvFill(); }
 function toast(m) { let t = $('#tt'); if (!t) { t = document.createElement('div'); t.id = 'tt'; document.body.appendChild(t); } t.textContent = m; t.classList.remove('on'); void t.offsetWidth; t.classList.add('on'); }
 async function doAuth() { const up = auMode === 'up', h = $('#au-u').value.trim(), pw = $('#au-p').value, er = $('#au-e'), go = $('#au-go'); er.textContent = '';
@@ -584,13 +708,18 @@ drawPf();
 let q = '', scat = 'All', sage = 'All', sort = 'new';
 const rec = () => { try { return JSON.parse(localStorage.ngdRecent || '[]'); } catch (e) { return []; } };
 const saveRec = () => { const t = q.trim(); if (!t) return; try { localStorage.ngdRecent = JSON.stringify([t, ...rec().filter(x => x !== t)].slice(0, 6)); } catch (e) {} };
-const match = x => { const t = q.trim().toLowerCase(), hay = [x.title, x.desc, x.about, x.cat, x.dev].join(' ').toLowerCase(); return (!t || t.split(/\s+/).every(w => hay.includes(w))) && (scat === 'All' || x.cat === scat) && (sage === 'All' || x.age === sage); };
-function drawSR() { const r = G.filter(match).sort(sort === 'az' ? (a, b) => String(a.title).localeCompare(b.title) : (a, b) => b.v - a.v), has = q.trim() || scat !== 'All' || sage !== 'All';
-  $('#sr').innerHTML = (!has && rec().length ? '<div class="sec-t">Recent searches</div><div class="chips" style="flex-wrap:wrap;overflow:visible">' + rec().map(t => `<button class="chip rc" data-q="${esc(t)}">${esc(t)}</button>`).join('') + '</div>' : '') + `<div class="sec-t">${has ? r.length + ' result' + (r.length === 1 ? '' : 's') : 'Browse all games'}</div>` + (r.length ? `<div class="list">${r.map(card).join('')}</div>` : '<p class="mu pad">No games match your search.</p>'); }
-function drawS() { const cs = ['All', ...new Set(G.map(x => x.cat).filter(Boolean))], ag = ['All', ...new Set(G.map(x => x.age).filter(Boolean))];
-  $('#search').innerHTML = `<div class="sbar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="si" placeholder="Search games, categories, publishers…" value="${esc(q)}" autocomplete="off" enterkeyhint="search"><button id="sx" ${q ? '' : 'hidden'} aria-label="Clear">&times;</button></div>
-  <div class="chips">${cs.map(c => `<button class="chip sc2${c === scat ? ' on' : ''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
-  <div class="chips">${ag.length > 2 ? ag.map(c => `<button class="chip sa${c === sage ? ' on' : ''}" data-v="${esc(c)}">${c === 'All' ? 'Any age' : esc(c)}</button>`).join('') : ''}<button class="chip so${sort === 'new' ? ' on' : ''}" data-v="new">Newest</button><button class="chip so${sort === 'az' ? ' on' : ''}" data-v="az">A–Z</button></div><div id="sr"></div>`; drawSR(); }
+const mq = x => { const t = q.trim().toLowerCase(), hay = [x.title, x.desc, x.about, x.cat, x.dev].join(' ').toLowerCase(); return !t || t.split(/\s+/).every(w => hay.includes(w)); };
+const match = x => mq(x) && (scat === 'All' || x.cat === scat) && (sage === 'All' || x.age === sage);
+function drawF() {   // the category / age lines follow the search: they only list what the current search can return
+  const cats = () => ['All', ...new Set(G.filter(x => mq(x) && (sage === 'All' || x.age === sage)).map(x => x.cat).filter(Boolean))], ages = () => ['All', ...new Set(G.filter(x => mq(x) && (scat === 'All' || x.cat === scat)).map(x => x.age).filter(Boolean))];
+  let cs = cats(); if (!cs.includes(scat)) scat = 'All';
+  let ag = ages(); if (!ag.includes(sage)) { sage = 'All'; cs = cats(); }
+  const f = $('#sfl'); if (!f) return;
+  f.innerHTML = `<div class="chips">${cs.map(c => `<button class="chip sc2${c === scat ? ' on' : ''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>`
+    + `<div class="chips sub">${ag.length > 2 ? ag.map(c => `<button class="chip sa${c === sage ? ' on' : ''}" data-v="${esc(c)}">${c === 'All' ? 'Any age' : esc(c)}</button>`).join('') : ''}<button class="chip so${sort === 'new' ? ' on' : ''}" data-v="new">Newest</button><button class="chip so${sort === 'az' ? ' on' : ''}" data-v="az">A\u2013Z</button></div>`; }
+function drawSR() { drawF(); const r = G.filter(match).sort(sort === 'az' ? (a, b) => String(a.title).localeCompare(b.title) : (a, b) => b.v - a.v), has = q.trim() || scat !== 'All' || sage !== 'All';
+  $('#sr').innerHTML = (!has && rec().length ? '<div class="sec-t">Recent searches</div><div class="chips" style="flex-wrap:wrap;overflow:visible;border:0">' + rec().map(t => `<button class="chip rc" data-q="${esc(t)}">${esc(t)}</button>`).join('') + '</div>' : '') + `<div class="sec-t">${has ? r.length + ' result' + (r.length === 1 ? '' : 's') : 'Browse all games'}</div>` + (r.length ? `<div class="list">${r.map(card).join('')}</div>` : '<p class="mu pad">No games match your search.</p>'); }
+function drawS() { $('#search').innerHTML = `<div class="sbar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="si" placeholder="Search games, categories, publishers\u2026" value="${esc(q)}" autocomplete="off" enterkeyhint="search"><button id="sx" ${q ? '' : 'hidden'} aria-label="Clear">&times;</button></div><div id="sfl"></div><div id="sr"></div>`; drawSR(); }
 document.body.addEventListener('input', e => { if (e.target.id === 'si') { q = e.target.value; $('#sx').hidden = !q; drawSR(); } });
 document.body.addEventListener('keydown', e => { if (e.target.id === 'si' && e.key === 'Enter') { saveRec(); e.target.blur(); } });
 function social() { const c = $('#sc'); c.classList.remove('full', 'pg');
@@ -615,7 +744,7 @@ async function load() {
 load();
 document.body.addEventListener('click', e => {
   const t = e.target, c = t.closest('.card'), ch = t.closest('.chip'), nb = t.closest('nav button');
-  if (menuOn() && t.closest('.mn-i, #pli')) closeMenu();
+  if (menuOn() && t.closest('.mn-i:not(.mn-vis):not(.mn-flt), #pli')) closeMenu();
   if (nb) navTo(nb.dataset.t);
   else if (t.closest('#gear')) settings();
   else if (t.closest('#pli')) showAuth('in');
@@ -636,14 +765,16 @@ document.body.addEventListener('click', e => {
 });
 const fdate = v => { try { return new Date(v).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); } catch (e) { return ''; } };
 function sheet(x) { if (!x) return; const c = $('#sc'), e = stats()[x.id] || {}, o = /^land/i.test(x.ori || '') ? 'Landscape' : /^port/i.test(x.ori || '') ? 'Portrait' : 'Any';
+  const sh = Array.isArray(x.shots) ? x.shots.filter(u => /^https:\/\//.test(u)) : [], shotsHTML = sh.length ? `<div class="shots">${sh.map((u, i) => `<button class="shot" data-i="${i}" aria-label="Screenshot ${i + 1}"><img loading="lazy" decoding="async" src="${esc(u)}" alt=""></button>`).join('')}</div>` : '',
+    wn = (x.notes || x.rel > 1) ? `<div class="pf-t">What\u2019s new</div>${x.notes ? `<p class="ab2">${esc(x.notes)}</p>` : ''}<p class="wn-m">Version ${esc(x.ver || '1.0')}${x.upd ? ' \u00b7 Updated ' + fdate(x.upd) : ''}</p>` : '';
   c.classList.remove('full', 'pg');
-  c.innerHTML = `<div class="gh"></div><div class="in"><div class="big">${cv(x)}</div><div class="hd"><div class="th">${cv(x)}</div><div><h1>${esc(x.title)}</h1>${dv(x)}</div></div><p class="sd">${esc(x.desc)}</p>
+  c.innerHTML = `<div class="gh"></div><div class="in"><div class="big">${cv(x)}</div><div class="hd"><div class="th">${cv(x)}</div><div><h1>${esc(x.title)}</h1>${dv(x)}</div></div><p class="sd">${esc(x.desc)}</p>${shotsHTML}
 <div class="more"><div class="facts"><div><b>${esc(x.cat || '–')}</b><span>Category</span></div><div><b>${esc(x.age || '–')}</b><span>Age</span></div><div><b>${esc(x.ver || '–')}</b><span>Version</span></div><div><b>${o}</b><span>Screen</span></div></div>
-<div class="pf-t">About this game</div><p class="ab2">${esc(x.about || x.desc || 'No more details yet.')}</p>
-<div class="pf-t">Information</div><div class="kv"><div><span>Developer</span><b>${esc(x.dev || 'nmedea')}${x.vf === false ? '' : BD}</b></div>${x.v ? `<div><span>Added</span><b>${fdate(x.v)}</b></div>` : ''}<div><span>Requires</span><b>Internet connection</b></div><div><span>Account</span><b>Needed to play</b></div></div>
+${wn}<div class="pf-t">About this game</div><p class="ab2">${esc(x.about || x.desc || 'No more details yet.')}</p>
+<div class="pf-t">Information</div><div class="kv"><div><span>Developer</span><b>${esc(x.dev || 'nmedea')}${x.vf === false ? '' : BD}</b></div>${x.pub || x.v ? `<div><span>Added</span><b>${fdate(x.pub || x.v)}</b></div>` : ''}${x.upd && x.upd !== (x.pub || x.v) ? `<div><span>Updated</span><b>${fdate(x.upd)}</b></div>` : ''}<div><span>Requires</span><b>Internet connection</b></div><div><span>Account</span><b>Needed to play</b></div></div>
 <div class="pf-t">Your activity</div><div class="kv"><div><span>Time played</span><b>${dur(e.t || 0)}</b></div><div><span>Sessions</span><b>${e.n || 0}</b></div>${e.l ? `<div><span>Last played</span><b>${fdate(e.l)}</b></div>` : ''}</div></div>
 <div class="btns"><button class="pl" id="go">Play</button><button class="sec" id="mr">More details</button></div></div>`;
-  openSheet(); $('#go').onclick = () => { $('#sh').classList.remove('on'); play(x); }; $('#mr').onclick = () => setFull(!c.classList.contains('full')); }
+  openSheet(); c.querySelectorAll('.shot').forEach(b => b.onclick = () => zoom(sh[+b.dataset.i])); $('#go').onclick = () => { $('#sh').classList.remove('on'); play(x); }; $('#mr').onclick = () => setFull(!c.classList.contains('full')); }
 // drag the sheet: down closes (or shrinks a full page), up opens the full page
 { const sc = $('#sc'); let dg = null;
   sc.addEventListener('pointerdown', e => { if (!e.target.closest('.gh,.hd')) return; dg = { y: e.clientY, d: 0, f: sc.classList.contains('full') }; sc.setPointerCapture(e.pointerId); sc.style.transition = 'none'; });
@@ -651,6 +782,10 @@ function sheet(x) { if (!x) return; const c = $('#sc'), e = stats()[x.id] || {},
   const end = () => { if (!dg) return; const d = dg.d, f = dg.f; dg = null; sc.style.transition = ''; sc.style.transform = '';
     if (d > 80) { if (f && !sc.classList.contains('pg') && d < innerHeight * .5) setFull(false); else closeSheet(); } else if (d < -50 && !f && !sc.classList.contains('pg')) setFull(true); };
   sc.addEventListener('pointerup', end); sc.addEventListener('pointercancel', end); }
+function zoom(u) { $('#ssi').src = u; openModal('#ss'); }
+$('#ss').onclick = () => dropLy();
+{ const ids = ['sh', 'pl', 'fs', 'pv', 'au', 'fc', 'rp', 'dm', 'lc', 'ss'], sync = () => document.documentElement.classList.toggle('lk', ids.some(i => $('#' + i).classList.contains('on'))), mo = new MutationObserver(sync);   // nothing behind an open sheet, game or pop-up can scroll
+  ids.forEach(i => mo.observe($('#' + i), { attributes: true, attributeFilter: ['class'] })); sync(); }
 let tm; const bar = n => $('#bar').style.width = n + '%';
 function play(x) { if (!U && x.vf !== false) { if (topLy() === 'sheet') dropLy(); pend = x; showAuth('up', 'Create an account or log in to play.'); return; } endSession(); { if (topLy() === 'sheet') LY[LY.length - 1] = { name: 'game' }; else pushLy('game'); } { const st = stats(), e = st[x.id] || { n: 0, t: 0, l: 0 }; e.n++; e.l = Date.now(); st[x.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} } curG = { id: x.id, s: Date.now(), o: x.ori }; fit();
   $('#pl').classList.add('on'); $('#ld').classList.remove('off'); $('#lt').textContent = 'Loading ' + x.title + '…'; bar(8);
@@ -838,7 +973,7 @@ async function fsMsgs(u) {
   return Object.entries(o).sort((a, b) => a[0] < b[0] ? -1 : 1).map(([k, m]) => Object.assign({ k }, m)).filter(m => m && typeof m.t === 'string' && !FS.bl[m.f] && (!m.ts || m.ts > clr) && (m.f === U.uid || m.f === u));
 }
 // --- screens ---
-const FI = { back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', chat: '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.7 7L3 21l2-5.6A8 8 0 1 1 21 12z"/></svg>', add: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2M19 8v6M16 11h6"/></svg>', more: '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>', fr: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>' };
+const FI = { back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', chat: '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.7 7L3 21l2-5.6A8 8 0 1 1 21 12z"/></svg>', add: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2M19 8v6M16 11h6"/></svg>', more: '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>', send: '<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>', srch: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>', fr: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>' };
 const fsPhoto = u => { const h = (FS.pres[u] || {}).h; return h && /^https:\/\//.test(h.p || '') ? h.p : ''; };
 const fsAv = (n, on, lg, p) => `<span class="fs-av${lg ? ' lg' : ''}">${avatar(n)}${p ? `<img class="ph" src="${esc(p)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}<i class="fs-dot${on ? ' on' : ''}"></i></span>`;
 const fsHead = (t, r) => `<div class="fs-h"><button class="fs-ic" data-a="back" aria-label="Back">${FI.back}</button><b>${esc(t)}</b>${r || ''}</div>`;
@@ -846,6 +981,7 @@ const fsTop = () => FS.stack[FS.stack.length - 1] || { v: 'list' };
 function fsRender() {
   if (!FS.on) return; const t = fsTop(), el = $('#fs'), a = document.activeElement, aid = a && a.id, av = a && a.value;
   if (t.v === 'chat') { fsChat(t); return; }
+  if (t.v === 'find') { if (!$('#fsq')) { el.innerHTML = fsFind(); fsFindLoad(''); } else fsFindPaint(); return; }
   el.innerHTML = t.v === 'profile' ? fsProfile(t) : t.v === 'blocked' ? fsBlocked() : t.v === 'requests' ? fsReqs() : fsList();
   if (aid && aid === 'fsn' && $('#fsn')) { $('#fsn').value = av; $('#fsn').focus(); }
 }
@@ -855,9 +991,38 @@ function fsRow(u, o) {
 }
 function fsList() {
   const fr = Object.entries(FS.fr).sort((a, b) => (fsStat(b[0]).on - fsStat(a[0]).on) || String(a[1].name).localeCompare(b[1].name)), rq = Object.entries(FS.rq), nb = Object.keys(FS.bl).length;
-  return fsHead('Friends') + `<div class="fs-b"><button class="fs-rq" data-a="reqs">${FI.add}Friend requests<em class="${rq.length ? 'hot' : ''}">${rq.length ? rq.length + ' new' : 'None'}</em></button><div class="fs-t">Add a friend</div><div class="fs-add"><input class="fi" id="fsn" placeholder="Their username" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="fs-go" id="fsa" data-a="add">Send request</button></div><div class="fs-er" id="fse">${esc(FS.err)}</div>`
-   + `<div class="fs-t">Your friends (${fr.length}/${MAXF})</div>` + (fr.length ? fr.map(([u, o]) => fsRow(u, o)).join('') : '<p class="fs-e">No friends yet. Add someone by their exact username.</p>')
+  return fsHead('Friends', `<button class="fs-ic" data-a="find" aria-label="Add friends">${FI.add}</button>`) + `<div class="fs-b"><button class="fs-rq" data-a="reqs">${FI.add}<span class="fs-i2">Friend requests</span>${rq.length ? `<em class="hot">${rq.length}</em>` : ''}</button>`
+   + `<div class="fs-t">Your friends (${fr.length}/${MAXF})</div>` + (fr.length ? fr.map(([u, o]) => fsRow(u, o)).join('') : '<p class="fs-e">No friends yet.</p><button class="fs-lk" data-a="find">Find friends</button>')
    + `<div class="fs-t">Privacy and safety</div><button class="fs-ro" data-a="vis">Show my online status<span class="fs-sw${fsHide() ? '' : ' on'}"></span></button><button class="fs-ro" data-a="flt">Hide offensive words in chats<span class="fs-sw${localStorage.ngdFilter === '0' ? '' : ' on'}"></span></button><button class="fs-ro" data-a="blocked">Blocked players<em>${nb}</em></button><button class="fs-ro" data-a="rules">Community rules and Terms<em>&rsaquo;</em></button></div>`;
+}
+// --- add friends: search by username, with a list of available players shown before you type ---
+const fsFind = () => { FS.cand = []; FS.fq = ''; FS.fqErr = ''; FS.fload = true; return fsHead('Add friends') + `<div class="fs-b"><div class="sbar">${FI.srch}<input id="fsq" placeholder="Search by username" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button id="fsqx" data-a="fqx" hidden aria-label="Clear">&times;</button></div><div id="fsfl"></div></div>`; };
+function fsFindPaint() {
+  const box = $('#fsfl'); if (!box) return;
+  const c = FS.cand || [], sent = FS.sentTo || {};
+  box.innerHTML = `<div class="fs-t">${FS.fq ? 'Results' : 'Players on NGD'}</div>` + (FS.fload && !c.length ? '<p class="fs-e">Searching\u2026</p>' : c.length ? c.map(x => `<div class="fs-r">${fsAv(x.name, false, false, '')}<span class="fs-i"><b>${esc(x.name)}</b></span>${sent[x.u] ? '<em class="fs-sent">Requested</em>' : `<button class="fs-mini ok" data-a="addu" data-u="${esc(x.u)}" data-n="${esc(x.name)}">Add</button>`}</div>`).join('') : `<p class="fs-e">${esc(FS.fqErr || (FS.fq ? 'No player found with that username.' : 'No players to show yet.'))}</p>`);
+}
+async function fsFindLoad(q) {
+  const low = String(q || '').trim().toLowerCase().replace(/[^a-z0-9_.-]/g, ''), my = FS.fqn = (FS.fqn || 0) + 1; FS.fq = low; FS.fload = true; FS.fqErr = ''; fsFindPaint();
+  let list = [];
+  const ok = u => typeof u === 'string' && u !== U.uid && !FS.fr[u] && !FS.bl[u];
+  try {
+    const qs = 'orderBy=%22%24key%22&limitToFirst=30' + (low ? '&startAt=' + encodeURIComponent(JSON.stringify(low)) + '&endAt=' + encodeURIComponent(JSON.stringify(low + '\uf8ff')) : '');
+    const o = (await sb('names', 'GET', undefined, qs)) || {};
+    list = Object.entries(o).filter(([k, u]) => ok(u)).slice(0, 20).map(([k, u]) => ({ k, u, name: k }));
+  } catch (e) {   // the server may not allow reading the whole list: fall back to looking up one exact username
+    if (low.length >= 3) { try { const u = await sb('names/' + encodeURIComponent(low)); if (ok(u)) list = [{ k: low, u, name: low }]; } catch (e2) { FS.fqErr = fsMsg(e2); } }
+    else FS.fqErr = 'Type at least 3 letters of a username to find a player.';
+  }
+  if (my !== FS.fqn) return;
+  FS.cand = list; FS.fload = false; fsFindPaint();
+  await Promise.all(list.map(async x => { try { const n = await sb('users/' + x.u + '/name'); if (typeof n === 'string' && n) x.name = n; } catch (e) {} }));   // proper capital letters
+  if (my === FS.fqn) fsFindPaint();
+}
+async function fsAddU(u, n, el) {
+  if (el) el.disabled = true;
+  try { const m = await fsAdd(n); FS.sentTo = FS.sentTo || {}; FS.sentTo[u] = 1; toast(m); if (/now friends/.test(m)) { await fsLoad().catch(() => {}); FS.cand = (FS.cand || []).filter(x => x.u !== u); } fsFindPaint(); }
+  catch (e) { toast(fsMsg(e)); if (el) el.disabled = false; }
 }
 function fsProfile(t) {
   const u = t.u, f = FS.fr[u], name = (f && f.name) || t.n || 'Player', s = fsStat(u), rq = FS.rq[u];
@@ -867,7 +1032,7 @@ function fsProfile(t) {
 }
 function fsReqs() {
   const rq = Object.entries(FS.rq);
-  return fsHead('Friend requests') + `<div class="fs-b"><p class="fs-e">People who want to be your friend. Nobody is told if you decline, and you can block anyone who bothers you.</p>` + (rq.length ? rq.map(([u, o]) => `<div class="fs-r">${fsAv(o.name || 'Player', false, false, fsPhoto(u))}<span class="fs-i" data-a="prof" data-u="${esc(u)}" data-n="${esc(o.name || 'Player')}"><b>${esc(o.name || 'Player')}</b><span>wants to be friends</span></span><button class="fs-mini ok" data-a="acc" data-u="${esc(u)}" data-n="${esc(o.name || 'Player')}">Accept</button><button class="fs-mini" data-a="dec" data-u="${esc(u)}">Decline</button></div>`).join('') : '<p class="fs-e" style="text-align:center;padding:30px 0">No friend requests right now.</p>') + '</div>';
+  return fsHead('Friend requests') + `<div class="fs-b"><p class="fs-e">People who want to be your friend. Nobody is told if you decline, and you can block anyone who bothers you.</p>` + (rq.length ? rq.map(([u, o]) => `<div class="fs-r">${fsAv(o.name || 'Player', false, false, fsPhoto(u))}<span class="fs-i" data-a="prof" data-u="${esc(u)}" data-n="${esc(o.name || 'Player')}"><b>${esc(o.name || 'Player')}</b><span>wants to be friends</span></span><button class="fs-mini ok" data-a="acc" data-u="${esc(u)}" data-n="${esc(o.name || 'Player')}">Accept</button><button class="fs-mini" data-a="dec" data-u="${esc(u)}">Decline</button></div>`).join('') : '<p class="fs-e" style="text-align:center;padding:30px 0 6px">No friend requests right now.</p><div style="text-align:center"><button class="fs-lk" data-a="find">Find friends</button></div>') + '</div>';
 }
 function fsBlocked() {
   const b = Object.entries(FS.bl);
@@ -876,24 +1041,45 @@ function fsBlocked() {
 function fsChat(t) {
   const u = t.u, f = FS.fr[u], name = (f && f.name) || t.n || 'Player', s = fsStat(u);
   $('#fs').innerHTML = fsHead(name, `<button class="fs-ic" data-a="chmenu" data-u="${esc(u)}" data-n="${esc(name)}" aria-label="More">${FI.more}</button>`)
-   + `<div class="fs-nt">${esc(s.txt)} · Private chat. Be kind. You can report or block anyone.</div><div id="fsm"></div><div class="fs-in"><input class="fi" id="fsi" maxlength="500" placeholder="Message" autocomplete="off" enterkeyhint="send"><button class="fs-go" data-a="send" data-u="${esc(u)}">Send</button></div>`;
-  FS.sig = ''; fsPaint(u, true); fsPoll(u);
+   + `<div class="fs-nt">${esc(s.txt)} · Private chat. Be kind. You can report or block anyone.</div><div id="fsm"></div><div class="fs-in"><input class="fi" id="fsi" maxlength="500" placeholder="Message" autocomplete="off" enterkeyhint="send"><button class="fs-send off" data-a="send" data-u="${esc(u)}" aria-label="Send">${FI.send}</button></div>`;
+  FS.sig = ''; FS.typing = false; fsPaint(u, true); fsPoll(u); fsTyCheck(u);
+  clearInterval(FS.ct); FS.ct = setInterval(() => { const t = fsTop(); if (!FS.on || t.v !== 'chat' || t.u !== u) { clearInterval(FS.ct); FS.ct = 0; FS.typing = false; fsTyping(u, false); return; } if (document.hidden) return; fsPoll(u); fsTyCheck(u); }, 1500);
   $('#fsi').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); fsSendNow(u); } });
+  $('#fsi').addEventListener('input', e => { const b = $('#fs .fs-send'); if (b) b.classList.toggle('off', !e.target.value.trim()); fsTyping(u, !!e.target.value.trim()); });
+}
+// --- typing indicator: stored under its own database name (ngdChatTyping), separate from your other chat app ---
+const TB = FB.replace(/\/$/, '') + '/globalchat/ngdChatTyping', ftime = v => { try { return new Date(v).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); } catch (e) { return ''; } };
+async function tyReq(pk, method, body) {
+  try { const r = await fetch(TB + '/' + pk + '/' + U.uid + '.json?auth=' + await tok(), { method, headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined });
+    if (r.status === 401 || r.status === 403) FS.tyOff = 1; } catch (e) {} }
+function fsTyping(u, on) {   // tell the friend you are typing (stops by itself after 4 seconds)
+  if (!U || FS.tyOff || fsHide()) return; const pk = pairKey(U.uid, u); clearTimeout(FS.tyStop);
+  if (!on) { if (FS.tyOn) { FS.tyOn = 0; tyReq(pk, 'DELETE'); } return; }
+  FS.tyStop = setTimeout(() => fsTyping(u, false), 4000);
+  if (Date.now() - (FS.tyLast || 0) < 2500) return; FS.tyLast = Date.now(); FS.tyOn = 1; tyReq(pk, 'PUT', { ts: SV, n: U.name });
+}
+async function fsTyCheck(u) {   // is the friend typing right now?
+  if (FS.tyOff || !U) return;
+  try { const r = await fetch(TB + '/' + pairKey(U.uid, u) + '/' + u + '.json?auth=' + await tok(), { cache: 'no-store' });
+    if (r.status === 401 || r.status === 403) { FS.tyOff = 1; return; }
+    const v = r.ok ? await r.json() : null, on = !!v && typeof v.ts === 'number' && (Date.now() + FS.off - v.ts) < 7000;
+    if (on !== !!FS.typing) { FS.typing = on; if (fsTop().v === 'chat') { fsPaint(u); const nt = $('#fs .fs-nt'); if (nt) nt.textContent = on ? 'Typing\u2026' : fsStat(u).txt + ' \u00b7 Private chat. Be kind. You can report or block anyone.'; } } } catch (e) {}
 }
 function fsPaint(u, force) {
   const box = $('#fsm'); if (!box) return;
-  const sig = FS.msgs.map(m => m.k).join(',') + '|' + (localStorage.ngdFilter || '');
+  const sig = FS.msgs.map(m => m.k).join(',') + '|' + (localStorage.ngdFilter || '') + '|' + (FS.typing ? 1 : 0);
   if (sig === FS.sig && !force) return; FS.sig = sig;
   const near = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
-  box.innerHTML = FS.msgs.length ? FS.msgs.map(m => { const me = m.f === U.uid; return `<div class="fs-m${me ? '' : ' o'}">${esc(fsClean(m.t))}${me ? '' : `<small><button class="fl" data-a="repm" data-k="${esc(m.k)}" data-u="${esc(u)}">Report</button></small>`}</div>`; }).join('') : '<p class="fs-e" style="text-align:center">Say hello 👋</p>';
+  box.innerHTML = FS.msgs.length ? FS.msgs.map(m => { const me = m.f === U.uid; return `<div class="fs-m${me ? '' : ' o'}">${esc(fsClean(m.t))}<span class="tm">${m.ts ? ftime(m.ts) : ''}</span>${me ? '' : `<small><button class="fl" data-a="repm" data-k="${esc(m.k)}" data-u="${esc(u)}">Report</button></small>`}</div>`; }).join('') : '<p class="fs-e" style="text-align:center">Say hello</p>';
+  if (FS.typing) box.insertAdjacentHTML('beforeend', '<div class="fs-m o fs-ty" aria-label="Typing"><i></i><i></i><i></i></div>');
   if (near || force) box.scrollTop = box.scrollHeight;
 }
 async function fsPoll(u) {
   try { const m = await fsMsgs(u); if (fsTop().v !== 'chat' || fsTop().u !== u) return; FS.msgs = m; fsPaint(u); const last = m.length ? m[m.length - 1].ts : 0; if (last) localStorage[fsReadKey(u)] = last; } catch (e) {}
 }
 async function fsSendNow(u) {
-  const i = $('#fsi'); if (!i || !i.value.trim()) return; const v = i.value; i.value = '';
-  try { await fsSend(u, v); await fsPoll(u); } catch (e) { i.value = v; toast(fsMsg(e)); }
+  const i = $('#fsi'); if (!i || !i.value.trim()) return; const v = i.value; i.value = ''; i.dispatchEvent(new Event('input'));
+  try { await fsSend(u, v); await fsPoll(u); } catch (e) { i.value = v; i.dispatchEvent(new Event('input')); toast(fsMsg(e)); }
 }
 function fsFit() { const v = window.visualViewport, el = $('#fs'); if (!v || !FS.on) return; el.style.height = v.height + 'px'; el.style.top = v.offsetTop + 'px'; }
 if (window.visualViewport) { visualViewport.addEventListener('resize', fsFit); visualViewport.addEventListener('scroll', fsFit); }
@@ -902,9 +1088,9 @@ function fsOpen() {
   if (FS.on) return; FS.on = true; FS.stack = [{ v: 'list' }]; FS.err = ''; $('#fs').classList.add('on'); fsFit();
   pushLy('fs', fsShut); fsRender(); fsLoad().then(() => { if (fsTop().v === 'list') fsRender(); }).catch(e => { FS.err = fsMsg(e); if (fsTop().v === 'list') fsRender(); });
   FS.tmr = setInterval(() => { if (document.hidden) return; const t = fsTop(); FS.n++;
-    if (t.v === 'chat') fsPoll(t.u); else if (FS.n % 5 === 0) fsLoad().then(() => { if (fsTop().v !== 'chat') fsRender(); }).catch(() => {}); }, 3000);
+    if (t.v === 'chat') { /* chat has its own faster refresh */ } else if (FS.n % 5 === 0) fsLoad().then(() => { if (fsTop().v !== 'chat') fsRender(); }).catch(() => {}); }, 3000);
 }
-function fsShut() { FS.on = false; FS.stack = []; clearInterval(FS.tmr); const el = $('#fs'); el.classList.remove('on'); el.style.height = ''; el.style.top = ''; el.innerHTML = ''; fsBadge(); try { drawP(); } catch (e) {} }
+function fsShut() { FS.on = false; FS.stack = []; clearInterval(FS.tmr); clearInterval(FS.ct); FS.typing = false; const el = $('#fs'); el.classList.remove('on'); el.style.height = ''; el.style.top = ''; el.innerHTML = ''; fsBadge(); try { drawP(); } catch (e) {} }
 function fsGo(v, o) { FS.stack.push(Object.assign({ v }, o || {})); FS.msgs = []; fsRender(); pushLy('fsv', () => { FS.stack.pop(); FS.msgs = []; fsRender(); }); }
 function fsConfirm(title, text, label, fn, ok) {
   $('#fct').textContent = title; $('#fcx').textContent = text; const y = $('#fcy'); y.textContent = label; y.classList.toggle('ok', !!ok);
@@ -920,6 +1106,9 @@ async function fsAct(a, u, n, el) {
   try {
     if (a === 'back') dropLy();
     else if (a === 'add') { const b = $('#fsa'), i = $('#fsn'); b.disabled = true; FS.err = ''; $('#fse').textContent = ''; try { const m = await fsAdd(i.value); i.value = ''; toast(m); await fsLoad().catch(() => {}); fsRender(); } catch (e) { FS.err = fsMsg(e); $('#fse').textContent = FS.err; } b.disabled = false; }
+    else if (a === 'find') fsGo('find');
+    else if (a === 'addu') fsAddU(u, n, el);
+    else if (a === 'fqx') { const i = $('#fsq'); if (i) { i.value = ''; $('#fsqx').hidden = true; fsFindLoad(''); } }
     else if (a === 'prof') fsGo('profile', { u, n });
     else if (a === 'chat') fsGo('chat', { u, n });
     else if (a === 'acc') { await fsAccept(u, n); toast('You are now friends with ' + n); await fsLoad().catch(() => {}); fsRender(); }
@@ -939,10 +1128,11 @@ async function fsAct(a, u, n, el) {
     else if (a === 'rules') openPolicy('terms');
   } catch (e) { toast(fsMsg(e)); }
 }
+$('#fs').addEventListener('input', e => { if (e.target.id === 'fsq') { $('#fsqx').hidden = !e.target.value; clearTimeout(FS.ft); FS.ft = setTimeout(() => fsFindLoad(e.target.value), 250); } });
 $('#fs').addEventListener('click', e => { const b = e.target.closest('[data-a]'); if (b) fsAct(b.dataset.a, b.dataset.u, b.dataset.n, b); });
 $('#fcn').onclick = () => dropLy(); $('#fc').onclick = e => { if (e.target.id === 'fc') dropLy(); };
 $('#rpc').onclick = () => dropLy(); $('#rp').onclick = e => { if (e.target.id === 'rp') dropLy(); };
 $('#onl').addEventListener('click', e => { const b = e.target.closest('.onl-i'); if (b) { fsOpen(); if (FS.on) fsGo('profile', { u: b.dataset.u, n: b.dataset.n }); } });
 document.body.addEventListener('click', e => { if (e.target.closest('.fr-open')) { if (menuOn()) closeMenu(); setTimeout(fsOpen, 60); } });
-{ const _dp = drawP; drawP = function () { _dp.apply(this, arguments); if (U) { const p = $('#profile .pf'); if (p) { const b = document.createElement('button'); b.className = 'pf-fr fr-open'; b.innerHTML = FI.fr + 'Friends and chat<em id="fsbd" hidden></em>'; const st = p.querySelector('.pf-st'); st ? st.after(b) : p.appendChild(b); fsBadge(); } } }; }
+{ const _dp = drawP; drawP = function () { _dp.apply(this, arguments); if (U) { const p = $('#profile .pf'); if (p) { const b = document.createElement('button'); b.className = 'pf-fr fr-open'; b.innerHTML = FI.fr + '<span class="pf-fl">Friends and chat</span><em id="fsbd" hidden></em>'; const st = p.querySelector('.pf-st'); st ? st.after(b) : p.appendChild(b); fsBadge(); } } }; }
 </script></body></html>
