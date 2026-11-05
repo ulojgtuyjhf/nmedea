@@ -1,8 +1,17 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "dev.pages.nmedea.ngd",
-        "sha256_cert_fingerprints": ["BE:E9:48:9B:F5:21:13:BC:78:80:4E:8D:0B:55:3F:85:2A:C7:2E:2A:9F:23:E1:1A:92:8D:36:4D:FD:CD:2C:BE"]
-      }
-    }]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "dev.pages.nmedea.ngd",
+      "sha256_cert_fingerprints": [
+        "BE:E9:48:9B:F5:21:13:BC:78:80:4E:8D:0B:55:3F:85:2A:C7:2E:2A:9F:23:E1:1A:92:8D:36:4D:FD:CD:2C:BE",
+        "E6:0D:93:BF:6A:EC:3C:1C:00:F2:06:F8:A7:D6:3C:58:DE:90:A0:7B:62:BC:19:B8:DF:68:E2:E1:84:B8:0F:60",
+        "80:43:20:F4:0A:EE:E7:99:07:26:DC:48:89:EC:9F:7B:A6:0B:E1:B2:6D:A5:60:ED:3F:49:B9:44:33:8E:C4:A6",
+        "2E:5A:32:5E:AE:C0:EB:7B:F8:54:03:F0:8B:0E:B0:4D:0C:A6:2E:E2:78:62:EE:DB:D1:7D:D5:D0:06:45:20:8F"
+      ]
+    }
+  }
+]
