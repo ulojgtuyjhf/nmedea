@@ -511,12 +511,66 @@ button.fs-r::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;
 @media (prefers-reduced-motion:reduce){.bg-grid,.bg-sh span,.bg-st{animation:none}}
 .ax{position:relative;z-index:1}
 :root[data-theme=light] #au .er:not(:empty){color:#ff8a93}
+
+/* sticky category bar */
+:root{--hh:52px}
+.chips.cats{position:sticky;top:var(--hh);z-index:3;background:var(--bg);padding-top:8px;padding-bottom:8px;margin-top:-6px}
+/* server problem notice */
+#svr{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 10px);z-index:8;display:none;max-width:520px;margin:0 auto;padding:12px 14px;border-radius:16px;background:#2b1620;border:1px solid #ff6b81;color:#ffd6dc;box-shadow:0 10px 30px rgba(0,0,0,.45);font-size:13.5px;line-height:1.4;gap:10px;align-items:flex-start}
+#svr.on{display:flex}
+#svr .t{flex:1}#svr b{display:block;color:#fff;font-size:14.5px;margin-bottom:2px}
+#svr button{flex:none;border:0;border-radius:10px;padding:7px 12px;font-weight:700;background:#ff6b81;color:#2b0a12}
+#svr .x2{background:none;color:#ffd6dc;padding:4px 6px;font-size:18px;line-height:1}
+:root[data-theme=light] #svr{background:#fff0f2;color:#7a1c2c}:root[data-theme=light] #svr b{color:#5c0f1d}:root[data-theme=light] #svr .x2{color:#7a1c2c}
+/* icons */
+.ic{display:inline-grid;place-items:center}.ic svg,.ics svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* game stats (players + online) */
+.gsw{margin:10px 0 2px}.gs{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mu);align-items:center}.gs span{display:inline-flex;align-items:center;gap:6px}.gs b{color:var(--tx);font-weight:700}
+.gs i{width:8px;height:8px;border-radius:50%;background:#2fd06b;box-shadow:0 0 0 3px rgba(47,208,107,.2)}.gs i.off{background:#6b7088;box-shadow:none}
+.gs-a{display:flex;align-items:center;margin-top:10px;min-height:0}.gs-a:empty{display:none}.gs-c{width:30px;height:30px;border-radius:50%;overflow:hidden;margin-left:-8px;border:2px solid var(--s);background:var(--s2);flex:none}.gs-c:first-child{margin-left:0}.gs-c svg{width:100%;height:100%;display:block}.gs-a em{font-style:normal;font-size:12px;color:var(--mu);margin-left:8px}
+/* comments */
+.cm-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 12px}.cm-n{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--mu)}.cm-n b{color:var(--tx)}
+.cm-sort{display:flex;background:var(--s2);border-radius:99px;padding:3px}.cm-sort button{border:0;background:none;color:var(--mu);font-size:12px;padding:5px 11px;border-radius:99px;font-weight:600}.cm-sort button.on{background:var(--s);color:var(--tx);box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.cm-ph{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}.cm-av{flex:none;width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--s2);display:block}.cm-av svg{width:100%;height:100%;display:block}
+.cm-ta{flex:1;min-width:0;background:var(--s2);border:1px solid var(--bd);border-radius:14px;padding:8px 10px}.cm-ta:focus-within{border-color:var(--ac)}
+.cm-ta textarea{width:100%;background:none;border:0;outline:0;resize:none;color:var(--tx);font:inherit;font-size:14px;line-height:1.4;display:block}
+.cm-bar{display:flex;align-items:center;justify-content:space-between;margin-top:4px}.cm-cnt{font-size:11.5px;color:var(--mu)}
+.cm-post{border:0;border-radius:99px;background:var(--gr);color:#fff;font-weight:700;font-size:13px;padding:7px 18px}.cm-post:disabled{opacity:.4}
+.cm-lg{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--s2);border:1px solid var(--bd);border-radius:14px;padding:11px 12px;margin-bottom:14px;font-size:13.5px;color:var(--mu)}.cm-lg button{border:0;border-radius:99px;background:var(--gr);color:#fff;font-weight:700;font-size:13px;padding:7px 16px;flex:none}
+.cm-i{display:flex;gap:10px;padding:13px 0;border-top:1px solid var(--bd)}.cm-b{min-width:0;flex:1}
+.cm-h{display:flex;gap:8px;align-items:baseline;font-size:13.5px}.cm-h b{font-weight:600}.cm-h em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:1px 7px;border-radius:99px;background:rgba(33,114,255,.18);color:var(--hl)}.cm-h span{color:var(--mu);font-size:12px}
+.cm-t{margin:3px 0 0;white-space:pre-wrap;word-break:break-word;font-size:14px;line-height:1.45;color:var(--tp)}.cm-t.cl{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.cm-rm{border:0;background:none;color:var(--hl);font-size:12.5px;font-weight:600;padding:2px 0}
+.cm-a{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.cm-hp{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);background:var(--s2);color:var(--mu);border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:600}.cm-hp svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cm-hp b{color:var(--tx)}.cm-hp.on{background:rgba(33,114,255,.16);border-color:rgba(33,114,255,.55);color:var(--hl)}.cm-hp.on svg{fill:currentColor}.cm-hp.on b{color:var(--hl)}
+.cm-who{display:inline-flex;align-items:center;gap:7px;border:0;background:none;color:var(--mu);font-size:12.5px;padding:0}.cm-who .st{display:flex}.cm-who .st span{width:20px;height:20px;border-radius:50%;overflow:hidden;margin-left:-6px;border:2px solid var(--s);background:var(--s2)}.cm-who .st span:first-child{margin-left:0}.cm-who svg{width:100%;height:100%;display:block}
+.cm-d{margin-left:auto;border:0;background:none;color:var(--mu);padding:4px;display:grid;place-items:center}.cm-d svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cm-wl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.cm-wl[hidden]{display:none}.cm-chip{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--bd);border-radius:99px;padding:3px 10px 3px 3px;font-size:12.5px}.cm-chip i{width:22px;height:22px;border-radius:50%;overflow:hidden;display:block}.cm-chip svg{width:100%;height:100%;display:block}
+/* character editor */
+.ch-ed{display:flex;gap:16px;align-items:center;background:var(--s);border:1px solid var(--bd);border-radius:18px;padding:14px;flex-wrap:wrap;justify-content:center}
+.ch-pv{width:132px;height:132px;flex:none}.ch-pv svg{width:100%;height:100%;display:block;overflow:visible}
+.ch-ct{flex:1;min-width:200px}.ch-l{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin:8px 0 6px}.ch-l:first-child{margin-top:0}
+.ch-row{display:flex;gap:8px;flex-wrap:wrap}
+.ch-sw{width:28px;height:28px;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);padding:0}.ch-sw.on{border-color:var(--tx);box-shadow:0 0 0 2px var(--bg),inset 0 0 0 1px rgba(0,0,0,.18)}
+.ch-op{width:44px;height:44px;border-radius:12px;border:2px solid var(--bd);background:var(--s2);padding:3px;overflow:hidden}.ch-op svg{width:100%;height:100%;display:block;border-radius:8px}.ch-op.on{border-color:var(--ac)}
+.ch-rnd{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--bd)!important}.ch-rnd svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+/* join-server lobby (shown after the game loads) */
+#glb{position:absolute;inset:0;z-index:2;display:none;align-items:center;justify-content:center;gap:clamp(18px,5vmin,48px);flex-wrap:wrap;padding:calc(env(safe-area-inset-top) + 40px) 22px 22px;overflow:auto;background:radial-gradient(700px 420px at 80% 40%,rgba(109,74,255,.28),transparent 62%),radial-gradient(600px 400px at 10% 0%,rgba(33,114,255,.22),transparent 60%),var(--bg)}
+#glb.on{display:flex}
+.glb-l{flex:1 1 240px;max-width:420px;display:flex;flex-direction:column;gap:14px}.glb-g{display:flex;gap:14px;align-items:center}.glb-cv{width:72px;height:72px;border-radius:18px;overflow:hidden;flex:none}.glb-cv .cv{aspect-ratio:1;border-radius:0;font-size:26px;height:100%}.glb-g h2{margin:0 0 2px;font-size:24px;line-height:1.15}
+.glb-r{flex:0 1 300px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.glb-ch{width:min(52vmin,250px);aspect-ratio:1}.glb-ch svg{width:100%;height:100%;display:block;overflow:visible;animation:glbf 3.2s ease-in-out infinite}@keyframes glbf{50%{transform:translateY(-6px)}}
+.glb-n{font-size:20px;letter-spacing:.02em}
+.glb-j{width:100%;max-width:260px;border:0;border-radius:16px;padding:15px;font-weight:700;font-size:17px;letter-spacing:.04em;color:#fff;background:linear-gradient(135deg,#1fb86a,#0f7a3e);box-shadow:0 8px 24px rgba(20,160,90,.4)}
+.glb-b{border:0;background:none;color:var(--mu);font-size:13.5px;padding:6px}
 </style><script>try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||4)<=2)document.documentElement.classList.add('lite')}catch(e){}try{document.documentElement.dataset.theme=localStorage.ngdTheme==='light'?'light':'dark'}catch(e){}</script></head><body>
 <header class="hdr"><img src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><b>NGD</b><button id="gear" aria-label="Settings" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header>
 <div id="onl" hidden aria-label="Friends online"></div>
 <div id="home" class="tab on"></div><div id="search" class="tab"></div><div id="profile" class="tab"></div>
 <nav><button data-t="home" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Games</button><button data-t="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search</button><button data-t="profile"><span id="pnav"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 3.9 3.1l.9 4A2.6 2.6 0 0 1 20 18.3a2.7 2.7 0 0 1-2-1l-1.2-1.6H7.2L6 17.3a2.7 2.7 0 0 1-2 1A2.6 2.6 0 0 1 1.2 15.1l.9-4A4 4 0 0 1 6 8z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/></svg></span>Profile<i class="bd" id="nbd" hidden></i></button></nav>
 <div id="mbk"></div><div id="mnu" role="menu"></div>
+<div id="svr" role="alert"><div class="t"><b>Something went wrong on our end</b>Our team is working on a fix and it should be back very soon. We keep trying automatically.</div><button id="svt">Try again</button><button class="x2" id="svx" aria-label="Dismiss">&times;</button></div>
 <div id="sh"><div id="sc"></div></div>
 <div id="au"></div>
 <div id="fs" role="dialog" aria-label="Friends and chat"></div>
@@ -528,7 +582,7 @@ button.fs-r::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;
 <div id="lc"><div class="cb"><h2>Log out?</h2><p>Are you sure you want to log out?</p><div class="r"><button id="lcn">Cancel</button><button id="lcy">Log out</button></div></div></div>
 <div id="pl"><iframe id="fr" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-forms" allow="fullscreen; autoplay; gamepad" referrerpolicy="no-referrer"></iframe>
 <div id="ld"><svg viewBox="0 0 200 140"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00E676"/><stop offset="1" stop-color="#0033A0"/></linearGradient></defs><g transform="translate(-8,2)"><path class="h" d="M 46 64 C 28 42, 48 10, 88 10 C 112 10, 125 18, 131 27 C 133 30, 134 32, 137 34 C 158 47, 178 71, 194 97 C 172 73, 144 47, 118 41 C 92 35, 82 72, 88 112 C 68 108, 52 90, 46 64 Z"/></g></svg><span id="lt" class="mu">Loading…</span></div>
-<div id="bar"></div><button id="x" aria-label="Exit game"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<div id="glb"></div><div id="bar"></div><button id="x" aria-label="Exit game"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
 <div id="cf"><div class="cb"><h2>Exit game?</h2><p>You will leave this game and go back to NGD. Progress that isn’t saved may be lost.</p><div class="r"><button id="cs">Stay</button><button id="ce">Exit</button></div></div></div></div>
 <script>
 const FB = 'https://globalchat-2d669-default-rtdb.firebaseio.com', FBKEY = 'AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ';   // your chat's Firebase (the games list is saved under globalchat/ngdGames)
@@ -560,7 +614,7 @@ function openSheet() { const c = $('#sc'); c.style.transform = ''; c.style.trans
 function closeSheet() { if (topLy() === 'sheet') dropLy(); else $('#sh').classList.remove('on'); }
 function openModal(sel) { $(sel).classList.add('on'); pushLy('modal', () => $(sel).classList.remove('on')); }
 function closeGameLayer() { if (topLy() === 'game') { LY.pop(); histBack(); } }
-function setFull(f) { const c = $('#sc'); c.classList.toggle('full', f); const m = $('#mr'); if (m) m.textContent = f ? 'Less' : 'More details'; c.scrollTop = 0; }
+function setFull(f) { const c = $('#sc'); c.classList.toggle('full', f); const m = $('#mr'); if (m) m.textContent = f ? 'Less' : 'More details'; c.scrollTop = 0; if (f && cmSheet && $('#cm')) cmLoad(cmSheet); }
 function goTab(t) { document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.id === t)); document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x.dataset.t === t)); scrollTo(0, 0); document.body.classList.toggle('ns', t === 'search'); if (t === 'search') drawS(); if (t === 'profile') { drawP(); setTimeout(markSeen, 400); } }
 function navTo(t) { if (t === 'home') { if (topLy() === 'tab') dropLy(); else goTab('home'); } else { goTab(t); if (!LY.some(l => l.name === 'tab')) pushLy('tab', () => goTab('home')); } }
 let G = [], cat = 'All';
@@ -572,7 +626,7 @@ const SOCIAL = [];   // add your links like: { n: 'Instagram', u: 'https://insta
 const mcard = x => `<button class="card" data-id="${esc(x.id)}">${cv(x)}<div class="ci"><h3>${esc(x.title)}</h3>${dv(x)}</div></button>`;
 const CTRL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 3.9 3.1l.9 4A2.6 2.6 0 0 1 20 18.3a2.7 2.7 0 0 1-2-1l-1.2-1.6H7.2L6 17.3a2.7 2.7 0 0 1-2 1A2.6 2.6 0 0 1 1.2 15.1l.9-4A4 4 0 0 1 6 8z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/></svg>';
 // NGD player avatar: every NGD account gets its own colourful gaming badge (emblem + colours come from the username)
-const NGD_USE_CHAT_PHOTO = true;   // false = always show the NGD avatar; set true to show the nmedea chat photo when an account has one
+const NGD_USE_CHAT_PHOTO = false;   // false = always show the NGD avatar; set true to show the nmedea chat photo when an account has one
 const AVP = [['#ff5f6d','#ffc371'],['#2172ff','#6d4aff'],['#00c9a7','#2172ff'],['#ff4d9d','#7c4dff'],['#f7b733','#fc4a1a'],['#11998e','#38ef7d'],['#ee0979','#ff6a00'],['#4facfe','#00c6ff']];
 const AVE = [
  '<path d="M17 24h30a9 9 0 0 1 8.8 7.2l2 10A6.2 6.2 0 0 1 46 44.5l-3-4H21l-3 4A6.2 6.2 0 0 1 6.2 41.2l2-10A9 9 0 0 1 17 24z"/><path d="M20 29v8M16 33h8" stroke="#141735" stroke-opacity=".85" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="43" cy="31" r="2.2" fill="#141735" fill-opacity=".85"/><circle cx="47.5" cy="35.5" r="2.2" fill="#141735" fill-opacity=".85"/>',
@@ -582,12 +636,30 @@ const AVE = [
  '<path d="M14 54V30a18 18 0 0 1 36 0v24l-6-4.500-6 4.500-6-4.500-6 4.500-6-4.500z"/><circle cx="25.500" cy="30" r="3.400" fill="#141735" fill-opacity=".85"/><circle cx="38.500" cy="30" r="3.400" fill="#141735" fill-opacity=".85"/>',
  '<path d="M19 10h26v16a13 13 0 0 1-26 0z"/><path d="M19 15h-8v4a9 9 0 0 0 9 9M45 15h8v4a9 9 0 0 1-9 9" fill="none" stroke="#fff" stroke-width="3.200" stroke-linecap="round"/><rect x="28.500" y="38" width="7" height="9"/><rect x="20" y="48" width="24" height="6" rx="2"/>'];
 let _av = 0;
-function avatar(name) { const n = String(name || ''), h = n ? [...n].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) : 11, [a, b] = AVP[h % AVP.length], em = n === 'Guest' ? AVE[0] : AVE[Math.floor(h / 8) % AVE.length], id = 'av' + (++_av);
-  return `<svg class="ava" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><filter id="${id}f" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#000" flood-opacity=".3"/></filter><radialGradient id="${id}s" cx=".3" cy=".2" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>`
-   + `<rect width="64" height="64" fill="url(#${id})"/><rect width="64" height="64" fill="url(#${id}s)"/>`
-   + `<g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="10" r="3.500"/><path d="M55 7l4 7h-8z"/><rect x="52" y="48" width="7" height="7" rx="1.200"/><path d="M5 52l6 6M11 52l-6 6"/></g>`
-   + `<g transform="translate(9 9) scale(.72)" fill="#fff" filter="url(#${id}f)">${em}</g>`
-   + `</svg>`; }
+const CPAL = ['#ff5f6d', '#ff9f43', '#feca57', '#2ed573', '#1dd1a1', '#48dbfb', '#2172ff', '#6d4aff', '#c56cf0', '#ff6bcb', '#f2f4f8', '#8395a7'];
+const chHash = t => [...String(t)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+const chRand = t => { const h = chHash(t || 'guest'); return { c: h % 12, e: (h >> 4) % 4, m: (h >> 7) % 4 }; };
+const chParse = code => { const p = String(code || '').split('.').map(Number); return p.length === 3 && p.every(Number.isInteger) ? { c: Math.abs(p[0]) % 12, e: Math.abs(p[1]) % 4, m: Math.abs(p[2]) % 4 } : null; };
+const chCode = o => o.c + '.' + o.e + '.' + o.m;
+const myCode = () => { let v = null; try { v = chParse(localStorage.ngdChar); } catch (e) {} return chCode(v || chRand(U ? U.uid : 'guest')); };
+const CHR = {};   // characters of other players, filled in from their online status
+const chrNote = h => { if (h && h.n && h.c && chParse(h.c)) CHR[String(h.n).toLowerCase()] = h.c; };
+const EYES = ['<ellipse cx="24.500" cy="30" rx="4.200" ry="5" fill="#fff"/><ellipse cx="39.500" cy="30" rx="4.200" ry="5" fill="#fff"/><circle cx="25.500" cy="31" r="2.400" fill="#141735"/><circle cx="40.500" cy="31" r="2.400" fill="#141735"/>',
+  '<path d="M20 31q4.500-6 9 0M35 31q4.500-6 9 0" stroke="#141735" stroke-width="2.600" fill="none" stroke-linecap="round"/>',
+  '<path d="M20 30h9a4.500 4.500 0 0 1-9 0zM35 30h9a4.500 4.500 0 0 1-9 0z" fill="#fff"/><circle cx="24.500" cy="32" r="1.800" fill="#141735"/><circle cx="39.500" cy="32" r="1.800" fill="#141735"/><path d="M19.500 30h10M34.500 30h10" stroke="#141735" stroke-width="2.200" stroke-linecap="round"/>',
+  '<circle cx="24.500" cy="30.500" r="3.200" fill="#141735"/><circle cx="39.500" cy="30.500" r="3.200" fill="#141735"/><circle cx="25.600" cy="29.300" r=".9" fill="#fff"/><circle cx="40.600" cy="29.300" r=".9" fill="#fff"/>'];
+const MOUTH = ['<path d="M26 41q6 6 12 0" stroke="#141735" stroke-width="2.600" fill="none" stroke-linecap="round"/>',
+  '<path d="M25 40h14a7 7 0 0 1-14 0z" fill="#141735"/><path d="M29 46.500a3 3 0 0 1 6 0z" fill="#ff6b81"/>',
+  '<path d="M27 43h10" stroke="#141735" stroke-width="2.600" stroke-linecap="round"/>',
+  '<ellipse cx="32" cy="43" rx="3" ry="3.600" fill="#141735"/>'];
+function charSvg(code, big) {
+  const o = chParse(code) || chRand('guest'), col = CPAL[o.c], id = 'ch' + (++_av);
+  return `<svg class="ava" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="${id}h" cx=".32" cy=".24" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="${id}s" cx=".5" cy="1.05" r=".75"><stop offset="0" stop-color="#000" stop-opacity=".3"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>`
+    + (big ? '<ellipse cx="32" cy="57.500" rx="15" ry="3" fill="#000" opacity=".25"/>' : `<rect width="64" height="64" fill="#191b2b"/><circle cx="32" cy="32" r="30" fill="${col}" opacity=".18"/>`)
+    + `<circle cx="32" cy="34" r="21" fill="${col}"/><circle cx="32" cy="34" r="21" fill="url(#${id}s)"/><circle cx="32" cy="34" r="21" fill="url(#${id}h)"/><circle cx="32" cy="34" r="21" fill="none" stroke="#000" stroke-opacity=".16" stroke-width="1.200"/>${EYES[o.e]}${MOUTH[o.m]}</svg>`;
+}
+const chUri = code => 'data:image/svg+xml,' + encodeURIComponent(charSvg(code, false).replace(' class="ava"', ' xmlns="http://www.w3.org/2000/svg" width="128" height="128"'));
+function avatar(name) { const n = String(name || ''); if (U && n === U.name) return charSvg(myCode()); return charSvg(CHR[n.toLowerCase()] || chCode(chRand(n || 'guest'))); }
 const avName = () => U ? U.name : 'Guest';
 const photo = () => NGD_USE_CHAT_PHOTO && U && U.photo ? `<img src="${esc(U.photo)}" alt="" onerror="this.remove()">` : '';
 const pic = () => avatar(avName()) + photo();
@@ -633,7 +705,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape' && menuOn()) closeMenu
 function drawP() { const st = stats(), pl = G.filter(g => st[g.id]).map(g => ({ g, e: st[g.id] })),
   secs = pl.reduce((a, o) => a + (o.e.t || 0), 0), ses = pl.reduce((a, o) => a + (o.e.n || 0), 0), rcn = [...pl].sort((a, b) => (b.e.l || 0) - (a.e.l || 0)).slice(0, 8);
   const row = o => `<button class="card" data-id="${esc(o.g.id)}"><span class="lt">${cv(o.g)}</span><span class="tx"><span class="t">${esc(o.g.title)}</span><span class="d">${dur(o.e.t || 0)} played · ${o.e.n || 0} session${o.e.n === 1 ? '' : 's'}</span></span><span class="gp">Play</span></button>`;
-  $('#profile').innerHTML = `<div class="pf"><div class="pf-h"><div class="pf-av">${pic()}</div><div><h1>${esc(U ? U.name : 'Guest')}</h1><p>${U ? 'nmedea account' : 'Not signed in'}</p></div></div><div class="pf-st"><div><b>${pl.length}</b><span>Games played</span></div><div><b>${ses}</b><span>Sessions</span></div><div><b>${dur(secs)}</b><span>Play time</span></div></div>`
+  $('#profile').innerHTML = `<div class="pf"><div class="pf-h"><div class="pf-av">${pic()}</div><div><h1>${esc(U ? U.name : 'Guest')}</h1><p>${U ? 'nmedea account' : 'Not signed in'}</p></div></div>${U ? chEditor() : ''}<div class="pf-st"><div><b>${pl.length}</b><span>Games played</span></div><div><b>${ses}</b><span>Sessions</span></div><div><b>${dur(secs)}</b><span>Play time</span></div></div>`
    + (rcn.length ? `<div class="pf-t">Recently played</div><div class="list flat">${rcn.map(row).join('')}</div>` : '<p class="pf-e">Games you play will show up here.</p>')
    + (U ? '' : '<div class="pf-t">Account</div><p class="pf-e" style="margin:0 0 12px">Log in or create an account to save your progress and play with friends.</p><button class="pl" id="lb">Log in or create account</button>') + '</div>';
   if (!U) $('#lb').onclick = () => showAuth('in'); }
@@ -727,20 +799,152 @@ function social() { const c = $('#sc'); c.classList.remove('full', 'pg');
   openSheet(); }
 function draw() {
   const n = [...G].sort((a, b) => b.v - a.v), cs = ['All', ...new Set(G.map(x => x.cat).filter(Boolean))], m = n.filter(x => cat === 'All' || x.cat === cat), st = stats(), cont = G.filter(g => st[g.id]).sort((a, b) => (st[b.id].l || 0) - (st[a.id].l || 0)).slice(0, 6);
-  $('#home').innerHTML = `<div style="height:6px"></div><div class="chips">${cs.map(c => `<button class="chip${c === cat ? ' on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>` + (n.length ? (cat === 'All' ? (cont.length ? `<div class="sec-t">Continue playing</div><div class="row">${cont.map(mcard).join('')}</div>` : '') + `<div class="sec-t">New</div><div class="row">${n.slice(0, 6).map(mcard).join('')}</div><div class="sec-t">All games</div>` : `<div class="sec-t">${esc(cat)}</div>`) + (m.length ? `<div class="list">${m.map(card).join('')}</div>` : '<p class="mu pad">Nothing here yet.</p>') : '<p class="mu pad">Nothing published yet – check back soon.</p>');
+  $('#home').innerHTML = `<div style="height:6px"></div><div class="chips cats">${cs.map(c => `<button class="chip${c === cat ? ' on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>` + (n.length ? (cat === 'All' ? (cont.length ? `<div class="sec-t">Continue playing</div><div class="row">${cont.map(mcard).join('')}</div>` : '') + `<div class="sec-t">New</div><div class="row">${n.slice(0, 6).map(mcard).join('')}</div><div class="sec-t">All games</div>` : `<div class="sec-t">${esc(cat)}</div>`) + (m.length ? `<div class="list">${m.map(card).join('')}</div>` : '<p class="mu pad">Nothing here yet.</p>') : '<p class="mu pad">Nothing published yet – check back soon.</p>');
   if (localStorage.ngdSeen == null && G.length) { try { localStorage.ngdSeen = Math.max(0, ...G.map(x => x.v || 0)); } catch (e) {} }
-  drawN(); if ($('#search').classList.contains('on')) drawS(); pvFill();
+  drawN(); if ($('#search').classList.contains('on')) drawS(); pvFill(); setHH();
 }
 async function load() {
   let saved = []; try { saved = JSON.parse(localStorage.ngdCache || '[]'); } catch (e) {}
   if (saved.length) { G = saved; draw(); } else $('#home').innerHTML = '<p class="mu pad">Loading games…</p>';
   let why = '';
   try { const r = await fb('.json', { cache: 'no-store' });
-    if (r.ok) { const o = await r.json(); G = o ? Object.values(o) : []; try { localStorage.ngdCache = JSON.stringify(G); } catch (e) {} draw(); return; }
+    if (r.ok) { const o = await r.json(); G = o ? Object.values(o) : []; try { localStorage.ngdCache = JSON.stringify(G); } catch (e) {} draw(); svUp(); return; }
     why = 'Firebase said HTTP ' + r.status + (r.status === 401 || r.status === 403 ? ' (database rules block reading ngdGames)' : r.status === 404 ? ' (database URL is wrong)' : '');
   } catch (e) { why = 'Firebase blocked or unreachable: ' + (e.message || e); }
+  svDown(why);
   if (!saved.length) $('#home').innerHTML = '<div class="pad"><p class="mu">Couldn’t reach the server.</p><p class="mu" style="font-size:12px;margin-top:6px">Reason: ' + esc(why) + '</p><button class="pl" id="rt" style="max-width:220px;margin-top:14px">Try again</button></div>';
 }
+// ---- server problem notice: shows when the database can't be reached, hides itself when it comes back
+let svT = 0, svHid = false;
+function svDown(why) { try { console.warn('NGD server problem:', why || ''); } catch (e) {} if (!$('#svr').classList.contains('on') && !svHid) $('#svr').classList.add('on'); if (!svT) svT = setInterval(() => { load(); if (cmSheet && $('#cm')) cmLoad(cmSheet, true); }, 20000); }
+function svUp() { $('#svr').classList.remove('on'); svHid = false; if (svT) { clearInterval(svT); svT = 0; } }
+$('#svx').onclick = () => { svHid = true; $('#svr').classList.remove('on'); };
+$('#svt').onclick = () => { svHid = false; load(); if (cmSheet && $('#cm')) cmLoad(cmSheet, true); };
+// ---- keeps the sticky category bar right under the header
+function setHH() { const h = document.querySelector('.hdr'); if (h && h.offsetHeight) document.documentElement.style.setProperty('--hh', h.offsetHeight + 'px'); }
+try { new ResizeObserver(setHH).observe(document.querySelector('.hdr')); } catch (e) {} addEventListener('resize', setHH);
+// ---- icons (no emoji anywhere)
+const IC = { users: '<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.900M16 3.100a4 4 0 0 1 0 7.800"/></svg>',
+  up: '<svg viewBox="0 0 24 24"><path d="M7 10v11H3V10zM7 10l4-8a3 3 0 0 1 3 3v4h5.500a2 2 0 0 1 2 2.300l-1.300 8a2 2 0 0 1-2 1.700H7"/></svg>',
+  trash: '<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/></svg>',
+  shuffle: '<svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>',
+  chat: '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.600 7.100L3 21l1.900-5.400A8 8 0 1 1 21 12z"/></svg>' };
+// ---- per-game stats: players who played + who is online. Same database, own bucket: globalchat/ngdStats
+const GS = FB.replace(/\/$/, '') + '/globalchat/ngdStats';
+let gsJ = null, gsT = 0, gsOff = 0, lbState = 0, curX = null;
+async function gsReq(p, method, body, qs) {
+  const r = await fetch(GS + '/' + p + '.json?auth=' + await tok() + (qs ? '&' + qs : ''), { method: method || 'GET', headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined, body: body !== undefined ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+  return r.json();
+}
+async function gsCounts(id) {
+  const [pl, on] = await Promise.all([gsReq('players/' + ckey(id), 'GET', undefined, 'shallow=true'), gsReq('online/' + ckey(id))]), now = Date.now() + gsOff;
+  return { players: Object.keys(pl || {}).length, online: Object.values(on || {}).filter(v => v && v.ts && now - v.ts < 60000) };
+}
+const nf = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1).replace('.0', '') + 'K' : String(n);
+const gsLine = d => `<span class="ics">${IC.users}<b>${nf(d.players)}</b> ${d.players === 1 ? 'player' : 'players'}</span><span><i class="${d.online.length ? '' : 'off'}"></i><b>${d.online.length}</b> online now</span>`;
+const gsAv = d => d.online.length ? d.online.slice(0, 8).map(o => `<span class="gs-c" title="${esc(o.n)}">${charSvg(o.c)}</span>`).join('') + (d.online.length > 8 ? `<em>+${d.online.length - 8}</em>` : '') : '';
+async function gsLoad(id) {
+  try { const d = await gsCounts(id); const el = $('#gs'); if (!el || cmSheet !== id) return; el.innerHTML = `<div class="gs">${gsLine(d)}</div><div class="gs-a">${gsAv(d)}</div>`; svUp(); }
+  catch (e) { svDown('stats ' + (e.status || e.message)); }
+}
+async function gsBeat() {
+  if (!gsJ || !U || localStorage.ngdInvisible === '1') return;
+  try { const r = await gsReq('online/' + ckey(gsJ.id) + '/' + U.uid, 'PUT', { n: U.name, c: myCode(), ts: { '.sv': 'timestamp' } }); if (r && r.ts) gsOff = r.ts - Date.now(); } catch (e) {}
+}
+function gsJoin(x) { if (!U) return; gsJ = x; gsReq('players/' + ckey(x.id) + '/' + U.uid, 'PUT', { n: U.name, ts: { '.sv': 'timestamp' } }).catch(() => {}); gsBeat(); clearInterval(gsT); gsT = setInterval(gsBeat, 20000); }
+function gsLeave() { clearInterval(gsT); gsT = 0; if (gsJ && U) { try { fetch(GS + '/online/' + ckey(gsJ.id) + '/' + U.uid + '.json?auth=' + U.it, { method: 'DELETE', keepalive: true }).catch(() => {}); } catch (e) {} } gsJ = null; }
+addEventListener('pagehide', gsLeave);
+// ---- lobby: loading finishes, then your character + "Join server"
+function lobbyShow(x) {
+  if (!x) return; const L = $('#glb');
+  L.innerHTML = `<div class="glb-l"><div class="glb-g"><div class="glb-cv">${cv(x)}</div><div><h2>${esc(x.title)}</h2>${dv(x)}</div></div><div class="gs" id="glbs"></div><div class="gs-a" id="glba"></div></div><div class="glb-r"><div class="glb-ch">${charSvg(myCode(), true)}</div><b class="glb-n">${esc(avName())}</b><button class="glb-j" id="glbj">Join server</button><button class="glb-b" id="glbb">Back to menu</button></div>`;
+  L.classList.add('on');
+  $('#glbj').onclick = () => { lbState = 2; L.classList.remove('on'); gsJoin(x); };
+  $('#glbb').onclick = closeGame;
+  gsCounts(x.id).then(d => { if (!L.classList.contains('on')) return; $('#glbs').innerHTML = gsLine(d); $('#glba').innerHTML = gsAv(d); }).catch(() => {});
+}
+// ---- character editor (profile)
+function chEditor() {
+  const m = chParse(myCode());
+  return `<div class="pf-t">Your character</div><div class="ch-ed"><div class="ch-pv">${charSvg(chCode(m), true)}</div><div class="ch-ct"><div class="ch-l">Colour</div><div class="ch-row">${CPAL.map((c, i) => `<button class="ch-sw${i === m.c ? ' on' : ''}" data-i="${i}" style="background:${c}" aria-label="Colour ${i + 1}"></button>`).join('')}</div>`
+    + `<div class="ch-l">Eyes</div><div class="ch-row">${[0, 1, 2, 3].map(i => `<button class="ch-ey ch-op${i === m.e ? ' on' : ''}" data-i="${i}" aria-label="Eyes ${i + 1}">${charSvg(chCode({ c: m.c, e: i, m: m.m }))}</button>`).join('')}</div>`
+    + `<div class="ch-l">Mouth</div><div class="ch-row">${[0, 1, 2, 3].map(i => `<button class="ch-mo ch-op${i === m.m ? ' on' : ''}" data-i="${i}" aria-label="Mouth ${i + 1}">${charSvg(chCode({ c: m.c, e: m.e, m: i }))}</button>`).join('')}</div>`
+    + `<button class="pl ch-rnd" id="chr">${IC.shuffle}Randomise</button></div></div>`;
+}
+function setChar(code) { try { localStorage.ngdChar = code; } catch (e) {} drawPf(); if (U) { fsBeat(); sb('users/' + U.uid + '/ch', 'PUT', code).catch(() => {}); } }
+document.body.addEventListener('click', e => {
+  const b = e.target.closest('.ch-sw,.ch-ey,.ch-mo,#chr'); if (!b || !U) return;
+  let m = chParse(myCode());
+  if (b.id === 'chr') m = { c: Math.random() * 12 | 0, e: Math.random() * 4 | 0, m: Math.random() * 4 | 0 };
+  else if (b.classList.contains('ch-sw')) m.c = +b.dataset.i; else if (b.classList.contains('ch-ey')) m.e = +b.dataset.i; else m.m = +b.dataset.i;
+  setChar(chCode(m));
+});
+// ---- comments: same Firebase database as every game, own bucket: globalchat/ngdComments/<gameId>/<commentId>
+const CB = FB.replace(/\/$/, '') + '/globalchat/ngdComments', ckey = id => String(id).replace(/[.$#\[\]\/]/g, '_');
+let cmFor = '', cmSheet = '', cmLast = 0, cmSort = 'top', cmData = null, cmOpen = {};
+async function cmReq(id, method, body, key) {
+  const get = !method || method === 'GET';
+  const r = await fetch(CB + '/' + ckey(id) + (key ? '/' + key : '') + '.json?auth=' + await tok() + (get ? '&orderBy=%22%24key%22&limitToLast=60' : ''), { method: method || 'GET', headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+  return r.json();
+}
+const cmAgo = t => { const s = Math.max(1, ((Date.now() - t) / 1000) | 0); return s < 60 ? 'just now' : s < 3600 ? ((s / 60) | 0) + 'm ago' : s < 86400 ? ((s / 3600) | 0) + 'h ago' : s < 2592000 ? ((s / 86400) | 0) + 'd ago' : fdate(t); };
+const cmCh = (code, name) => charSvg(chParse(code) ? code : chCode(chRand(name || 'guest')));
+function cmDraw(id, err) {
+  const b = $('#cm'); if (!b || cmFor !== id) return;
+  const draft = $('#cmi') ? $('#cmi').value : '';
+  const items = Object.entries(cmData || {}).map(([k, v]) => Object.assign({ k }, v)).filter(c => c && typeof c.t === 'string' && c.t);
+  items.forEach(c => { c.hv = c.h && typeof c.h === 'object' ? Object.entries(c.h).map(([u, v]) => ({ u, n: (v && v.n) || 'Player', c: v && v.c })) : []; });
+  items.sort(cmSort === 'top' ? (a, z) => (z.hv.length - a.hv.length) || ((z.ts || 0) - (a.ts || 0)) : (a, z) => (z.ts || 0) - (a.ts || 0));
+  const me = U ? U.uid : '';
+  const one = c => { const n = c.hv.length, voted = c.hv.some(v => v.u === me), long = c.t.length > 180 || c.t.split('\n').length > 4;
+    return `<div class="cm-i"><span class="cm-av">${cmCh(c.c, c.n)}</span><div class="cm-b"><div class="cm-h"><b>${esc(c.n || 'Player')}</b>${c.u === me ? '<em>You</em>' : ''}<span>${c.ts ? cmAgo(c.ts) : ''}</span></div>`
+      + `<div class="cm-t${long ? ' cl' : ''}">${esc(c.t)}</div>${long ? '<button class="cm-rm">Read more</button>' : ''}`
+      + `<div class="cm-a"><button class="cm-hp${voted ? ' on' : ''}" data-k="${esc(c.k)}" aria-pressed="${voted}">${IC.up}<span>Helpful</span>${n ? `<b>${n}</b>` : ''}</button>`
+      + (n ? `<button class="cm-who" data-k="${esc(c.k)}"><span class="st">${c.hv.slice(0, 3).map(v => `<span>${cmCh(v.c, v.n)}</span>`).join('')}</span>${n} found this helpful</button>` : '')
+      + (c.u === me ? `<button class="cm-d" data-k="${esc(c.k)}" aria-label="Delete comment">${IC.trash}</button>` : '') + '</div>'
+      + (n ? `<div class="cm-wl" id="w-${esc(c.k)}"${cmOpen[c.k] ? '' : ' hidden'}>${c.hv.map(v => `<span class="cm-chip"><i>${cmCh(v.c, v.n)}</i>${esc(v.n)}</span>`).join('')}</div>` : '') + '</div></div>'; };
+  b.innerHTML = `<div class="cm-top"><div class="cm-n"><span class="ic">${IC.chat}</span><span><b>${items.length}</b> comment${items.length === 1 ? '' : 's'}</span></div><div class="cm-sort"><button data-s="top" class="${cmSort === 'top' ? 'on' : ''}">Most helpful</button><button data-s="new" class="${cmSort === 'new' ? 'on' : ''}">Newest</button></div></div>`
+    + (U ? `<div class="cm-ph"><span class="cm-av">${avatar(U.name)}</span><div class="cm-ta"><textarea id="cmi" maxlength="300" rows="2" placeholder="Share what you think of this game"></textarea><div class="cm-bar"><span class="cm-cnt" id="cmc">0/300</span><button class="cm-post" id="cmp" disabled>Post</button></div></div></div>`
+      : '<div class="cm-lg"><span>Log in to join the conversation.</span><button id="cml">Log in</button></div>') + '<div class="er" id="cme"></div>'
+    + (err ? '<p class="mu">Comments aren’t loading right now. Our team is working on a fix. Please try again soon.</p><button class="pl" id="cmr" style="max-width:200px;margin-top:8px">Try again</button>'
+      : items.length ? items.map(one).join('') : '<p class="mu" style="padding:10px 0">No comments yet. Be the first to share what you think.</p>');
+  const ta = $('#cmi'), pb = $('#cmp');
+  if (ta) { ta.value = draft; const sync = () => { $('#cmc').textContent = ta.value.length + '/300'; pb.disabled = !ta.value.trim(); }; ta.oninput = sync; sync(); }
+  b.onclick = async e => {
+    const t = e.target, q = s => t.closest(s);
+    if (q('#cml')) { closeSheet(); setTimeout(() => showAuth('in', 'Log in to comment.'), 150); return; }
+    if (q('#cmr')) { cmLoad(id, true); return; }
+    if (q('.cm-sort button')) { cmSort = q('.cm-sort button').dataset.s; cmDraw(id); return; }
+    if (q('.cm-rm')) { const x = q('.cm-b').querySelector('.cm-t'); x.classList.toggle('cl'); q('.cm-rm').textContent = x.classList.contains('cl') ? 'Read more' : 'Show less'; return; }
+    if (q('.cm-who')) { const k = q('.cm-who').dataset.k; cmOpen[k] = !cmOpen[k]; const w = document.getElementById('w-' + k); if (w) w.hidden = !cmOpen[k]; return; }
+    if (q('.cm-hp')) {
+      if (!U) { closeSheet(); setTimeout(() => showAuth('in', 'Log in to mark comments helpful.'), 150); return; }
+      const k = q('.cm-hp').dataset.k, c = cmData && cmData[k]; if (!c) return; const had = c.h && c.h[U.uid], keep = c.h ? Object.assign({}, c.h) : null;
+      c.h = Object.assign({}, c.h || {}); if (had) delete c.h[U.uid]; else c.h[U.uid] = { n: U.name, c: myCode() }; cmDraw(id);
+      try { await cmReq(id, had ? 'DELETE' : 'PUT', had ? undefined : { n: U.name, c: myCode() }, k + '/h/' + U.uid); svUp(); }
+      catch (er) { c.h = keep || undefined; cmDraw(id); $('#cme').textContent = 'Couldn’t save that. Please try again.'; svDown('helpful ' + (er.status || er.message)); }
+      return;
+    }
+    if (q('.cm-d')) { const k = q('.cm-d').dataset.k; if (!confirm('Delete your comment?')) return; try { await cmReq(id, 'DELETE', undefined, k); if (cmData) delete cmData[k]; cmDraw(id); } catch (er) { $('#cme').textContent = 'Couldn’t delete that. Try again.'; svDown('comment delete ' + (er.status || er.message)); } return; }
+    if (q('#cmp')) {
+      const v = $('#cmi').value.trim().slice(0, 300), m = $('#cme'); if (!v) return;
+      if (Date.now() - cmLast < 8000) { m.textContent = 'Please wait a few seconds before commenting again.'; return; }
+      q('#cmp').disabled = true; m.textContent = '';
+      try { await cmReq(id, 'POST', { u: U.uid, n: String(U.name || 'Player').slice(0, 24), c: myCode(), t: v, ts: { '.sv': 'timestamp' } }); cmLast = Date.now(); svUp(); $('#cmi').value = ''; cmLoad(id, true); }
+      catch (er) { q('#cmp').disabled = false; m.textContent = 'Couldn’t post your comment. Please try again in a moment.'; svDown('comment post ' + (er.status || er.message)); }
+    }
+  };
+}
+async function cmLoad(id, force) {
+  if (cmFor === id && !force) return; if (cmFor !== id) { cmData = null; cmOpen = {}; } cmFor = id;
+  if (!force && $('#cm')) $('#cm').innerHTML = '<p class="mu">Loading comments…</p>';
+  try { cmData = (await cmReq(id)) || {}; svUp(); cmDraw(id); }
+  catch (e) { cmDraw(id, true); svDown('comments ' + (e.status || e.message)); }
+}
+// ---- games can send the player back to the NGD menu with: parent.postMessage({ngd:'exit'}, '*')
+addEventListener('message', e => { if (e.source === $('#fr').contentWindow && e.data && e.data.ngd === 'exit') closeGame(); });
 load();
 document.body.addEventListener('click', e => {
   const t = e.target, c = t.closest('.card'), ch = t.closest('.chip'), nb = t.closest('nav button');
@@ -768,13 +972,13 @@ function sheet(x) { if (!x) return; const c = $('#sc'), e = stats()[x.id] || {},
   const sh = Array.isArray(x.shots) ? x.shots.filter(u => /^https:\/\//.test(u)) : [], shotsHTML = sh.length ? `<div class="shots">${sh.map((u, i) => `<button class="shot" data-i="${i}" aria-label="Screenshot ${i + 1}"><img loading="lazy" decoding="async" src="${esc(u)}" alt=""></button>`).join('')}</div>` : '',
     wn = (x.notes || x.rel > 1) ? `<div class="pf-t">What\u2019s new</div>${x.notes ? `<p class="ab2">${esc(x.notes)}</p>` : ''}<p class="wn-m">Version ${esc(x.ver || '1.0')}${x.upd ? ' \u00b7 Updated ' + fdate(x.upd) : ''}</p>` : '';
   c.classList.remove('full', 'pg');
-  c.innerHTML = `<div class="gh"></div><div class="in"><div class="big">${cv(x)}</div><div class="hd"><div class="th">${cv(x)}</div><div><h1>${esc(x.title)}</h1>${dv(x)}</div></div><p class="sd">${esc(x.desc)}</p>${shotsHTML}
+  c.innerHTML = `<div class="gh"></div><div class="in"><div class="big">${cv(x)}</div><div class="hd"><div class="th">${cv(x)}</div><div><h1>${esc(x.title)}</h1>${dv(x)}</div></div><div id="gs" class="gsw"></div><p class="sd">${esc(x.desc)}</p>${shotsHTML}
 <div class="more"><div class="facts"><div><b>${esc(x.cat || '–')}</b><span>Category</span></div><div><b>${esc(x.age || '–')}</b><span>Age</span></div><div><b>${esc(x.ver || '–')}</b><span>Version</span></div><div><b>${o}</b><span>Screen</span></div></div>
 ${wn}<div class="pf-t">About this game</div><p class="ab2">${esc(x.about || x.desc || 'No more details yet.')}</p>
 <div class="pf-t">Information</div><div class="kv"><div><span>Developer</span><b>${esc(x.dev || 'nmedea')}${x.vf === false ? '' : BD}</b></div>${x.pub || x.v ? `<div><span>Added</span><b>${fdate(x.pub || x.v)}</b></div>` : ''}${x.upd && x.upd !== (x.pub || x.v) ? `<div><span>Updated</span><b>${fdate(x.upd)}</b></div>` : ''}<div><span>Requires</span><b>Internet connection</b></div><div><span>Account</span><b>Needed to play</b></div></div>
-<div class="pf-t">Your activity</div><div class="kv"><div><span>Time played</span><b>${dur(e.t || 0)}</b></div><div><span>Sessions</span><b>${e.n || 0}</b></div>${e.l ? `<div><span>Last played</span><b>${fdate(e.l)}</b></div>` : ''}</div></div>
+<div class="pf-t">Your activity</div><div class="kv"><div><span>Time played</span><b>${dur(e.t || 0)}</b></div><div><span>Sessions</span><b>${e.n || 0}</b></div>${e.l ? `<div><span>Last played</span><b>${fdate(e.l)}</b></div>` : ''}</div><div class="pf-t">Comments</div><div id="cm" class="cm"></div></div>
 <div class="btns"><button class="pl" id="go">Play</button><button class="sec" id="mr">More details</button></div></div>`;
-  openSheet(); c.querySelectorAll('.shot').forEach(b => b.onclick = () => zoom(sh[+b.dataset.i])); $('#go').onclick = () => { $('#sh').classList.remove('on'); play(x); }; $('#mr').onclick = () => setFull(!c.classList.contains('full')); }
+  cmFor = ''; cmSheet = x.id; openSheet(); gsLoad(x.id); c.querySelectorAll('.shot').forEach(b => b.onclick = () => zoom(sh[+b.dataset.i])); $('#go').onclick = () => { $('#sh').classList.remove('on'); play(x); }; $('#mr').onclick = () => setFull(!c.classList.contains('full')); }
 // drag the sheet: down closes (or shrinks a full page), up opens the full page
 { const sc = $('#sc'); let dg = null;
   sc.addEventListener('pointerdown', e => { if (!e.target.closest('.gh,.hd')) return; dg = { y: e.clientY, d: 0, f: sc.classList.contains('full') }; sc.setPointerCapture(e.pointerId); sc.style.transition = 'none'; });
@@ -787,18 +991,18 @@ $('#ss').onclick = () => dropLy();
 { const ids = ['sh', 'pl', 'fs', 'pv', 'au', 'fc', 'rp', 'dm', 'lc', 'ss'], sync = () => document.documentElement.classList.toggle('lk', ids.some(i => $('#' + i).classList.contains('on'))), mo = new MutationObserver(sync);   // nothing behind an open sheet, game or pop-up can scroll
   ids.forEach(i => mo.observe($('#' + i), { attributes: true, attributeFilter: ['class'] })); sync(); }
 let tm; const bar = n => $('#bar').style.width = n + '%';
-function play(x) { if (!U && x.vf !== false) { if (topLy() === 'sheet') dropLy(); pend = x; showAuth('up', 'Create an account or log in to play.'); return; } endSession(); { if (topLy() === 'sheet') LY[LY.length - 1] = { name: 'game' }; else pushLy('game'); } { const st = stats(), e = st[x.id] || { n: 0, t: 0, l: 0 }; e.n++; e.l = Date.now(); st[x.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} } curG = { id: x.id, s: Date.now(), o: x.ori }; fit();
+function play(x) { if (!U && x.vf !== false) { if (topLy() === 'sheet') dropLy(); pend = x; showAuth('up', 'Create an account or log in to play.'); return; } endSession(); { if (topLy() === 'sheet') LY[LY.length - 1] = { name: 'game' }; else pushLy('game'); } { const st = stats(), e = st[x.id] || { n: 0, t: 0, l: 0 }; e.n++; e.l = Date.now(); st[x.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} } curG = { id: x.id, s: Date.now(), o: x.ori }; curX = x; lbState = 0; $('#glb').classList.remove('on'); fit();
   $('#pl').classList.add('on'); $('#ld').classList.remove('off'); $('#lt').textContent = 'Loading ' + x.title + '…'; bar(8);
   let n = 8; clearInterval(tm); tm = setInterval(() => { n += (90 - n) * .08; bar(n); }, 250);
   const r = document.documentElement; try { (r.requestFullscreen || r.webkitRequestFullscreen).call(r); } catch (e) {} try { if (x.ori !== 'any') screen.orientation.lock(x.ori).catch(() => {}); } catch (e) {}
-  $('#fr').onload = () => { clearInterval(tm); bar(100); setTimeout(() => { $('#ld').classList.add('off'); bar(0); }, 350); };
+  $('#fr').onload = () => { if (lbState === 0) { lbState = 1; lobbyShow(curX); } clearInterval(tm); bar(100); setTimeout(() => { $('#ld').classList.add('off'); bar(0); }, 350); };
   (U && x.vf !== false ? tok().catch(() => {}) : Promise.resolve()).then(() => { if (curG && curG.id === x.id) { const u = ssoUrl(x); try { $('#fr').contentWindow.location.replace(u); } catch (e) { $('#fr').src = u; } } });
 }
 // single sign-on: verified games get the logged-in account in the URL hash, so players never sign in twice
-const ssoUrl = x => { const u = String(x.gurl).split('#')[0]; return x.vf === false ? x.gurl : U ? u + '#ngd=' + encodeURIComponent(JSON.stringify({ uid: U.uid, name: U.name, email: U.email || '', photo: U.photo || '', it: U.it, rt: U.rt, exp: U.exp })) : u + '#ngd=guest'; };
+const ssoUrl = x => { const u = String(x.gurl).split('#')[0]; return x.vf === false ? x.gurl : U ? u + '#ngd=' + encodeURIComponent(JSON.stringify({ uid: U.uid, name: U.name, email: U.email || '', photo: chUri(myCode()), ch: myCode(), it: U.it, rt: U.rt, exp: U.exp })) : u + '#ngd=guest'; };
 // the game asks players without an NGD login to log in here
 addEventListener('message', e => { if (e.source === $('#fr').contentWindow && e.data && e.data.ngd === 'login') { closeGame(); setTimeout(() => navTo('profile'), 120); } });
-function closeGame() { endSession(); closeGameLayer(); clearInterval(tm); try { $('#fr').contentWindow.location.replace('about:blank'); } catch (e) { $('#fr').src = 'about:blank'; } $('#pl').classList.remove('on'); $('#cf').classList.remove('on'); bar(0); try { draw(); } catch (e) {} try { document.exitFullscreen(); } catch (e) {} try { screen.orientation.unlock(); } catch (e) {} }
+function closeGame() { gsLeave(); lbState = 3; try { $('#glb').classList.remove('on'); } catch (e) {} endSession(); closeGameLayer(); clearInterval(tm); try { $('#fr').contentWindow.location.replace('about:blank'); } catch (e) { $('#fr').src = 'about:blank'; } $('#pl').classList.remove('on'); $('#cf').classList.remove('on'); bar(0); try { draw(); } catch (e) {} try { document.exitFullscreen(); } catch (e) {} try { screen.orientation.unlock(); } catch (e) {} }
 let curG = null;
 function endSession() { if (!curG) return; const st = stats(), e = st[curG.id] || { n: 1, t: 0, l: 0 }; e.t = (e.t || 0) + Math.min(Math.round((Date.now() - curG.s) / 1000), 43200); e.l = Date.now(); st[curG.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} curG = null; fit(); }
 const rotOn = () => $('#pl').classList.contains('rot'), dm = () => rotOn() ? [innerHeight, innerWidth] : [innerWidth, innerHeight];
@@ -872,7 +1076,7 @@ async function fsBeat() {
   try {
     if (fsHide()) { await sb('hubpres/' + U.uid, 'DELETE'); return; }
     const g = curG ? (G || []).find(x => x.id === curG.id) : null;
-    await sb('hubpres/' + U.uid, 'PUT', { n: U.name, g: g ? g.id : '', p: /^https:\/\//.test(U.photo || '') ? U.photo : '', ts: SV });
+    await sb('hubpres/' + U.uid, 'PUT', { n: U.name, g: g ? g.id : '', p: /^https:\/\//.test(U.photo || '') ? U.photo : '', c: myCode(), ts: SV });
     if (!FS.off) { const t = await sb('hubpres/' + U.uid + '/ts'); if (typeof t === 'number') FS.off = t - Date.now(); }
   } catch (e) {}
 }
@@ -904,10 +1108,10 @@ async function fsLoad(light) {
   for (const [u, o] of Object.entries(r || {})) if (!FS.bl[u] && o) FS.rq[u] = o;   // requests from blocked players never show
   fsBadge();
   if (light) return;
-  await Promise.all(Object.keys(FS.rq).map(async u => { const h = await sb('hubpres/' + u).catch(() => null); FS.pres[u] = { h, s: null }; }));
+  await Promise.all(Object.keys(FS.rq).map(async u => { const h = await sb('hubpres/' + u).catch(() => null); chrNote(h); FS.pres[u] = { h, s: null }; }));
   await Promise.all(Object.keys(FS.fr).map(async u => {
     const [h, s, m] = await Promise.all([sb('hubpres/' + u).catch(() => null), sb('presence/' + u).catch(() => null), sb('dm/' + pairKey(me, u), 'GET', undefined, KEYQ + '1').catch(() => null)]);
-    FS.pres[u] = { h, s };
+    chrNote(h); FS.pres[u] = { h, s };
     const k = m && Object.keys(m)[0]; FS.prev[u] = k ? Object.assign({ k }, m[k]) : null;
   }));
   fsStrip();
@@ -921,7 +1125,7 @@ function fsStrip() {   // row of friends who are online right now, at the top of
 }
 async function fsPres() {   // light refresh of who is online (also feeds the top row)
   if (!U || document.hidden) return;
-  await Promise.all(Object.keys(FS.fr).map(async u => { const [h, s] = await Promise.all([sb('hubpres/' + u).catch(() => null), sb('presence/' + u).catch(() => null)]); FS.pres[u] = { h, s }; }));
+  await Promise.all(Object.keys(FS.fr).map(async u => { const [h, s] = await Promise.all([sb('hubpres/' + u).catch(() => null), sb('presence/' + u).catch(() => null)]); chrNote(h); FS.pres[u] = { h, s }; }));
   fsStrip();
 }
 // --- actions ---
@@ -975,7 +1179,7 @@ async function fsMsgs(u) {
 // --- screens ---
 const FI = { back: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', chat: '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.7 7L3 21l2-5.6A8 8 0 1 1 21 12z"/></svg>', add: '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2M19 8v6M16 11h6"/></svg>', more: '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>', send: '<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>', srch: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>', fr: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>' };
 const fsPhoto = u => { const h = (FS.pres[u] || {}).h; return h && /^https:\/\//.test(h.p || '') ? h.p : ''; };
-const fsAv = (n, on, lg, p) => `<span class="fs-av${lg ? ' lg' : ''}">${avatar(n)}${p ? `<img class="ph" src="${esc(p)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}<i class="fs-dot${on ? ' on' : ''}"></i></span>`;
+const fsAv = (n, on, lg, p) => `<span class="fs-av${lg ? ' lg' : ''}">${avatar(n)}<i class="fs-dot${on ? ' on' : ''}"></i></span>`;
 const fsHead = (t, r) => `<div class="fs-h"><button class="fs-ic" data-a="back" aria-label="Back">${FI.back}</button><b>${esc(t)}</b>${r || ''}</div>`;
 const fsTop = () => FS.stack[FS.stack.length - 1] || { v: 'list' };
 function fsRender() {
