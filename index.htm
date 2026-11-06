@@ -122,7 +122,7 @@ nav{background:var(--nv)}.dv{color:var(--hl)}.sec-t{color:var(--sd)}.tag{color:v
 #pl.rot{inset:auto;top:0;left:0;transform-origin:0 0}
 body{background:var(--bg)}
 #search{padding-top:calc(env(safe-area-inset-top) + 8px)}
-.hdr{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 16px 6px;background:var(--bg)}
+.hdr{position:relative;z-index:4;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 8px) 16px 6px;background:var(--bg)}
 .hdr img{width:24px;height:24px;border-radius:7px;display:block}
 .hdr b{flex:1;font-size:17px;font-weight:700;letter-spacing:.03em}
 .hdr button{width:36px;height:36px;margin:-4px -8px -4px 0;border:0;background:none;display:grid;place-items:center;color:var(--mu)}
@@ -400,7 +400,7 @@ nav button[data-t=profile]{position:relative}body.hasrq nav button[data-t=profil
 .fs-rq{display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:14px;border:1px solid var(--bd);background:var(--s);font-weight:700;font-size:15px;text-align:left;margin:4px 0 6px}.fs-rq svg{width:22px;height:22px;fill:none;stroke:var(--hl);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.fs-rq em{margin-left:auto;font-style:normal;min-width:24px;padding:2px 8px;border-radius:99px;background:var(--s2);color:var(--mu);font-size:12.5px;text-align:center}.fs-rq em.hot{background:#e5484d;color:#fff}
 
 /* ===== v2: no scrollbars, scroll lock, flat category lines, flat profile, screenshots ===== */
-html,body{overflow-x:hidden}
+html{overflow-x:hidden}body{overflow-x:clip}
 *{scrollbar-width:none}*::-webkit-scrollbar{display:none;width:0;height:0}
 html.lk,html.lk body{overflow:hidden;overscroll-behavior:none}
 #sh{touch-action:none;overscroll-behavior:contain}#sc{touch-action:pan-y}
@@ -514,7 +514,7 @@ button.fs-r::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;
 
 /* sticky category bar */
 :root{--hh:52px}
-.chips.cats{position:sticky;top:var(--hh);z-index:3;background:var(--bg);padding-top:8px;padding-bottom:8px;margin-top:-6px}
+.chips.cats{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--bg);padding-top:8px;padding-bottom:8px;margin-top:-6px}
 /* server problem notice */
 #svr{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 10px);z-index:8;display:none;max-width:520px;margin:0 auto;padding:12px 14px;border-radius:16px;background:#2b1620;border:1px solid #ff6b81;color:#ffd6dc;box-shadow:0 10px 30px rgba(0,0,0,.45);font-size:13.5px;line-height:1.4;gap:10px;align-items:flex-start}
 #svr.on{display:flex}
@@ -564,11 +564,129 @@ button.fs-r::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;
 .glb-n{font-size:20px;letter-spacing:.02em}
 .glb-j{width:100%;max-width:260px;border:0;border-radius:16px;padding:15px;font-weight:700;font-size:17px;letter-spacing:.04em;color:#fff;background:linear-gradient(135deg,#1fb86a,#0f7a3e);box-shadow:0 8px 24px rgba(20,160,90,.4)}
 .glb-b{border:0;background:none;color:var(--mu);font-size:13.5px;padding:6px}
-</style><script>try{if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||4)<=2)document.documentElement.classList.add('lite')}catch(e){}try{document.documentElement.dataset.theme=localStorage.ngdTheme==='light'?'light':'dark'}catch(e){}</script></head><body>
+
+/* v6: pinned bars, comment paging + report, star ratings */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:3;pointer-events:none}
+.sstick{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--bg);padding-bottom:2px}
+.cm-more{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid var(--bd);border-radius:14px;background:var(--s2);color:var(--hl);font-weight:600;font-size:13.5px}
+.cm-rp{margin-left:auto;display:inline-flex;align-items:center;gap:5px;border:0;background:none;color:var(--mu);font-size:12px;padding:4px}.cm-rp svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.rt{margin:10px 0 4px}.rt:empty{display:none}
+.rt-sum{display:flex;align-items:center;gap:8px}.rt-big{font-size:24px;font-weight:700;line-height:1}.rt-n{color:var(--mu);font-size:13px}.rt-g{width:20px;height:20px;fill:#ffc83d;flex:none}
+.rt-me{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;font-size:13px;color:var(--mu)}
+.rt-in{display:inline-flex}.rt-s{border:0;background:none;padding:3px;display:grid;place-items:center}.rt-s svg{width:30px;height:30px;fill:none;stroke:var(--mu);stroke-width:1.6;stroke-linejoin:round}.rt-s.on svg{fill:#ffc83d;stroke:#ffc83d}
+.rt-x{border:0;background:none;color:var(--hl);font-size:12.5px;font-weight:600;padding:4px}
+
+/* v7: lobby fits the screen, exit button, character page, search keywords */
+#glb{overflow:hidden;container-type:size;padding:calc(env(safe-area-inset-top) + 44px) 20px 18px}
+.glb-w{width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:clamp(14px,4vmin,40px);min-height:0}
+.glb-l{flex:1 1 0;min-width:0;max-width:420px;overflow:hidden}
+.glb-r{flex:0 0 auto;width:min(300px,44%);min-height:0}
+.glb-ch{width:min(44cqh,210px,100%)}
+@container (max-aspect-ratio:1/1){.glb-w{flex-direction:column}.glb-l{flex:0 1 auto;width:100%;max-width:440px}.glb-r{width:100%;max-width:340px}.glb-ch{width:min(30cqh,56cqw,230px)}}
+@container (max-height:340px){.glb-ch{width:min(36cqh,140px)}.glb-g h2{font-size:20px}}
+.ch-card{width:100%;text-align:left;color:var(--tx);gap:14px;flex-wrap:nowrap;justify-content:flex-start}
+.ch-card .ch-pv{width:84px;height:84px}.ch-tx{display:flex;flex-direction:column;gap:3px;min-width:0}.ch-tx b{font-size:16px}.ch-tx span{font-size:13px;color:var(--mu);line-height:1.35}.ch-tx i{font-style:normal;font-size:13px;font-weight:600;color:var(--hl);margin-top:3px}
+.chb .chh{transform-box:fill-box;transform-origin:center;animation:chw 2.2s ease-in-out infinite}.chb .chh1{animation-delay:-1.1s}@keyframes chw{50%{transform:translateY(-2.5px)}}
+#cz{position:fixed;inset:0;z-index:9;display:none;flex-direction:column;background:radial-gradient(600px 380px at 50% 20%,rgba(109,74,255,.28),transparent 65%),var(--bg);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow:hidden}
+#cz.on{display:flex}
+.cz-top{flex:none;display:flex;align-items:center;gap:10px;padding:10px 14px}.cz-top b{flex:1;font-size:16px}
+.cz-bk{width:38px;height:38px;border-radius:50%;border:1px solid var(--bd);background:var(--s);color:var(--tx);display:grid;place-items:center;padding:0}.cz-bk svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cz-dn{border:0;border-radius:99px;padding:9px 20px;background:var(--gr);color:#fff;font-weight:700;font-size:14px}
+.cz-main{flex:1;min-height:0;display:flex;flex-direction:column}
+.cz-st{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px 20px}
+.cz-pv{flex:1;min-height:0;width:min(100%,300px)}.cz-pv svg{width:100%;height:100%;display:block;overflow:visible}.cz-nm{font-size:18px;flex:none}
+.cz-ct{flex:none;padding:12px 16px 16px;background:var(--s);border-top:1px solid var(--bd);border-radius:22px 22px 0 0}
+.cz-tabs{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:14px}.cz-tb{flex:1;border:0;border-radius:10px;padding:9px 4px;background:none;color:var(--mu);font-weight:600;font-size:13.5px}.cz-tb.on{background:var(--s2);color:var(--tx);box-shadow:0 1px 6px rgba(0,0,0,.25)}
+.cz-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:10px;margin:12px 0 4px;min-height:122px;align-content:start}.cz-g.col{grid-template-columns:repeat(8,1fr);gap:10px 6px}
+.cz-sw{aspect-ratio:1;width:100%;max-width:38px;justify-self:center;border-radius:50%;border:2px solid transparent;padding:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}.cz-sw.on{border-color:var(--tx);box-shadow:0 0 0 2px var(--s),inset 0 0 0 1px rgba(0,0,0,.18)}
+.cz-op{aspect-ratio:1;border-radius:14px;border:2px solid var(--bd);background:var(--s2);padding:3px;overflow:hidden}.cz-op svg{width:100%;height:100%;display:block;border-radius:9px}.cz-op.on{border-color:var(--ac)}
+@media (orientation:landscape) and (max-height:520px){.cz-main{flex-direction:row}.cz-st{flex:1}.cz-ct{width:min(52%,440px);border-radius:22px 0 0 0;border-left:1px solid var(--bd);overflow:auto}}
+#x{width:36px;height:36px;border:1px solid rgba(255,255,255,.4);background:rgba(14,15,26,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:.8;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+#x::after{inset:-6px}
+#x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#x.pulse::before{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(255,255,255,.75);animation:xp 1.4s ease-out infinite;pointer-events:none}
+@keyframes xp{from{transform:scale(.9);opacity:.9}to{transform:scale(1.8);opacity:0}}
+#xt{position:absolute;z-index:4;left:50%;top:calc(54px + env(safe-area-inset-top));transform:translateX(-50%);width:min(250px,calc(100% - 24px));padding:12px 14px;border-radius:14px;background:#171a2c;border:1px solid rgba(255,255,255,.22);box-shadow:0 8px 28px rgba(0,0,0,.55);color:#fff;font-size:13px;line-height:1.4;display:none;flex-direction:column;gap:4px;text-align:left}
+#xt.on{display:flex}#xt b{font-size:14px}#xt span{color:#c9d0ee}#xt u{text-decoration:none;align-self:flex-end;font-weight:700;color:#8fb8ff;font-size:13px;margin-top:2px}
+#xt::before{content:"";position:absolute;top:-6px;left:calc(50% + var(--ax,0px));width:11px;height:11px;background:#171a2c;border-left:1px solid rgba(255,255,255,.22);border-top:1px solid rgba(255,255,255,.22);transform:translateX(-50%) rotate(45deg)}
+.chips.wrap{flex-wrap:wrap;overflow:visible}
+.sug{margin:8px 16px;border:1px solid var(--bd);border-radius:14px;background:var(--s);overflow:hidden}
+.sg{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border:0;border-bottom:1px solid var(--bd);background:none;color:var(--tx);font-size:15px;text-align:left}.sg:last-child{border-bottom:0}.sg svg{width:18px;height:18px;fill:none;stroke:var(--mu);stroke-width:2;stroke-linecap:round;flex:none}
+.clr{border:0;background:none;color:var(--hl);font-size:13px;margin:2px 18px 0;padding:6px 0}.hint{margin:12px 20px;font-size:13px}
+.cz-g{grid-template-columns:repeat(6,1fr)}.cz-g.col{grid-template-columns:repeat(8,1fr)}
+.chips.wrap{gap:8px;padding:6px 18px 2px}.chips.wrap .chip.rc,.chips.wrap .chip.kw{margin:0;padding:8px 14px;border:1px solid var(--bd);border-radius:99px;background:var(--s);color:var(--tx)}
+/* v8: smooth on weak phones (the lite class is set automatically on low-core / low-RAM devices) */
+.list .card{content-visibility:auto;contain-intrinsic-size:auto 88px}
+.lite *,.lite *::before,.lite *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.lite .chb .chh,.lite .glb-ch svg,.lite #x.pulse::before{animation:none!important}
+.lite #x{background:rgba(14,15,26,.88)}
+.lite #glb,.lite #cz{background:var(--bg)}
+.lite .sbar,.lite .chip,.lite .pl,.lite .glb-j,.lite .card,.lite #cz *,.lite #glb *{box-shadow:none!important;text-shadow:none!important}
+.lite #big,.lite .glb-ch svg{filter:none!important}
+@media (prefers-reduced-motion:reduce){.chb .chh,.glb-ch svg,#x.pulse::before{animation:none!important}}
+
+/* v9: sticky fix, menu scroll lock, nav hidden with keyboard, professional search */
+#mbk,#mnu{touch-action:none;overscroll-behavior:contain}
+body.kb nav{display:none}body.kb{padding-bottom:0}
+.sgrp{margin:6px 0 0}
+.srows{border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin:0}
+.srow2{display:flex;align-items:center;gap:12px;width:100%;padding:11px 16px;border:0;border-top:1px solid var(--bd);background:none;color:var(--tx);text-align:left;font-size:15px}
+.srow2:first-child{border-top:0}.srow2:active{background:var(--s2)}
+.srow2 svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--mu);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.srow2 .st{width:44px;height:44px;border-radius:10px;overflow:hidden;flex:none;display:block}
+.srow2 .st .cv{aspect-ratio:1;height:100%;border-radius:0;font-size:18px}
+.srow2 .sx{flex:1;min-width:0;display:block}
+.srow2 .sx b{display:block;font-size:15px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow2 .sx i{display:block;font-style:normal;font-size:12.5px;color:var(--mu);margin-top:1px}
+.srow2 em{font-style:normal;color:var(--mu);font-size:20px;line-height:1}
+
+/* v11: Play Store style reviews */
+.rt-pl{display:flex;align-items:center;gap:18px}.rt-pl .rt-sum{flex-direction:column;align-items:flex-start;gap:2px;flex:none}.rt-pl .rt-big{font-size:44px;font-weight:600;line-height:1}
+.rt-ss{display:inline-flex;gap:1px}.rt-ss span,.cm-st span{display:grid;place-items:center}.rt-ss svg{width:15px;height:15px;fill:var(--bd);stroke:none}.rt-ss .on svg{fill:#ffc83d}
+.rt-bars{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.rt-bars>div{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--mu)}.rt-bars span{width:8px;text-align:right}
+.rt-bars i{flex:1;height:7px;border-radius:99px;background:var(--s2);overflow:hidden;display:block}.rt-bars b{display:block;height:100%;border-radius:99px;background:#ffc83d}
+.cm-st{display:flex;gap:1px;margin:2px 0 0}.cm-st svg{width:12px;height:12px;fill:var(--bd);stroke:none}.cm-st .on svg{fill:#ffc83d}
+.cm-dt{font-size:11.5px;color:var(--mu);margin:0 0 3px}
+
+/* v12: flat light 2D login background, smaller bars, notifications */
+.bg{background:linear-gradient(180deg,#06071c 0,#17114f 42%,#2a1259 58%,#0a0b12 58.2%)}
+.bg-st{animation:none}
+.bg-sun{box-shadow:0 0 44px rgba(255,95,162,.3)}
+.bg-fl{position:absolute;left:0;right:0;top:58%;bottom:0;background-image:linear-gradient(rgba(124,77,255,.34) 1px,transparent 1px),linear-gradient(90deg,rgba(33,114,255,.26) 1px,transparent 1px);background-size:100% 30px,42px 100%;-webkit-mask-image:linear-gradient(transparent,#000 50%);mask-image:linear-gradient(transparent,#000 50%)}
+.lite .bg-sh,.lite .bg-sun{display:none}
+@media (prefers-reduced-motion:reduce){.bg-sh{display:none}}
+body{padding-bottom:calc(52px + env(safe-area-inset-bottom))}
+nav{padding:2px 4px calc(2px + env(safe-area-inset-bottom))}
+nav button{gap:1px;padding:6px 2px 3px;font-size:10.5px;font-weight:500;letter-spacing:.01em}
+nav button.on{font-weight:600}
+nav svg{width:20px;height:20px;stroke-width:1.7}
+nav button::before{content:"";position:absolute;top:-2px;left:50%;width:0;height:2px;border-radius:0 0 3px 3px;background:var(--hl);transform:translateX(-50%);transition:width .18s}
+nav button.on::before{width:24px}
+#pnav .ava{width:20px;height:20px}
+nav .bd{top:2px;left:calc(50% + 3px);min-width:15px;height:15px;font-size:9.5px;padding:0 3px}
+body.hasrq nav button[data-t=profile]::after{display:none}
+.bd[hidden]{display:none}
+nav #pnav{display:flex;align-items:center;justify-content:center;height:20px}
+.chips.cats{padding-top:0;padding-bottom:0;margin-top:-6px}
+.chips.cats .chip{padding:7px 10px;font-size:12.5px}
+.hdr{padding:calc(env(safe-area-inset-top) + 6px) 16px 3px}.hdr img{width:22px;height:22px}.hdr b{font-size:16px}.hdr button{width:34px;height:34px}
+body.nfon #onl{display:none}
+.nf-h{padding:8px 18px 0}.nf-h h1{font-size:21px}
+.nf-l{border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.nf-r{display:flex;align-items:center;gap:12px;width:100%;padding:11px 16px;border:0;border-top:1px solid var(--bd);background:none;color:var(--tx);text-align:left}
+.nf-r:first-child{border-top:0}button.nf-r:active{background:var(--s2)}
+.nf-r .fs-av{width:40px;height:40px;min-width:40px;max-width:40px;margin:0;flex:none}
+.nf-t{width:44px;height:44px;border-radius:10px;overflow:hidden;flex:none;display:block}.nf-t .cv{aspect-ratio:1;height:100%;border-radius:0;font-size:18px}
+.nf-x{flex:1;min-width:0;display:block}.nf-x b{display:block;font-size:15px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nf-x i{display:block;font-style:normal;font-size:12.5px;color:var(--mu);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nf-x i.live{color:#3ddc84}
+.nf-b{flex:none;border:1px solid var(--bd);background:var(--s2);color:var(--tx);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:600}.nf-b.ok{background:var(--ac);border-color:transparent;color:#fff}.nf-b:disabled{opacity:.5}
+.nf-r em{font-style:normal;color:var(--mu);font-size:20px;line-height:1}
+.nf-e{text-align:center;padding:46px 28px}.nf-e b{display:block;font-size:16px}.nf-e p{color:var(--mu);font-size:13.5px;margin:6px 0 16px}.nf-e .pl{max-width:220px;margin:0 auto}
+</style><script>try{if((navigator.hardwareConcurrency||8)<=6||(navigator.deviceMemory||4)<=2||(navigator.connection&&navigator.connection.saveData))document.documentElement.classList.add('lite')}catch(e){}try{document.documentElement.dataset.theme=localStorage.ngdTheme==='light'?'light':'dark'}catch(e){}</script></head><body>
 <header class="hdr"><img src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><b>NGD</b><button id="gear" aria-label="Settings" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header>
 <div id="onl" hidden aria-label="Friends online"></div>
-<div id="home" class="tab on"></div><div id="search" class="tab"></div><div id="profile" class="tab"></div>
-<nav><button data-t="home" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Games</button><button data-t="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search</button><button data-t="profile"><span id="pnav"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 3.9 3.1l.9 4A2.6 2.6 0 0 1 20 18.3a2.7 2.7 0 0 1-2-1l-1.2-1.6H7.2L6 17.3a2.7 2.7 0 0 1-2 1A2.6 2.6 0 0 1 1.2 15.1l.9-4A4 4 0 0 1 6 8z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/></svg></span>Profile<i class="bd" id="nbd" hidden></i></button></nav>
+<div id="home" class="tab on"></div><div id="search" class="tab"></div><div id="notif" class="tab"></div><div id="profile" class="tab"></div>
+<nav><button data-t="home" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Games</button><button data-t="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search</button><button data-t="notif"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Notifications<i class="bd" id="nfbd" hidden></i></button><button data-t="profile"><span id="pnav"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 3.9 3.1l.9 4A2.6 2.6 0 0 1 20 18.3a2.7 2.7 0 0 1-2-1l-1.2-1.6H7.2L6 17.3a2.7 2.7 0 0 1-2 1A2.6 2.6 0 0 1 1.2 15.1l.9-4A4 4 0 0 1 6 8z"/><path d="M7.5 10.5v3M6 12h3"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18" cy="13" r=".6"/></svg></span>Profile<i class="bd" id="nbd" hidden></i></button></nav>
 <div id="mbk"></div><div id="mnu" role="menu"></div>
 <div id="svr" role="alert"><div class="t"><b>Something went wrong on our end</b>Our team is working on a fix and it should be back very soon. We keep trying automatically.</div><button id="svt">Try again</button><button class="x2" id="svx" aria-label="Dismiss">&times;</button></div>
 <div id="sh"><div id="sc"></div></div>
@@ -582,7 +700,7 @@ button.fs-r::after{content:"\203A";color:var(--mu);font-size:22px;line-height:1;
 <div id="lc"><div class="cb"><h2>Log out?</h2><p>Are you sure you want to log out?</p><div class="r"><button id="lcn">Cancel</button><button id="lcy">Log out</button></div></div></div>
 <div id="pl"><iframe id="fr" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-forms" allow="fullscreen; autoplay; gamepad" referrerpolicy="no-referrer"></iframe>
 <div id="ld"><svg viewBox="0 0 200 140"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00E676"/><stop offset="1" stop-color="#0033A0"/></linearGradient></defs><g transform="translate(-8,2)"><path class="h" d="M 46 64 C 28 42, 48 10, 88 10 C 112 10, 125 18, 131 27 C 133 30, 134 32, 137 34 C 158 47, 178 71, 194 97 C 172 73, 144 47, 118 41 C 92 35, 82 72, 88 112 C 68 108, 52 90, 46 64 Z"/></g></svg><span id="lt" class="mu">Loading…</span></div>
-<div id="glb"></div><div id="bar"></div><button id="x" aria-label="Exit game"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<div id="glb"></div><div id="bar"></div><button id="x" aria-label="Exit game"><svg viewBox="0 0 24 24"><path d="M10 4H6.500A2.500 2.500 0 0 0 4 6.500v11A2.500 2.500 0 0 0 6.500 20H10"/><path d="M15 8l4 4-4 4M19 12H9.500"/></svg></button><div id="xt" role="status"><b>Exit button</b><span>Tap it to leave the game. To move it, press and hold, then drag it anywhere.</span><u>Got it</u></div>
 <div id="cf"><div class="cb"><h2>Exit game?</h2><p>You will leave this game and go back to NGD. Progress that isn’t saved may be lost.</p><div class="r"><button id="cs">Stay</button><button id="ce">Exit</button></div></div></div></div>
 <script>
 const FB = 'https://globalchat-2d669-default-rtdb.firebaseio.com', FBKEY = 'AIzaSyDnPz8BWCaXJOazlFVO4Eap8VxdSR2oDFQ';   // your chat's Firebase (the games list is saved under globalchat/ngdGames)
@@ -615,7 +733,7 @@ function closeSheet() { if (topLy() === 'sheet') dropLy(); else $('#sh').classLi
 function openModal(sel) { $(sel).classList.add('on'); pushLy('modal', () => $(sel).classList.remove('on')); }
 function closeGameLayer() { if (topLy() === 'game') { LY.pop(); histBack(); } }
 function setFull(f) { const c = $('#sc'); c.classList.toggle('full', f); const m = $('#mr'); if (m) m.textContent = f ? 'Less' : 'More details'; c.scrollTop = 0; if (f && cmSheet && $('#cm')) cmLoad(cmSheet); }
-function goTab(t) { document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.id === t)); document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x.dataset.t === t)); scrollTo(0, 0); document.body.classList.toggle('ns', t === 'search'); if (t === 'search') drawS(); if (t === 'profile') { drawP(); setTimeout(markSeen, 400); } }
+function goTab(t) { document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.id === t)); document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x.dataset.t === t)); scrollTo(0, 0); document.body.classList.toggle('ns', t === 'search'); document.body.classList.toggle('nfon', t === 'notif'); if (t === 'search') drawS(); if (t === 'notif') { drawNf(); if (U) fsLoad().catch(() => {}); } if (t === 'profile') { drawP(); setTimeout(markSeen, 400); } }
 function navTo(t) { if (t === 'home') { if (topLy() === 'tab') dropLy(); else goTab('home'); } else { goTab(t); if (!LY.some(l => l.name === 'tab')) pushLy('tab', () => goTab('home')); } }
 let G = [], cat = 'All';
 const BD = '<svg viewBox="0 0 24 24"><path fill="#2172ff" d="M12 1.8l2.4 1.7 2.9-.2 1.2 2.7 2.6 1.4-.4 2.9L22 12l-1.3 2.1.4 2.9-2.6 1.4-1.2 2.7-2.9-.2L12 22.2l-2.4-1.7-2.9.2-1.2-2.7-2.6-1.4.4-2.9L2 12l1.3-2.1-.4-2.9 2.6-1.4 1.2-2.7 2.9.2z"/><path d="M7.8 12.3l3 3 5.4-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -636,27 +754,46 @@ const AVE = [
  '<path d="M14 54V30a18 18 0 0 1 36 0v24l-6-4.500-6 4.500-6-4.500-6 4.500-6-4.500z"/><circle cx="25.500" cy="30" r="3.400" fill="#141735" fill-opacity=".85"/><circle cx="38.500" cy="30" r="3.400" fill="#141735" fill-opacity=".85"/>',
  '<path d="M19 10h26v16a13 13 0 0 1-26 0z"/><path d="M19 15h-8v4a9 9 0 0 0 9 9M45 15h8v4a9 9 0 0 1-9 9" fill="none" stroke="#fff" stroke-width="3.200" stroke-linecap="round"/><rect x="28.500" y="38" width="7" height="9"/><rect x="20" y="48" width="24" height="6" rx="2"/>'];
 let _av = 0;
-const CPAL = ['#ff5f6d', '#ff9f43', '#feca57', '#2ed573', '#1dd1a1', '#48dbfb', '#2172ff', '#6d4aff', '#c56cf0', '#ff6bcb', '#f2f4f8', '#8395a7'];
+const CPAL = ['#ff5f6d', '#ff9f43', '#feca57', '#2ed573', '#1dd1a1', '#48dbfb', '#2172ff', '#6d4aff', '#c56cf0', '#ff6bcb', '#f2f4f8', '#8395a7', '#a3e635', '#14b8a6', '#f43f5e', '#475569'];
+// character code "colour.eyes.mouth[.extra]": the 4th part is left out when there is no extra, so older codes stay valid
 const chHash = t => [...String(t)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
-const chRand = t => { const h = chHash(t || 'guest'); return { c: h % 12, e: (h >> 4) % 4, m: (h >> 7) % 4 }; };
-const chParse = code => { const p = String(code || '').split('.').map(Number); return p.length === 3 && p.every(Number.isInteger) ? { c: Math.abs(p[0]) % 12, e: Math.abs(p[1]) % 4, m: Math.abs(p[2]) % 4 } : null; };
-const chCode = o => o.c + '.' + o.e + '.' + o.m;
+const chRand = t => { const h = chHash(t || 'guest'); return { c: h % 12, e: 0, m: 4, a: 0 }; };
+const chParse = code => { const p = String(code || '').split('.').map(Number); return (p.length === 3 || p.length === 4) && p.every(Number.isInteger) ? { c: Math.abs(p[0]) % CPAL.length, e: Math.abs(p[1]) % 6, m: Math.abs(p[2]) % 6, a: p.length === 4 ? Math.abs(p[3]) % 6 : 0 } : null; };
+const chCode = o => o.c + '.' + o.e + '.' + o.m + (o.a ? '.' + o.a : '');
+const chLegacy = code => { const o = chParse(code) || chRand('guest'); return o.c % 12 + '.' + o.e % 4 + '.' + o.m % 4; };   // 3-part form for games that only know the first four eyes and mouths
 const myCode = () => { let v = null; try { v = chParse(localStorage.ngdChar); } catch (e) {} return chCode(v || chRand(U ? U.uid : 'guest')); };
 const CHR = {};   // characters of other players, filled in from their online status
 const chrNote = h => { if (h && h.n && h.c && chParse(h.c)) CHR[String(h.n).toLowerCase()] = h.c; };
-const EYES = ['<ellipse cx="24.500" cy="30" rx="4.200" ry="5" fill="#fff"/><ellipse cx="39.500" cy="30" rx="4.200" ry="5" fill="#fff"/><circle cx="25.500" cy="31" r="2.400" fill="#141735"/><circle cx="40.500" cy="31" r="2.400" fill="#141735"/>',
-  '<path d="M20 31q4.500-6 9 0M35 31q4.500-6 9 0" stroke="#141735" stroke-width="2.600" fill="none" stroke-linecap="round"/>',
-  '<path d="M20 30h9a4.500 4.500 0 0 1-9 0zM35 30h9a4.500 4.500 0 0 1-9 0z" fill="#fff"/><circle cx="24.500" cy="32" r="1.800" fill="#141735"/><circle cx="39.500" cy="32" r="1.800" fill="#141735"/><path d="M19.500 30h10M34.500 30h10" stroke="#141735" stroke-width="2.200" stroke-linecap="round"/>',
-  '<circle cx="24.500" cy="30.500" r="3.200" fill="#141735"/><circle cx="39.500" cy="30.500" r="3.200" fill="#141735"/><circle cx="25.600" cy="29.300" r=".9" fill="#fff"/><circle cx="40.600" cy="29.300" r=".9" fill="#fff"/>'];
-const MOUTH = ['<path d="M26 41q6 6 12 0" stroke="#141735" stroke-width="2.600" fill="none" stroke-linecap="round"/>',
-  '<path d="M25 40h14a7 7 0 0 1-14 0z" fill="#141735"/><path d="M29 46.500a3 3 0 0 1 6 0z" fill="#ff6b81"/>',
-  '<path d="M27 43h10" stroke="#141735" stroke-width="2.600" stroke-linecap="round"/>',
-  '<ellipse cx="32" cy="43" rx="3" ry="3.600" fill="#141735"/>'];
-function charSvg(code, big) {
-  const o = chParse(code) || chRand('guest'), col = CPAL[o.c], id = 'ch' + (++_av);
-  return `<svg class="ava" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="${id}h" cx=".32" cy=".24" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="${id}s" cx=".5" cy="1.05" r=".75"><stop offset="0" stop-color="#000" stop-opacity=".3"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>`
-    + (big ? '<ellipse cx="32" cy="57.500" rx="15" ry="3" fill="#000" opacity=".25"/>' : `<rect width="64" height="64" fill="#191b2b"/><circle cx="32" cy="32" r="30" fill="${col}" opacity=".18"/>`)
-    + `<circle cx="32" cy="34" r="21" fill="${col}"/><circle cx="32" cy="34" r="21" fill="url(#${id}s)"/><circle cx="32" cy="34" r="21" fill="url(#${id}h)"/><circle cx="32" cy="34" r="21" fill="none" stroke="#000" stroke-opacity=".16" stroke-width="1.200"/>${EYES[o.e]}${MOUTH[o.m]}</svg>`;
+// Lumen look: round glossy body, two round hands at the sides, white eyes with a dark pupil. Colours use the same hue / lightness steps as Lumen.
+const _hs = hx => { const r = parseInt(hx.slice(1, 3), 16) / 255, g = parseInt(hx.slice(3, 5), 16) / 255, b = parseInt(hx.slice(5, 7), 16) / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; let h = 0; if (d) h = mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [Math.round(h * 60), (mx + mn) / 2 > .85 || d < .2 ? 10 : 80]; };
+const CHS = CPAL.map(_hs), HSL = (c, l) => 'hsl(' + CHS[c][0] + ',' + CHS[c][1] + '%,' + l + '%)';
+const EK = '#16324a', EL = 'rgba(22,50,74,.5)';
+const EYES = [   // 0 = exactly the Lumen eyes
+  '<g stroke="' + EL + '" stroke-width="1.100"><circle cx="26.300" cy="26.800" r="3.800" fill="#fff"/><circle cx="37.700" cy="26.800" r="3.800" fill="#fff"/></g><circle cx="26.300" cy="25.800" r="1.900" fill="' + EK + '"/><circle cx="37.700" cy="25.800" r="1.900" fill="' + EK + '"/>',
+  '<path d="M22.800 28q3.500-5.600 7 0M34.200 28q3.500-5.600 7 0" stroke="' + EK + '" stroke-width="2.300" fill="none" stroke-linecap="round"/>',
+  '<g stroke="' + EL + '" stroke-width="1.100"><path d="M22.500 26.800h7.600a3.800 3.800 0 0 1-7.600 0zM33.900 26.800h7.600a3.800 3.800 0 0 1-7.600 0z" fill="#fff"/></g><circle cx="26.300" cy="28.400" r="1.500" fill="' + EK + '"/><circle cx="37.700" cy="28.400" r="1.500" fill="' + EK + '"/><path d="M22 26.800h8.600M33.400 26.800h8.600" stroke="' + EK + '" stroke-width="1.900" stroke-linecap="round"/>',
+  '<circle cx="26.300" cy="26.800" r="2.900" fill="' + EK + '"/><circle cx="37.700" cy="26.800" r="2.900" fill="' + EK + '"/><circle cx="27.300" cy="25.700" r=".9" fill="#fff"/><circle cx="38.700" cy="25.700" r=".9" fill="#fff"/>',
+  '<g stroke="' + EL + '" stroke-width="1.100"><circle cx="25.800" cy="27" r="4.800" fill="#fff"/><circle cx="38.200" cy="27" r="4.800" fill="#fff"/></g><circle cx="26.200" cy="26.400" r="2.700" fill="' + EK + '"/><circle cx="38.600" cy="26.400" r="2.700" fill="' + EK + '"/><circle cx="27.200" cy="25.200" r="1" fill="#fff"/><circle cx="39.600" cy="25.200" r="1" fill="#fff"/>',
+  '<g stroke="' + EL + '" stroke-width="1.100"><circle cx="26.300" cy="27.400" r="3.600" fill="#fff"/><circle cx="37.700" cy="27.400" r="3.600" fill="#fff"/></g><circle cx="26.300" cy="27.800" r="1.800" fill="' + EK + '"/><circle cx="37.700" cy="27.800" r="1.800" fill="' + EK + '"/><path d="M21.500 21.800l9 3M42.500 21.800l-9 3" stroke="' + EK + '" stroke-width="2.100" stroke-linecap="round"/>'];
+const MOUTH = ['<path d="M27.600 38.500q4.400 4.400 8.800 0" stroke="' + EK + '" stroke-width="2.200" fill="none" stroke-linecap="round"/>',
+  '<path d="M27 37.500h10a5 5 0 0 1-10 0z" fill="' + EK + '"/><path d="M29.800 42.300a2.200 2.200 0 0 1 4.400 0z" fill="#ff6b81"/>',
+  '<path d="M28.500 40h7" stroke="' + EK + '" stroke-width="2.200" stroke-linecap="round"/>',
+  '<ellipse cx="32" cy="40" rx="2.300" ry="2.800" fill="' + EK + '"/>',
+  '',
+  '<path d="M28 40.500q4.600 2.800 7.800-1.800" stroke="' + EK + '" stroke-width="2.200" fill="none" stroke-linecap="round"/>'];
+const ACC = ['',
+  '<path d="M14 20q18-22 36 0z" fill="#e5484d" stroke="#000" stroke-opacity=".28" stroke-width="1.200"/><path d="M44 18.500h12q-1 4-12 3.500z" fill="#b8272c"/><circle cx="32" cy="8.500" r="2" fill="#fff" fill-opacity=".85"/>',
+  '<path d="M15 18.500q17-7 34 0l-.6 4q-16.400-6-32.800 0z" fill="#ffd23f" stroke="#000" stroke-opacity=".25" stroke-width="1"/>',
+  '<path d="M19 17l2.500-10 6.500 6 4-9 4 9 6.500-6L45 17z" fill="#ffc83d" stroke="#b8860b" stroke-width="1.100" stroke-linejoin="round"/><circle cx="32" cy="13.500" r="1.400" fill="#e5484d"/>',
+  '<path d="M18.500 23.500h12v5a6 5.500 0 0 1-12 0zM33.500 23.500h12v5a6 5.500 0 0 1-12 0z" fill="#12131f" stroke="#fff" stroke-opacity=".25"/><path d="M30.500 25h3" stroke="#12131f" stroke-width="2"/><path d="M21 25l4-1.200" stroke="#fff" stroke-opacity=".4" stroke-width="1.300" stroke-linecap="round"/>',
+  '<path d="M32 15q0-9 8-10.500q.5 9-8 10.500z" fill="#3ddc84" stroke="#000" stroke-opacity=".2"/><path d="M32 15q-.5-7-7-8.500q-.4 7 7 8.500z" fill="#2fb86b"/>'];
+function charSvg(code, big) {   // same look as the Lumen characters: round body, two hands, eyes
+  const o = chParse(code) || chRand('guest'), id = 'ch' + (++_av), col = HSL(o.c, 60), cx = 32, cy = 34, r = 19, k = r / 16, sw = 2.900;
+  const hand = (sx, i) => `<g class="chh chh${i}"><circle cx="${cx + sx * r * .9855}" cy="${cy - .17 * r}" r="${(r * .27).toFixed(2)}" fill="${HSL(o.c, 74)}" stroke="${HSL(o.c, 38)}" stroke-width="${sw}"/></g>`;
+  return `<svg class="ava${big ? ' chb' : ''}" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="${id}g" gradientUnits="userSpaceOnUse" cx="${cx}" cy="${cy}" r="${r}" fx="${cx - 5 * k}" fy="${cy - 6 * k}" fr="${2 * k}"><stop offset="0" stop-color="${HSL(o.c, 74)}"/><stop offset="1" stop-color="${HSL(o.c, 52)}"/></radialGradient></defs>`
+    + (big ? '' : `<rect width="64" height="64" fill="#191b2b"/><circle cx="32" cy="32" r="30" fill="${col}" opacity=".18"/>`)
+    + hand(-1, 0) + hand(1, 1)
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${id}g)" stroke="${HSL(o.c, 38)}" stroke-width="${sw}"/>${EYES[o.e]}${MOUTH[o.m]}${ACC[o.a]}</svg>`;
 }
 const chUri = code => 'data:image/svg+xml,' + encodeURIComponent(charSvg(code, false).replace(' class="ava"', ' xmlns="http://www.w3.org/2000/svg" width="128" height="128"'));
 function avatar(name) { const n = String(name || ''); if (U && n === U.name) return charSvg(myCode()); return charSvg(CHR[n.toLowerCase()] || chCode(chRand(n || 'guest'))); }
@@ -745,8 +882,8 @@ function pvFill() { const e = $('#au-pv'); if (!e) return; const l = (G || []).s
   const t = l.length ? l.map(x => `<div class="gz-tile">${cv(x)}<span>${esc(x.title)}</span></div>`).join('') : Array.from({ length: 6 }, () => '<div class="gz-tile"><div class="cv">N</div><span>&nbsp;</span></div>').join('');
   e.innerHTML = t + t; e.classList.toggle('mv', l.length > 3); }
 const BGS = (() => { const P = ['<path d="M12 4l9 16H3z"/>', '<circle cx="12" cy="12" r="8"/>', '<path d="M5 5l14 14M19 5L5 19"/>', '<rect x="5" y="5" width="14" height="14" rx="1"/>'], C = ['#ff4d9d', '#4facfe', '#9b7bff', '#38ef7d'];
-  const sh = Array.from({ length: 12 }, (_, i) => `<span style="left:${(i * 83 + 7) % 92}%;width:${26 + (i * 13) % 26}px;color:${C[i % 4]};animation-duration:${16 + (i * 5) % 14}s;animation-delay:-${(i * 7) % 20}s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${P[i % 4]}</svg></span>`).join('');
-  return `<div class="bg" aria-hidden="true"><div class="bg-st"></div><div class="bg-sun"></div><div class="bg-grid"></div><div class="bg-sh">${sh}</div><div class="bg-dim"></div></div>`; })();
+  const sh = Array.from({ length: 6 }, (_, i) => `<span style="left:${(i * 83 + 9) % 86}%;width:${24 + (i * 13) % 22}px;color:${C[i % 4]};animation-duration:${24 + (i * 7) % 16}s;animation-delay:-${(i * 9) % 24}s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${P[i % 4]}</svg></span>`).join('');
+  return `<div class="bg" aria-hidden="true"><div class="bg-st"></div><div class="bg-sun"></div><div class="bg-fl"></div><div class="bg-sh">${sh}</div><div class="bg-dim"></div></div>`; })();
 function drawAu() { const up = auMode === 'up', eye = '<button type="button" class="lf-eye" aria-label="Show or hide password">Show</button>';
   $('#au').innerHTML = BGS + `<div class="ax"><div class="ax-h"><img class="ax-lg" src="ngd-icon-512.png" alt="" onerror="this.style.display='none'"><h1 class="ax-t">NGD</h1><p class="ax-sub">nmedea gaming dex</p></div>`
     + `<h2 class="ax-h2">${up ? 'Create your account' : 'Welcome back'}</h2><p class="ax-s">${auNote ? esc(auNote) : up ? 'Free to play. No email needed.' : 'Log in to continue to your games.'}</p>`
@@ -777,23 +914,70 @@ async function doAuth() { const up = auMode === 'up', h = $('#au-u').value.trim(
     U = { uid: j.localId, email: j.email || email, name, photo, it, rt, exp }; saveU(); try { localStorage.removeItem('ngdGuest'); } catch (e) {} $('#au').classList.remove('on'); drawPf(); toast((up ? 'Account created. Welcome, ' : 'Welcome back, ') + name + '!'); if (pend) { const g0 = pend; pend = null; play(g0); }
   } catch (e) { er.textContent = e.message || 'Something went wrong'; go.disabled = false; go.textContent = up ? 'Create account' : 'Log in'; } }
 drawPf();
-let q = '', scat = 'All', sage = 'All', sort = 'new';
+let pin = '', q = '', qi = '', scat = 'All', sage = 'All', sort = 'new', sugOn = false;   // q = the search that was sent, qi = what is typed in the box
 const rec = () => { try { return JSON.parse(localStorage.ngdRecent || '[]'); } catch (e) { return []; } };
 const saveRec = () => { const t = q.trim(); if (!t) return; try { localStorage.ngdRecent = JSON.stringify([t, ...rec().filter(x => x !== t)].slice(0, 6)); } catch (e) {} };
-const mq = x => { const t = q.trim().toLowerCase(), hay = [x.title, x.desc, x.about, x.cat, x.dev].join(' ').toLowerCase(); return !t || t.split(/\s+/).every(w => hay.includes(w)); };
+const SIC = '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+const STOPW = new Set('the and for with that this your you are from have will can not but all one more into over some what when also their them then than just like play game games very each only make made using used get its our out any new has was were been being here there where which while about after before other could would should'.split(' '));
+let _kw = null, _kwN = -1;
+function kws() {   // keywords are built from your own games: categories, frequent words and titles
+  if (_kw && _kwN === G.length) return _kw;
+  const cats = [...new Set(G.map(x => x.cat).filter(Boolean))], fr = {};
+  G.forEach(x => String([x.title, x.desc, x.about].join(' ')).toLowerCase().replace(/[^a-z0-9\u00c0-\u024f\s'-]/g, ' ').split(/\s+/).forEach(w => { if (w.length > 3 && !STOPW.has(w)) fr[w] = (fr[w] || 0) + 1; }));
+  const top = Object.entries(fr).filter(e => e[1] > 1).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 24).map(e => e[0]), titles = G.map(x => x.title).filter(Boolean);
+  _kw = { cats, top, all: [...new Set([...cats, ...top, ...titles])] }; _kwN = G.length; return _kw;
+}
+const qwords = t => String(t == null ? q : t).trim().toLowerCase().split(/\s+/).filter(Boolean);
+const rel = (x, t) => {   // how well a game fits the search: title beats category beats publisher beats description
+  const ws = qwords(t); if (!ws.length) return 1;
+  const ti = String(x.title || '').toLowerCase(), ct = String(x.cat || '').toLowerCase(), dv = String(x.dev || '').toLowerCase(), de = String([x.desc, x.about].join(' ')).toLowerCase(); let s = 0, hit = 0;
+  for (const w of ws) { let p = 0; if (ti === w) p = 100; else if (ti.startsWith(w)) p = 60; else if (ti.split(/\s+/).some(z => z.startsWith(w))) p = 50; else if (ti.includes(w)) p = 40; else if (ct.includes(w)) p = 35; else if (dv.includes(w)) p = 20; else if (de.includes(w)) p = 10; if (p) hit++; s += p; }
+  return hit ? s + (hit === ws.length ? 25 : 0) : 0;
+};
+const mq = x => rel(x) > 0;
 const match = x => mq(x) && (scat === 'All' || x.cat === scat) && (sage === 'All' || x.age === sage);
 function drawF() {   // the category / age lines follow the search: they only list what the current search can return
   const cats = () => ['All', ...new Set(G.filter(x => mq(x) && (sage === 'All' || x.age === sage)).map(x => x.cat).filter(Boolean))], ages = () => ['All', ...new Set(G.filter(x => mq(x) && (scat === 'All' || x.cat === scat)).map(x => x.age).filter(Boolean))];
   let cs = cats(); if (!cs.includes(scat)) scat = 'All';
   let ag = ages(); if (!ag.includes(sage)) { sage = 'All'; cs = cats(); }
-  const f = $('#sfl'); if (!f) return;
+  const f = $('#sfl'); if (!f) return; f.style.display = sugOn ? 'none' : '';
+  const so = q.trim() && sort === 'rel' ? 'rel' : sort === 'rel' ? 'new' : sort;
   f.innerHTML = `<div class="chips">${cs.map(c => `<button class="chip sc2${c === scat ? ' on' : ''}" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>`
-    + `<div class="chips sub">${ag.length > 2 ? ag.map(c => `<button class="chip sa${c === sage ? ' on' : ''}" data-v="${esc(c)}">${c === 'All' ? 'Any age' : esc(c)}</button>`).join('') : ''}<button class="chip so${sort === 'new' ? ' on' : ''}" data-v="new">Newest</button><button class="chip so${sort === 'az' ? ' on' : ''}" data-v="az">A\u2013Z</button></div>`; }
-function drawSR() { drawF(); const r = G.filter(match).sort(sort === 'az' ? (a, b) => String(a.title).localeCompare(b.title) : (a, b) => b.v - a.v), has = q.trim() || scat !== 'All' || sage !== 'All';
-  $('#sr').innerHTML = (!has && rec().length ? '<div class="sec-t">Recent searches</div><div class="chips" style="flex-wrap:wrap;overflow:visible;border:0">' + rec().map(t => `<button class="chip rc" data-q="${esc(t)}">${esc(t)}</button>`).join('') + '</div>' : '') + `<div class="sec-t">${has ? r.length + ' result' + (r.length === 1 ? '' : 's') : 'Browse all games'}</div>` + (r.length ? `<div class="list">${r.map(card).join('')}</div>` : '<p class="mu pad">No games match your search.</p>'); }
-function drawS() { $('#search').innerHTML = `<div class="sbar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="si" placeholder="Search games, categories, publishers\u2026" value="${esc(q)}" autocomplete="off" enterkeyhint="search"><button id="sx" ${q ? '' : 'hidden'} aria-label="Clear">&times;</button></div><div id="sfl"></div><div id="sr"></div>`; drawSR(); }
-document.body.addEventListener('input', e => { if (e.target.id === 'si') { q = e.target.value; $('#sx').hidden = !q; drawSR(); } });
-document.body.addEventListener('keydown', e => { if (e.target.id === 'si' && e.key === 'Enter') { saveRec(); e.target.blur(); } });
+    + `<div class="chips sub">${ag.length > 2 ? ag.map(c => `<button class="chip sa${c === sage ? ' on' : ''}" data-v="${esc(c)}">${c === 'All' ? 'Any age' : esc(c)}</button>`).join('') : ''}${q.trim() ? `<button class="chip so${so === 'rel' ? ' on' : ''}" data-v="rel">Best match</button>` : ''}<button class="chip so${so === 'new' ? ' on' : ''}" data-v="new">Newest</button><button class="chip so${so === 'az' ? ' on' : ''}" data-v="az">A\u2013Z</button></div>`; }
+function drawSug() {   // games with small images first, then keywords, all divided by lines
+  const f = $('#sfl'); if (f) f.style.display = 'none';
+  const t = qi.trim().toLowerCase(), k = kws(), r = rec(); let h = '';
+  const kr = w => `<button class="srow2 kw" data-q="${esc(w)}">${SIC}<span class="sx"><b>${esc(w)}</b></span><em>&rsaquo;</em></button>`;
+  const gr = x => `<button class="srow2 gsug" data-id="${esc(x.id)}" data-q="${esc(x.title)}"><span class="st">${cv(x)}</span><span class="sx"><b>${esc(x.title)}</b><i>${esc(x.cat || 'Game')}${x.age ? ' \u00b7 ' + esc(x.age) : ''}</i></span><em>&rsaquo;</em></button>`;
+  if (!t) {
+    const top = [...G].sort((a, b) => (b.v || 0) - (a.v || 0)).slice(0, 6);
+    h += (r.length ? `<div class="sec-t">Recent searches</div><div class="srows">${r.map(x => `<button class="srow2 rc" data-q="${esc(x)}">${SIC}<span class="sx"><b>${esc(x)}</b></span><em>&rsaquo;</em></button>`).join('')}</div><button class="clr" id="rcx">Clear history</button>` : '')
+      + (top.length ? `<div class="sec-t">Popular games</div><div class="srows">${top.map(gr).join('')}</div>` : '')
+      + `<div class="sec-t">Categories</div><div class="srows">${k.cats.map(kr).join('')}</div>`;
+  } else {
+    const m = k.all.filter(w => w.toLowerCase().includes(t) && w.toLowerCase() !== t).sort((a, b) => (b.toLowerCase().startsWith(t) - a.toLowerCase().startsWith(t)) || a.length - b.length).slice(0, 4),
+      gm = G.filter(x => rel(x, qi) > 0).sort((a, b) => rel(b, qi) - rel(a, qi) || (b.v || 0) - (a.v || 0)).slice(0, 6);
+    const gt = new Set(gm.map(x => String(x.title).toLowerCase())); m.splice(0, m.length, ...m.filter(w => !gt.has(w.toLowerCase())));
+    h += (gm.length ? `<div class="srows">${gm.map(gr).join('')}</div>` : '')
+      + `<div class="srows"><button class="srow2 kw" data-q="${esc(qi.trim())}">${SIC}<span class="sx"><b>Search for \u201c${esc(qi.trim())}\u201d</b></span><em>&rsaquo;</em></button>${m.map(kr).join('')}</div>`;
+  }
+  $('#sr').innerHTML = h;
+}
+function drawSR() { if (sugOn) { drawSug(); return; } drawF();
+  const so = q.trim() && sort === 'rel' ? 'rel' : sort === 'rel' ? 'new' : sort,
+    r = G.filter(match).sort(so === 'rel' ? (a, b) => rel(b) - rel(a) || b.v - a.v : so === 'az' ? (a, b) => String(a.title).localeCompare(b.title) : (a, b) => b.v - a.v), has = q.trim() || scat !== 'All' || sage !== 'All';
+  if (pin) { const pg = G.find(x => x.id === pin); if (pg) { const i = r.indexOf(pg); if (i > 0) { r.splice(i, 1); r.unshift(pg); } else if (i < 0) r.unshift(pg); } }
+  const seen = new Set(r.map(x => x.id)), tops = r.slice(0, 3), tc = new Set(tops.map(x => x.cat).filter(Boolean)), td = new Set(tops.map(x => x.dev).filter(Boolean)),
+    more = (q.trim() || scat !== 'All' || sage !== 'All') ? G.filter(x => !seen.has(x.id)).sort((a, b) => (td.has(a.dev) - td.has(b.dev)) || (tc.has(b.cat) - tc.has(a.cat)) || (b.v || 0) - (a.v || 0)).slice(0, 10) : [],
+    rel2 = more.length ? `<div class="sec-t">More games you may like</div><div class="list">${more.map(card).join('')}</div>` : '';
+  $('#sr').innerHTML = `<div class="sec-t">${has ? r.length + ' result' + (r.length === 1 ? '' : 's') + (q.trim() ? ' for \u201c' + esc(q.trim()) + '\u201d' : '') : 'Browse all games'}</div>` + (r.length ? `<div class="list">${r.map(card).join('')}</div>` : `<p class="mu pad">No games match \u201c${esc(q.trim())}\u201d. Try one of these keywords:</p><div class="chips wrap">${[...kws().cats, ...kws().top.slice(0, 8)].map(x => `<button class="chip kw" data-q="${esc(x)}">${esc(x)}</button>`).join('')}</div>`) + rel2; }
+function drawS() { sugOn = false; $('#search').innerHTML = `<div class="sstick"><div class="sbar">${SIC}<input id="si" placeholder="Search games, keywords\u2026" value="${esc(qi)}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><button id="sx" ${qi ? '' : 'hidden'} aria-label="Clear">&times;</button></div></div><div id="sfl"></div><div id="sr"></div>`; drawSR(); }
+function searchGo(text, pinId) { pin = pinId || ''; qi = String(text || '').trim(); q = qi; sugOn = false; scat = 'All'; sage = 'All'; if (q) { saveRec(); sort = 'rel'; } else if (sort === 'rel') sort = 'new'; drawS(); try { $('#si').blur(); } catch (e) {} scrollTo(0, 0); }
+document.body.addEventListener('focusin', e => { if (e.target.id === 'si') document.body.classList.add('kb'); });
+document.body.addEventListener('focusout', e => { if (e.target.id === 'si') setTimeout(() => { if (document.activeElement !== $('#si')) document.body.classList.remove('kb'); }, 120); });
+document.body.addEventListener('focusin', e => { if (e.target.id === 'si') { sugOn = true; qi = e.target.value; drawSug(); } });
+document.body.addEventListener('input', e => { if (e.target.id === 'si') { qi = e.target.value; $('#sx').hidden = !qi; sugOn = true; drawSug(); } });
+document.body.addEventListener('keydown', e => { if (e.target.id === 'si' && e.key === 'Enter') { e.preventDefault(); searchGo(e.target.value); } });
 function social() { const c = $('#sc'); c.classList.remove('full', 'pg');
   c.innerHTML = `<div class="gh"></div><div class="in"><h1>Follow nmedea</h1><p class="mu" style="margin:4px 0 8px">Find us on social media.</p>${SOCIAL.length ? SOCIAL.map(l => `<a class="sl" href="${esc(l.u)}" target="_blank" rel="noopener noreferrer">${esc(l.n)}<span>Open ›</span></a>`).join('') : '<p class="mu">Social links coming soon.</p>'}</div>`;
   openSheet(); }
@@ -858,7 +1042,7 @@ addEventListener('pagehide', gsLeave);
 // ---- lobby: loading finishes, then your character + "Join server"
 function lobbyShow(x) {
   if (!x) return; const L = $('#glb');
-  L.innerHTML = `<div class="glb-l"><div class="glb-g"><div class="glb-cv">${cv(x)}</div><div><h2>${esc(x.title)}</h2>${dv(x)}</div></div><div class="gs" id="glbs"></div><div class="gs-a" id="glba"></div></div><div class="glb-r"><div class="glb-ch">${charSvg(myCode(), true)}</div><b class="glb-n">${esc(avName())}</b><button class="glb-j" id="glbj">Join server</button><button class="glb-b" id="glbb">Back to menu</button></div>`;
+  L.innerHTML = `<div class="glb-w"><div class="glb-l"><div class="glb-g"><div class="glb-cv">${cv(x)}</div><div><h2>${esc(x.title)}</h2>${dv(x)}</div></div><div class="gs" id="glbs"></div><div class="gs-a" id="glba"></div></div><div class="glb-r"><div class="glb-ch">${charSvg(myCode(), true)}</div><b class="glb-n">${esc(avName())}</b><button class="glb-j" id="glbj">Join server</button><button class="glb-b" id="glbb">Back to menu</button></div></div>`;
   L.classList.add('on');
   $('#glbj').onclick = () => { lbState = 2; L.classList.remove('on'); gsJoin(x); };
   $('#glbb').onclick = closeGame;
@@ -866,23 +1050,40 @@ function lobbyShow(x) {
 }
 // ---- character editor (profile)
 function chEditor() {
-  const m = chParse(myCode());
-  return `<div class="pf-t">Your character</div><div class="ch-ed"><div class="ch-pv">${charSvg(chCode(m), true)}</div><div class="ch-ct"><div class="ch-l">Colour</div><div class="ch-row">${CPAL.map((c, i) => `<button class="ch-sw${i === m.c ? ' on' : ''}" data-i="${i}" style="background:${c}" aria-label="Colour ${i + 1}"></button>`).join('')}</div>`
-    + `<div class="ch-l">Eyes</div><div class="ch-row">${[0, 1, 2, 3].map(i => `<button class="ch-ey ch-op${i === m.e ? ' on' : ''}" data-i="${i}" aria-label="Eyes ${i + 1}">${charSvg(chCode({ c: m.c, e: i, m: m.m }))}</button>`).join('')}</div>`
-    + `<div class="ch-l">Mouth</div><div class="ch-row">${[0, 1, 2, 3].map(i => `<button class="ch-mo ch-op${i === m.m ? ' on' : ''}" data-i="${i}" aria-label="Mouth ${i + 1}">${charSvg(chCode({ c: m.c, e: m.e, m: i }))}</button>`).join('')}</div>`
-    + `<button class="pl ch-rnd" id="chr">${IC.shuffle}Randomise</button></div></div>`;
+  return `<div class="pf-t">Your character</div><button class="ch-ed ch-card" id="czo"><div class="ch-pv">${charSvg(myCode(), true)}</div><div class="ch-tx"><b>Customize character</b><span>Colour, eyes, mouth and extras. This is how you look in every game lobby.</span><i>Edit ›</i></div></button>`;
 }
 function setChar(code) { try { localStorage.ngdChar = code; } catch (e) {} drawPf(); if (U) { fsBeat(); sb('users/' + U.uid + '/ch', 'PUT', code).catch(() => {}); } }
+// ---- customize page (full screen)
+document.body.insertAdjacentHTML('beforeend', '<div id="cz" role="dialog" aria-label="Customize character"></div>');
+let czTab = 'c';
+const CZT = [['c', 'Colour'], ['e', 'Eyes'], ['m', 'Mouth'], ['a', 'Extras']];
+function czDraw() {
+  const m = chParse(myCode()), pv = $('#czp'); if (!pv) return;
+  pv.innerHTML = charSvg(chCode(m), true);
+  $('#czt').innerHTML = CZT.map(([k, n]) => `<button class="cz-tb${k === czTab ? ' on' : ''}" data-k="${k}">${n}</button>`).join('');
+  $('#czg').className = 'cz-g' + (czTab === 'c' ? ' col' : '');
+  $('#czg').innerHTML = czTab === 'c' ? CPAL.map((c, i) => `<button class="cz-it cz-sw${i === m.c ? ' on' : ''}" data-i="${i}" style="background:${c}" aria-label="Colour ${i + 1}"></button>`).join('')
+    : [0, 1, 2, 3, 4, 5].map(i => `<button class="cz-it cz-op${i === m[czTab] ? ' on' : ''}" data-i="${i}" aria-label="${CZT.find(t => t[0] === czTab)[1]} ${i + 1}">${charSvg(chCode(Object.assign({}, m, { [czTab]: i })))}</button>`).join('');
+}
+function openCz() {
+  if (!U) { showAuth('in', 'Log in to customize your character.'); return; }
+  czTab = 'c'; const z = $('#cz');
+  z.innerHTML = `<div class="cz-top"><button class="cz-bk" id="czb" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><b>Customize character</b><button class="cz-dn" id="czd">Done</button></div><div class="cz-main"><div class="cz-st"><div class="cz-pv" id="czp"></div><b class="cz-nm">${esc(avName())}</b></div><div class="cz-ct"><div class="cz-tabs" id="czt"></div><div id="czg"></div><button class="pl ch-rnd" id="czr">${IC.shuffle}Randomise</button></div></div>`;
+  czDraw(); z.classList.add('on');
+  pushLy('modal', () => { z.classList.remove('on'); try { drawP(); } catch (e) {} });
+}
 document.body.addEventListener('click', e => {
-  const b = e.target.closest('.ch-sw,.ch-ey,.ch-mo,#chr'); if (!b || !U) return;
-  let m = chParse(myCode());
-  if (b.id === 'chr') m = { c: Math.random() * 12 | 0, e: Math.random() * 4 | 0, m: Math.random() * 4 | 0 };
-  else if (b.classList.contains('ch-sw')) m.c = +b.dataset.i; else if (b.classList.contains('ch-ey')) m.e = +b.dataset.i; else m.m = +b.dataset.i;
-  setChar(chCode(m));
+  const t = e.target; if (t.closest('#czo')) { openCz(); return; }
+  if (!t.closest('#cz')) return;
+  if (t.closest('#czb,#czd')) { if (topLy() === 'modal') dropLy(); else $('#cz').classList.remove('on'); return; }
+  const tb = t.closest('.cz-tb'); if (tb) { czTab = tb.dataset.k; czDraw(); return; }
+  const it = t.closest('.cz-it'); if (it) { const m = chParse(myCode()); m[czTab] = +it.dataset.i; setChar(chCode(m)); czDraw(); return; }
+  if (t.closest('#czr')) { setChar(chCode({ c: Math.random() * CPAL.length | 0, e: Math.random() * 6 | 0, m: Math.random() * 6 | 0, a: Math.random() * 6 | 0 })); czDraw(); }
 });
 // ---- comments: same Firebase database as every game, own bucket: globalchat/ngdComments/<gameId>/<commentId>
 const CB = FB.replace(/\/$/, '') + '/globalchat/ngdComments', ckey = id => String(id).replace(/[.$#\[\]\/]/g, '_');
-let cmFor = '', cmSheet = '', cmLast = 0, cmSort = 'top', cmData = null, cmOpen = {};
+let cmFor = '', cmSheet = '', cmLast = 0, cmSort = 'top', cmData = null, cmOpen = {}, CM_PAGE = 5, CM_STEP = 10, cmShown = 5;
+const cmHid = () => { try { const a = JSON.parse(localStorage.ngdHidCm || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
 async function cmReq(id, method, body, key) {
   const get = !method || method === 'GET';
   const r = await fetch(CB + '/' + ckey(id) + (key ? '/' + key : '') + '.json?auth=' + await tok() + (get ? '&orderBy=%22%24key%22&limitToLast=60' : ''), { method: method || 'GET', headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
@@ -891,32 +1092,35 @@ async function cmReq(id, method, body, key) {
 }
 const cmAgo = t => { const s = Math.max(1, ((Date.now() - t) / 1000) | 0); return s < 60 ? 'just now' : s < 3600 ? ((s / 60) | 0) + 'm ago' : s < 86400 ? ((s / 3600) | 0) + 'h ago' : s < 2592000 ? ((s / 86400) | 0) + 'd ago' : fdate(t); };
 const cmCh = (code, name) => charSvg(chParse(code) ? code : chCode(chRand(name || 'guest')));
+const cmStars = u => { const v = rtData && u && rtData[u] ? +rtData[u].s : 0; return v >= 1 && v <= 5 ? `<div class="cm-st" aria-label="Rated ${v} out of 5">${[1, 2, 3, 4, 5].map(i => `<span class="${i <= v ? 'on' : ''}">${STAR}</span>`).join('')}</div>` : ''; };
 function cmDraw(id, err) {
   const b = $('#cm'); if (!b || cmFor !== id) return;
   const draft = $('#cmi') ? $('#cmi').value : '';
-  const items = Object.entries(cmData || {}).map(([k, v]) => Object.assign({ k }, v)).filter(c => c && typeof c.t === 'string' && c.t);
+  const hid = cmHid(), items = Object.entries(cmData || {}).map(([k, v]) => Object.assign({ k }, v)).filter(c => c && typeof c.t === 'string' && c.t && !hid.includes(id + '/' + c.k) && !(c.u && FS.bl && FS.bl[c.u]));
   items.forEach(c => { c.hv = c.h && typeof c.h === 'object' ? Object.entries(c.h).map(([u, v]) => ({ u, n: (v && v.n) || 'Player', c: v && v.c })) : []; });
   items.sort(cmSort === 'top' ? (a, z) => (z.hv.length - a.hv.length) || ((z.ts || 0) - (a.ts || 0)) : (a, z) => (z.ts || 0) - (a.ts || 0));
-  const me = U ? U.uid : '';
+  const me = U ? U.uid : '', mine = c => !!U && !!c.u && c.u === U.uid;
   const one = c => { const n = c.hv.length, voted = c.hv.some(v => v.u === me), long = c.t.length > 180 || c.t.split('\n').length > 4;
-    return `<div class="cm-i"><span class="cm-av">${cmCh(c.c, c.n)}</span><div class="cm-b"><div class="cm-h"><b>${esc(c.n || 'Player')}</b>${c.u === me ? '<em>You</em>' : ''}<span>${c.ts ? cmAgo(c.ts) : ''}</span></div>`
+    return `<div class="cm-i"><span class="cm-av">${cmCh(c.c, c.n)}</span><div class="cm-b"><div class="cm-h"><b>${esc(c.n || 'Player')}</b>${mine(c) ? '<em>You</em>' : ''}</div>${cmStars(c.u)}<div class="cm-dt">${c.ts ? cmAgo(c.ts) : ''}</div>`
       + `<div class="cm-t${long ? ' cl' : ''}">${esc(c.t)}</div>${long ? '<button class="cm-rm">Read more</button>' : ''}`
       + `<div class="cm-a"><button class="cm-hp${voted ? ' on' : ''}" data-k="${esc(c.k)}" aria-pressed="${voted}">${IC.up}<span>Helpful</span>${n ? `<b>${n}</b>` : ''}</button>`
       + (n ? `<button class="cm-who" data-k="${esc(c.k)}"><span class="st">${c.hv.slice(0, 3).map(v => `<span>${cmCh(v.c, v.n)}</span>`).join('')}</span>${n} found this helpful</button>` : '')
-      + (c.u === me ? `<button class="cm-d" data-k="${esc(c.k)}" aria-label="Delete comment">${IC.trash}</button>` : '') + '</div>'
+      + (mine(c) ? `<button class="cm-d" data-k="${esc(c.k)}" aria-label="Delete comment">${IC.trash}</button>` : `<button class="cm-rp" data-k="${esc(c.k)}" aria-label="Report comment">${CMFLAG}<span>Report</span></button>`) + '</div>'
       + (n ? `<div class="cm-wl" id="w-${esc(c.k)}"${cmOpen[c.k] ? '' : ' hidden'}>${c.hv.map(v => `<span class="cm-chip"><i>${cmCh(v.c, v.n)}</i>${esc(v.n)}</span>`).join('')}</div>` : '') + '</div></div>'; };
   b.innerHTML = `<div class="cm-top"><div class="cm-n"><span class="ic">${IC.chat}</span><span><b>${items.length}</b> comment${items.length === 1 ? '' : 's'}</span></div><div class="cm-sort"><button data-s="top" class="${cmSort === 'top' ? 'on' : ''}">Most helpful</button><button data-s="new" class="${cmSort === 'new' ? 'on' : ''}">Newest</button></div></div>`
     + (U ? `<div class="cm-ph"><span class="cm-av">${avatar(U.name)}</span><div class="cm-ta"><textarea id="cmi" maxlength="300" rows="2" placeholder="Share what you think of this game"></textarea><div class="cm-bar"><span class="cm-cnt" id="cmc">0/300</span><button class="cm-post" id="cmp" disabled>Post</button></div></div></div>`
       : '<div class="cm-lg"><span>Log in to join the conversation.</span><button id="cml">Log in</button></div>') + '<div class="er" id="cme"></div>'
     + (err ? '<p class="mu">Comments aren’t loading right now. Our team is working on a fix. Please try again soon.</p><button class="pl" id="cmr" style="max-width:200px;margin-top:8px">Try again</button>'
-      : items.length ? items.map(one).join('') : '<p class="mu" style="padding:10px 0">No comments yet. Be the first to share what you think.</p>');
+      : items.length ? items.slice(0, cmShown).map(one).join('') + (items.length > cmShown ? `<button class="cm-more" id="cmm">Show more comments (${items.length - cmShown} more)</button>` : '') : '<p class="mu" style="padding:10px 0">No comments yet. Be the first to share what you think.</p>');
   const ta = $('#cmi'), pb = $('#cmp');
   if (ta) { ta.value = draft; const sync = () => { $('#cmc').textContent = ta.value.length + '/300'; pb.disabled = !ta.value.trim(); }; ta.oninput = sync; sync(); }
   b.onclick = async e => {
     const t = e.target, q = s => t.closest(s);
     if (q('#cml')) { closeSheet(); setTimeout(() => showAuth('in', 'Log in to comment.'), 150); return; }
     if (q('#cmr')) { cmLoad(id, true); return; }
-    if (q('.cm-sort button')) { cmSort = q('.cm-sort button').dataset.s; cmDraw(id); return; }
+    if (q('#cmm')) { cmShown += CM_STEP; cmDraw(id); return; }
+    if (q('.cm-rp')) { cmReportOpen(id, q('.cm-rp').dataset.k); return; }
+    if (q('.cm-sort button')) { cmSort = q('.cm-sort button').dataset.s; cmShown = CM_PAGE; cmDraw(id); return; }
     if (q('.cm-rm')) { const x = q('.cm-b').querySelector('.cm-t'); x.classList.toggle('cl'); q('.cm-rm').textContent = x.classList.contains('cl') ? 'Read more' : 'Show less'; return; }
     if (q('.cm-who')) { const k = q('.cm-who').dataset.k; cmOpen[k] = !cmOpen[k]; const w = document.getElementById('w-' + k); if (w) w.hidden = !cmOpen[k]; return; }
     if (q('.cm-hp')) {
@@ -927,7 +1131,7 @@ function cmDraw(id, err) {
       catch (er) { c.h = keep || undefined; cmDraw(id); $('#cme').textContent = 'Couldn’t save that. Please try again.'; svDown('helpful ' + (er.status || er.message)); }
       return;
     }
-    if (q('.cm-d')) { const k = q('.cm-d').dataset.k; if (!confirm('Delete your comment?')) return; try { await cmReq(id, 'DELETE', undefined, k); if (cmData) delete cmData[k]; cmDraw(id); } catch (er) { $('#cme').textContent = 'Couldn’t delete that. Try again.'; svDown('comment delete ' + (er.status || er.message)); } return; }
+    if (q('.cm-d')) { const k = q('.cm-d').dataset.k, own = cmData && cmData[k]; if (!U || !own || own.u !== U.uid) return; fsConfirm('Delete your comment?', 'This permanently removes your comment from this game. This cannot be undone.', 'Delete', async () => { try { await cmReq(id, 'DELETE', undefined, k); if (cmData) delete cmData[k]; cmDraw(id); toast('Comment deleted'); } catch (er) { const m = $('#cme'); if (m) m.textContent = 'Couldn’t delete that. Try again.'; svDown('comment delete ' + (er.status || er.message)); } }); return; }
     if (q('#cmp')) {
       const v = $('#cmi').value.trim().slice(0, 300), m = $('#cme'); if (!v) return;
       if (Date.now() - cmLast < 8000) { m.textContent = 'Please wait a few seconds before commenting again.'; return; }
@@ -938,10 +1142,61 @@ function cmDraw(id, err) {
   };
 }
 async function cmLoad(id, force) {
-  if (cmFor === id && !force) return; if (cmFor !== id) { cmData = null; cmOpen = {}; } cmFor = id;
+  if (cmFor === id && !force) return; if (cmFor !== id) { cmData = null; cmOpen = {}; cmShown = CM_PAGE; } cmFor = id;
   if (!force && $('#cm')) $('#cm').innerHTML = '<p class="mu">Loading comments…</p>';
   try { cmData = (await cmReq(id)) || {}; svUp(); cmDraw(id); }
   catch (e) { cmDraw(id, true); svDown('comments ' + (e.status || e.message)); }
+}
+
+const CMFLAG = '<svg viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></svg>';
+function cmReportOpen(id, k) {
+  const c = cmData && cmData[k]; if (!c) return;
+  if (!U) { closeSheet(); setTimeout(() => showAuth('in', 'Log in to report a comment.'), 150); return; }
+  if (c.u === U.uid) return;
+  $('#rpt').textContent = 'Report comment'; $('#rpn').value = ''; $('#rpe').textContent = ''; $('#rpb').checked = false; $('#rpg').disabled = false; $('#rpg').textContent = 'Send report';
+  $('#rpg').onclick = async () => { const g = $('#rpg'); g.disabled = true; g.textContent = 'Sending…';
+    try {
+      const nm = String(c.n || 'Player').slice(0, 24);
+      await sb('reports', 'POST', { by: U.uid, byName: U.name, t: c.u, tn: nm, r: $('#rpr').value, note: ('Game comment [' + id + '/' + k + '] ' + $('#rpn').value).slice(0, 300), ctx: [{ f: c.u, t: String(c.t).slice(0, 300), ts: c.ts || 0, rep: 1 }], ts: SV });
+      const b = $('#rpb').checked; dropLy();
+      try { const h = cmHid(); h.push(id + '/' + k); localStorage.ngdHidCm = JSON.stringify(h.slice(-300)); } catch (e) {}
+      if (b) { try { await fsBlock(c.u, nm); } catch (e) {} }
+      toast(b ? 'Report sent. ' + nm + ' is blocked' : 'Report sent. Thank you'); cmDraw(id);
+    } catch (e) { $('#rpe').textContent = fsMsg(e); g.disabled = false; g.textContent = 'Send report'; } };
+  openModal('#rp');
+}
+// ---- star ratings: globalchat/ngdRatings/<gameId>/<uid> = { s: 1..5 }  (one rating per account, can be changed or removed)
+const RB = FB.replace(/\/$/, '') + '/globalchat/ngdRatings', STAR = '<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.5l-5.9 3.1 1.2-6.5L2.5 9.5l6.6-.9z"/></svg>';
+let rtFor = '', rtData = null, rtBusy = false;
+async function rtReq(id, method, body, key) {
+  const get = !method || method === 'GET';
+  const r = await fetch(RB + '/' + ckey(id) + (key ? '/' + key : '') + '.json?auth=' + await tok() + (get ? '&orderBy=%22%24key%22&limitToLast=1000' : ''), { method: method || 'GET', headers: body ? { 'Content-Type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+  if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+  return r.json();
+}
+function rtDraw(id, err) {
+  const b = $('#rt'); if (!b || rtFor !== id) return;
+  if (err) { b.innerHTML = ''; return; }
+  const vals = Object.values(rtData || {}).map(v => v && +v.s).filter(n => n >= 1 && n <= 5), n = vals.length, avg = n ? vals.reduce((a, z) => a + z, 0) / n : 0, mine = U && rtData && rtData[U.uid] ? +rtData[U.uid].s : 0;
+  const dist = [5, 4, 3, 2, 1].map(k => vals.filter(v => v === k).length);
+  b.innerHTML = `<div class="rt-pl"><div class="rt-sum"><span class="rt-big">${n ? avg.toFixed(1) : '–'}</span><span class="rt-ss">${[1, 2, 3, 4, 5].map(i => `<span class="${i <= Math.round(avg) && n ? 'on' : ''}">${STAR}</span>`).join('')}</span><span class="rt-n">${n ? nf(n) + ' rating' + (n === 1 ? '' : 's') : 'No ratings yet'}</span></div><div class="rt-bars">${dist.map((c, i) => `<div><span>${5 - i}</span><i><b style="width:${n ? Math.round(c / n * 100) : 0}%"></b></i></div>`).join('')}</div></div>`
+    + `<div class="rt-me"><span>${mine ? 'Your rating' : 'Tap a star to rate'}</span><span class="rt-in">${[1, 2, 3, 4, 5].map(i => `<button class="rt-s${i <= mine ? ' on' : ''}" data-v="${i}" aria-label="Rate ${i} star${i === 1 ? '' : 's'}">${STAR}</button>`).join('')}</span>${mine ? '<button class="rt-x" id="rtx">Remove</button>' : ''}</div><div class="er" id="rte"></div>`;
+  b.onclick = async e => {
+    const s = e.target.closest('.rt-s'), x = e.target.closest('#rtx'); if (!s && !x) return;
+    if (!U) { closeSheet(); setTimeout(() => showAuth('in', 'Log in to rate this game.'), 150); return; }
+    if (rtBusy) return; rtBusy = true;
+    const keep = rtData ? Object.assign({}, rtData) : {}, v = s ? +s.dataset.v : 0;
+    rtData = Object.assign({}, rtData || {}); if (v) rtData[U.uid] = { s: v }; else delete rtData[U.uid]; rtDraw(id);
+    try { await rtReq(id, v ? 'PUT' : 'DELETE', v ? { s: v } : undefined, U.uid); }
+    catch (er) { rtData = keep; rtDraw(id); const m = $('#rte'); if (m) m.textContent = 'Couldn’t save your rating. Please try again.'; }
+    rtBusy = false;
+  };
+  try { if (cmFor === id && $('#cm')) cmDraw(id); } catch (e) {}
+}
+async function rtLoad(id) {
+  rtFor = id; rtData = null; const b = $('#rt'); if (b) b.innerHTML = '';
+  try { const d = (await rtReq(id)) || {}; if (rtFor !== id) return; rtData = d; rtDraw(id); }
+  catch (e) { try { console.warn('NGD ratings:', e.status || e.message); } catch (z) {} rtDraw(id, true); }
 }
 // ---- games can send the player back to the NGD menu with: parent.postMessage({ngd:'exit'}, '*')
 addEventListener('message', e => { if (e.source === $('#fr').contentWindow && e.data && e.data.ngd === 'exit') closeGame(); });
@@ -960,11 +1215,14 @@ document.body.addEventListener('click', e => {
   else if (t.closest('.sc2')) { scat = t.closest('.sc2').dataset.v; drawS(); }
   else if (t.closest('.sa')) { sage = t.closest('.sa').dataset.v; drawS(); }
   else if (t.closest('.so')) { sort = t.closest('.so').dataset.v; drawS(); }
-  else if (t.closest('.rc')) { q = t.closest('.rc').dataset.q; drawS(); }
-  else if (t.closest('#sx')) { q = ''; drawS(); $('#si').focus(); }
+  else if (t.closest('.gsug')) { const g3 = t.closest('.gsug'); searchGo(g3.dataset.q, g3.dataset.id); }
+  else if (t.closest('.rc,.kw')) searchGo(t.closest('.rc,.kw').dataset.q)
+  else if (t.closest('#rcx')) { try { localStorage.ngdRecent = '[]'; } catch (e) {} drawSug(); }
+  else if (t.closest('#sx')) { q = ''; qi = ''; sort = sort === 'rel' ? 'new' : sort; drawS(); $('#si').focus(); }
   else if (ch) { cat = ch.dataset.c; draw(); }
   else if (t.id === 'rt') load();
   else if (c) { if (c.closest('#search')) saveRec(); sheet(G.find(x => x.id === c.dataset.id)); }
+  else if (t.closest('.card2')) { const g2 = t.closest('.card2'); try { $('#si').blur(); } catch (e) {} sheet(G.find(x => x.id === g2.dataset.id)); }
   else if (t.id === 'sh') closeSheet();
 });
 const fdate = v => { try { return new Date(v).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); } catch (e) { return ''; } };
@@ -972,13 +1230,13 @@ function sheet(x) { if (!x) return; const c = $('#sc'), e = stats()[x.id] || {},
   const sh = Array.isArray(x.shots) ? x.shots.filter(u => /^https:\/\//.test(u)) : [], shotsHTML = sh.length ? `<div class="shots">${sh.map((u, i) => `<button class="shot" data-i="${i}" aria-label="Screenshot ${i + 1}"><img loading="lazy" decoding="async" src="${esc(u)}" alt=""></button>`).join('')}</div>` : '',
     wn = (x.notes || x.rel > 1) ? `<div class="pf-t">What\u2019s new</div>${x.notes ? `<p class="ab2">${esc(x.notes)}</p>` : ''}<p class="wn-m">Version ${esc(x.ver || '1.0')}${x.upd ? ' \u00b7 Updated ' + fdate(x.upd) : ''}</p>` : '';
   c.classList.remove('full', 'pg');
-  c.innerHTML = `<div class="gh"></div><div class="in"><div class="big">${cv(x)}</div><div class="hd"><div class="th">${cv(x)}</div><div><h1>${esc(x.title)}</h1>${dv(x)}</div></div><div id="gs" class="gsw"></div><p class="sd">${esc(x.desc)}</p>${shotsHTML}
+  c.innerHTML = `<div class="gh"></div><div class="in"><div class="big">${cv(x)}</div><div class="hd"><div class="th">${cv(x)}</div><div><h1>${esc(x.title)}</h1>${dv(x)}</div></div><div id="gs" class="gsw"></div><div id="rt" class="rt"></div><p class="sd">${esc(x.desc)}</p>${shotsHTML}
 <div class="more"><div class="facts"><div><b>${esc(x.cat || '–')}</b><span>Category</span></div><div><b>${esc(x.age || '–')}</b><span>Age</span></div><div><b>${esc(x.ver || '–')}</b><span>Version</span></div><div><b>${o}</b><span>Screen</span></div></div>
 ${wn}<div class="pf-t">About this game</div><p class="ab2">${esc(x.about || x.desc || 'No more details yet.')}</p>
 <div class="pf-t">Information</div><div class="kv"><div><span>Developer</span><b>${esc(x.dev || 'nmedea')}${x.vf === false ? '' : BD}</b></div>${x.pub || x.v ? `<div><span>Added</span><b>${fdate(x.pub || x.v)}</b></div>` : ''}${x.upd && x.upd !== (x.pub || x.v) ? `<div><span>Updated</span><b>${fdate(x.upd)}</b></div>` : ''}<div><span>Requires</span><b>Internet connection</b></div><div><span>Account</span><b>Needed to play</b></div></div>
 <div class="pf-t">Your activity</div><div class="kv"><div><span>Time played</span><b>${dur(e.t || 0)}</b></div><div><span>Sessions</span><b>${e.n || 0}</b></div>${e.l ? `<div><span>Last played</span><b>${fdate(e.l)}</b></div>` : ''}</div><div class="pf-t">Comments</div><div id="cm" class="cm"></div></div>
 <div class="btns"><button class="pl" id="go">Play</button><button class="sec" id="mr">More details</button></div></div>`;
-  cmFor = ''; cmSheet = x.id; openSheet(); gsLoad(x.id); c.querySelectorAll('.shot').forEach(b => b.onclick = () => zoom(sh[+b.dataset.i])); $('#go').onclick = () => { $('#sh').classList.remove('on'); play(x); }; $('#mr').onclick = () => setFull(!c.classList.contains('full')); }
+  cmFor = ''; cmSheet = x.id; openSheet(); gsLoad(x.id); rtLoad(x.id); c.querySelectorAll('.shot').forEach(b => b.onclick = () => zoom(sh[+b.dataset.i])); $('#go').onclick = () => { $('#sh').classList.remove('on'); play(x); }; $('#mr').onclick = () => setFull(!c.classList.contains('full')); }
 // drag the sheet: down closes (or shrinks a full page), up opens the full page
 { const sc = $('#sc'); let dg = null;
   sc.addEventListener('pointerdown', e => { if (!e.target.closest('.gh,.hd')) return; dg = { y: e.clientY, d: 0, f: sc.classList.contains('full') }; sc.setPointerCapture(e.pointerId); sc.style.transition = 'none'; });
@@ -988,10 +1246,10 @@ ${wn}<div class="pf-t">About this game</div><p class="ab2">${esc(x.about || x.de
   sc.addEventListener('pointerup', end); sc.addEventListener('pointercancel', end); }
 function zoom(u) { $('#ssi').src = u; openModal('#ss'); }
 $('#ss').onclick = () => dropLy();
-{ const ids = ['sh', 'pl', 'fs', 'pv', 'au', 'fc', 'rp', 'dm', 'lc', 'ss'], sync = () => document.documentElement.classList.toggle('lk', ids.some(i => $('#' + i).classList.contains('on'))), mo = new MutationObserver(sync);   // nothing behind an open sheet, game or pop-up can scroll
+{ const ids = ['sh', 'pl', 'fs', 'pv', 'au', 'fc', 'rp', 'dm', 'lc', 'ss', 'mbk'], sync = () => document.documentElement.classList.toggle('lk', ids.some(i => $('#' + i).classList.contains('on'))), mo = new MutationObserver(sync);   // nothing behind an open sheet, game or pop-up can scroll
   ids.forEach(i => mo.observe($('#' + i), { attributes: true, attributeFilter: ['class'] })); sync(); }
 let tm; const bar = n => $('#bar').style.width = n + '%';
-function play(x) { if (!U && x.vf !== false) { if (topLy() === 'sheet') dropLy(); pend = x; showAuth('up', 'Create an account or log in to play.'); return; } endSession(); { if (topLy() === 'sheet') LY[LY.length - 1] = { name: 'game' }; else pushLy('game'); } { const st = stats(), e = st[x.id] || { n: 0, t: 0, l: 0 }; e.n++; e.l = Date.now(); st[x.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} } curG = { id: x.id, s: Date.now(), o: x.ori }; curX = x; lbState = 0; $('#glb').classList.remove('on'); fit();
+function play(x) { if (!U && x.vf !== false) { if (topLy() === 'sheet') dropLy(); pend = x; showAuth('up', 'Create an account or log in to play.'); return; } endSession(); { if (topLy() === 'sheet') LY[LY.length - 1] = { name: 'game' }; else pushLy('game'); } { const st = stats(), e = st[x.id] || { n: 0, t: 0, l: 0 }; e.n++; e.l = Date.now(); st[x.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} } curG = { id: x.id, s: Date.now(), o: x.ori }; curX = x; lbState = 0; $('#glb').classList.remove('on'); fit(); xTipShow();
   $('#pl').classList.add('on'); $('#ld').classList.remove('off'); $('#lt').textContent = 'Loading ' + x.title + '…'; bar(8);
   let n = 8; clearInterval(tm); tm = setInterval(() => { n += (90 - n) * .08; bar(n); }, 250);
   const r = document.documentElement; try { (r.requestFullscreen || r.webkitRequestFullscreen).call(r); } catch (e) {} try { if (x.ori !== 'any') screen.orientation.lock(x.ori).catch(() => {}); } catch (e) {}
@@ -999,10 +1257,10 @@ function play(x) { if (!U && x.vf !== false) { if (topLy() === 'sheet') dropLy()
   (U && x.vf !== false ? tok().catch(() => {}) : Promise.resolve()).then(() => { if (curG && curG.id === x.id) { const u = ssoUrl(x); try { $('#fr').contentWindow.location.replace(u); } catch (e) { $('#fr').src = u; } } });
 }
 // single sign-on: verified games get the logged-in account in the URL hash, so players never sign in twice
-const ssoUrl = x => { const u = String(x.gurl).split('#')[0]; return x.vf === false ? x.gurl : U ? u + '#ngd=' + encodeURIComponent(JSON.stringify({ uid: U.uid, name: U.name, email: U.email || '', photo: chUri(myCode()), ch: myCode(), it: U.it, rt: U.rt, exp: U.exp })) : u + '#ngd=guest'; };
+const ssoUrl = x => { const u = String(x.gurl).split('#')[0]; return x.vf === false ? x.gurl : U ? u + '#ngd=' + encodeURIComponent(JSON.stringify({ uid: U.uid, name: U.name, email: U.email || '', photo: chUri(myCode()), ch: chLegacy(myCode()), ch2: myCode(), it: U.it, rt: U.rt, exp: U.exp })) : u + '#ngd=guest'; };
 // the game asks players without an NGD login to log in here
 addEventListener('message', e => { if (e.source === $('#fr').contentWindow && e.data && e.data.ngd === 'login') { closeGame(); setTimeout(() => navTo('profile'), 120); } });
-function closeGame() { gsLeave(); lbState = 3; try { $('#glb').classList.remove('on'); } catch (e) {} endSession(); closeGameLayer(); clearInterval(tm); try { $('#fr').contentWindow.location.replace('about:blank'); } catch (e) { $('#fr').src = 'about:blank'; } $('#pl').classList.remove('on'); $('#cf').classList.remove('on'); bar(0); try { draw(); } catch (e) {} try { document.exitFullscreen(); } catch (e) {} try { screen.orientation.unlock(); } catch (e) {} }
+function closeGame() { xTipHide(); gsLeave(); lbState = 3; try { $('#glb').classList.remove('on'); } catch (e) {} endSession(); closeGameLayer(); clearInterval(tm); try { $('#fr').contentWindow.location.replace('about:blank'); } catch (e) { $('#fr').src = 'about:blank'; } $('#pl').classList.remove('on'); $('#cf').classList.remove('on'); bar(0); try { draw(); } catch (e) {} try { document.exitFullscreen(); } catch (e) {} try { screen.orientation.unlock(); } catch (e) {} }
 let curG = null;
 function endSession() { if (!curG) return; const st = stats(), e = st[curG.id] || { n: 1, t: 0, l: 0 }; e.t = (e.t || 0) + Math.min(Math.round((Date.now() - curG.s) / 1000), 43200); e.l = Date.now(); st[curG.id] = e; try { localStorage.ngdStats = JSON.stringify(st); } catch (_) {} curG = null; fit(); }
 const rotOn = () => $('#pl').classList.contains('rot'), dm = () => rotOn() ? [innerHeight, innerWidth] : [innerWidth, innerHeight];
@@ -1012,12 +1270,12 @@ addEventListener('resize', fit); addEventListener('pagehide', endSession);
 const xb = $('#x'); let xt, xd = false, xs = null, xsup = false;
 const pt = e => rotOn() ? { x: e.clientY, y: innerWidth - e.clientX } : { x: e.clientX, y: e.clientY };
 const xPos = () => { const [W, H] = dm(); try { const p = JSON.parse(localStorage.ngdX || 'null'); if (p) { xb.style.left = p.x * W + 'px'; xb.style.top = p.y * H + 'px'; return; } } catch (e) {} xb.style.left = ''; xb.style.top = ''; };
-xb.addEventListener('pointerdown', e => { xs = pt(e); xd = false; xb.setPointerCapture(e.pointerId); clearTimeout(xt);
+xb.addEventListener('pointerdown', e => { xTipHide(true); xs = pt(e); xd = false; xb.setPointerCapture(e.pointerId); clearTimeout(xt);
   xt = setTimeout(() => { xd = true; xb.classList.add('drag'); navigator.vibrate && navigator.vibrate(15); }, 400); });
 xb.addEventListener('pointermove', e => { if (!xs) return; const p = pt(e), [W, H] = dm();
   if (!xd) { if (Math.hypot(p.x - xs.x, p.y - xs.y) > 10) clearTimeout(xt); return; }
-  xb.style.left = Math.min(Math.max(p.x, 14), W - 14) + 'px';
-  xb.style.top = Math.min(Math.max(p.y - 14, 0), H - 28) + 'px'; });
+  xb.style.left = Math.min(Math.max(p.x, 20), W - 20) + 'px';
+  xb.style.top = Math.min(Math.max(p.y - 18, 0), H - 36) + 'px'; });
 const xEnd = () => { clearTimeout(xt);
   if (xd) { xsup = true; setTimeout(() => xsup = false, 300); xb.classList.remove('drag'); const [W, H] = dm();
     try { localStorage.ngdX = JSON.stringify({ x: parseFloat(xb.style.left) / W, y: parseFloat(xb.style.top) / H }); } catch (e) {} }
@@ -1025,6 +1283,15 @@ const xEnd = () => { clearTimeout(xt);
 xb.addEventListener('pointerup', xEnd); xb.addEventListener('pointercancel', xEnd);
 xb.addEventListener('click', () => { if (xsup) return; $('#cf').classList.add('on'); });
 $('#cs').onclick = () => $('#cf').classList.remove('on');
+// first-time hint: tells new players the exit button can be tapped and moved
+const xtEl = $('#xt'); let xtT = 0;
+function xTipShow() { let seen = ''; try { seen = localStorage.ngdXTip || ''; } catch (e) {} if (seen) return; clearTimeout(xtT);
+  xtT = setTimeout(() => { if (!curG) return; const [W] = dm(), c = xb.style.left ? parseFloat(xb.style.left) : W / 2; xtEl.classList.add('on'); xb.classList.add('pulse');
+    const w = xtEl.offsetWidth, l = Math.min(Math.max(c, w / 2 + 8), W - w / 2 - 8); xtEl.style.left = l + 'px'; xtEl.style.setProperty('--ax', (c - l) + 'px');
+    xtEl.style.top = xb.style.top ? (parseFloat(xb.style.top) + 46) + 'px' : 'calc(54px + env(safe-area-inset-top))';
+    xtT = setTimeout(() => xTipHide(true), 9000); }, 900); }
+function xTipHide(mark) { clearTimeout(xtT); xtEl.classList.remove('on'); xb.classList.remove('pulse'); if (mark) { try { localStorage.ngdXTip = '1'; } catch (e) {} } }
+xtEl.addEventListener('click', () => xTipHide(true));
 $('#ce').onclick = closeGame;
 $('#dcn').onclick = () => dropLy();
 $('#dm').onclick = e => { if (e.target.id === 'dm') dropLy(); };
@@ -1116,8 +1383,9 @@ async function fsLoad(light) {
   }));
   fsStrip();
 }
-function fsBadge() { const n = Object.keys(FS.rq).length, e = document.getElementById('fsbd'); if (e) { e.textContent = n; e.hidden = !n || !U; } document.body.classList.toggle('hasrq', !!n && !!U); try { fsStrip(); } catch (x) {} }
+function fsBadge() { const n = Object.keys(FS.rq).length, e = document.getElementById('fsbd'); if (e) { e.textContent = n; e.hidden = !n || !U; } const nb = document.getElementById('nfbd'); if (nb) { nb.textContent = n > 9 ? '9+' : n; nb.hidden = !n || !U; } document.body.classList.toggle('hasrq', !!n && !!U); try { fsStrip(); } catch (x) {} }
 function fsStrip() {   // row of friends who are online right now, at the top of the page
+  try { if (document.getElementById('notif').classList.contains('on')) drawNf(); } catch (x) {}
   const el = document.getElementById('onl'); if (!el) return;
   const on = U ? Object.entries(FS.fr).filter(([u]) => fsStat(u).on) : [];
   el.hidden = !on.length;
@@ -1336,6 +1604,34 @@ $('#fs').addEventListener('input', e => { if (e.target.id === 'fsq') { $('#fsqx'
 $('#fs').addEventListener('click', e => { const b = e.target.closest('[data-a]'); if (b) fsAct(b.dataset.a, b.dataset.u, b.dataset.n, b); });
 $('#fcn').onclick = () => dropLy(); $('#fc').onclick = e => { if (e.target.id === 'fc') dropLy(); };
 $('#rpc').onclick = () => dropLy(); $('#rp').onclick = e => { if (e.target.id === 'rp') dropLy(); };
+
+// ---- Notifications tab: friend requests, friends online now, and which game they are playing
+function drawNf() {
+  const el = $('#notif'); if (!el) return;
+  const head = '<div class="nf-h"><h1>Notifications</h1></div>';
+  if (!U) { el.innerHTML = head + '<div class="nf-e"><b>Log in to see your notifications</b><p>Friend requests and friends who are online show up here.</p><button class="pl" id="nfl">Log in</button></div>'; return; }
+  const rq = Object.entries(FS.rq), fr = Object.entries(FS.fr), st = fr.map(([u, o]) => ({ u, o, s: fsStat(u) })).filter(x => x.s.on), byG = {}, idle = [];
+  st.forEach(x => { if (x.s.g) (byG[x.s.g.id] = byG[x.s.g.id] || { g: x.s.g, l: [] }).l.push(x); else idle.push(x); });
+  const gs = Object.values(byG), names = l => { const n = l.map(x => esc(x.o.name)); return n.length <= 2 ? n.join(' and ') : n.slice(0, 2).join(', ') + ' +' + (n.length - 2); };
+  let h = head;
+  if (rq.length) h += `<div class="sec-t">Friend requests (${rq.length})</div><div class="nf-l">${rq.map(([u, o]) => `<div class="nf-r">${fsAv(o.name, !!fsStat(u).on)}<span class="nf-x"><b>${esc(o.name)}</b><i>wants to be your friend</i></span><button class="nf-b ok" data-a="acc" data-u="${esc(u)}" data-n="${esc(o.name)}">Accept</button><button class="nf-b" data-a="dec" data-u="${esc(u)}" data-n="${esc(o.name)}">Decline</button></div>`).join('')}</div>`;
+  if (gs.length) h += `<div class="sec-t">Playing now</div><div class="nf-l">${gs.map(o => `<button class="nf-r nf-g" data-id="${esc(o.g.id)}"><span class="nf-t">${cv(o.g)}</span><span class="nf-x"><b>${esc(o.g.title)}</b><i class="live">${names(o.l)} ${o.l.length === 1 ? 'is' : 'are'} playing</i></span><em>&rsaquo;</em></button>`).join('')}</div>`;
+  if (idle.length) h += `<div class="sec-t">Online now</div><div class="nf-l">${idle.map(x => `<button class="nf-r nf-o" data-u="${esc(x.u)}" data-n="${esc(x.o.name)}">${fsAv(x.o.name, true)}<span class="nf-x"><b>${esc(x.o.name)}</b><i class="live">Online</i></span><em>&rsaquo;</em></button>`).join('')}</div>`;
+  if (!rq.length && !st.length) h += `<div class="nf-e"><b>You’re all caught up</b><p>${fr.length ? 'None of your friends are online right now. Friend requests and online friends will show up here.' : 'Add friends to see when they are online and which game they are playing.'}</p>${fr.length ? '' : '<button class="pl" id="nff">Find friends</button>'}</div>`;
+  el.innerHTML = h;
+}
+$('#notif').addEventListener('click', async e => {
+  const t = e.target, b = t.closest('[data-a]'), g = t.closest('.nf-g'), o = t.closest('.nf-o');
+  if (t.closest('#nfl')) { showAuth('in', 'Log in to see friend requests and who is online.'); return; }
+  if (t.closest('#nff')) { fsOpen(); if (FS.on) fsGo('find'); return; }
+  if (b && b.dataset.u) { const u = b.dataset.u, n = b.dataset.n; b.disabled = true;
+    try { if (b.dataset.a === 'acc') { await fsAccept(u, n); toast('You are now friends with ' + n); await fsLoad().catch(() => {}); } else { await sb('requests/' + U.uid + '/' + u, 'DELETE'); delete FS.rq[u]; fsBadge(); } }
+    catch (er) { toast(fsMsg(er)); b.disabled = false; return; }
+    drawNf(); return; }
+  if (g) { sheet(G.find(x => x.id === g.dataset.id)); return; }
+  if (o) { fsOpen(); if (FS.on) fsGo('profile', { u: o.dataset.u, n: o.dataset.n }); }
+});
+setInterval(() => { if (U && !document.hidden && !FS.on && $('#notif').classList.contains('on')) fsLoad(true).then(fsPres).catch(() => {}); }, 10000);
 $('#onl').addEventListener('click', e => { const b = e.target.closest('.onl-i'); if (b) { fsOpen(); if (FS.on) fsGo('profile', { u: b.dataset.u, n: b.dataset.n }); } });
 document.body.addEventListener('click', e => { if (e.target.closest('.fr-open')) { if (menuOn()) closeMenu(); setTimeout(fsOpen, 60); } });
 { const _dp = drawP; drawP = function () { _dp.apply(this, arguments); if (U) { const p = $('#profile .pf'); if (p) { const b = document.createElement('button'); b.className = 'pf-fr fr-open'; b.innerHTML = FI.fr + '<span class="pf-fl">Friends and chat</span><em id="fsbd" hidden></em>'; const st = p.querySelector('.pf-st'); st ? st.after(b) : p.appendChild(b); fsBadge(); } } }; }
